@@ -7,17 +7,21 @@
 //
 
 #import "ViewController.h"
+#import "OpenGLESView.h"
 
 @interface ViewController ()
-
+@property (nonatomic, strong) OpenGLESView *glesView;
 @end
 
 @implementation ViewController
 
-- (void)viewDidLoad {
+- (void)viewDidLoad
+{
     [super viewDidLoad];
-    // Do any additional setup after loading the view, typically from a nib.
+    self.glesView = [[OpenGLESView alloc]initWithFrame:self.view.bounds];
+    self.view = self.glesView;
 }
+
 
 
 @end
