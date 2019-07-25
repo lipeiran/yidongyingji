@@ -25,6 +25,33 @@ GLfloat vertexData[] = {
 GLProgram glProgram;
 
 #pragma mark -
+#pragma LifeCycle
+
++ (Class)layerClass
+{
+    return [CAEAGLLayer class];
+}
+
+- (id)initWithFrame:(CGRect)frame
+{
+    if (!(self = [super initWithFrame:frame]))
+    {
+        return nil;
+    }
+    [self commonInit];
+    return self;
+}
+
+- (void)layoutSubviews
+{
+    [super layoutSubviews];
+    [self destroyDisplayFrameBuffer];
+    [self createDisplayFrameBuffer];
+    [self draw];
+}
+
+
+#pragma mark -
 #pragma private methods
 
 - (void)commonInit
@@ -65,12 +92,7 @@ GLProgram glProgram;
     //获取vsh/fsh路径
     NSString *vertexShaderPath = [[NSBundle mainBundle]pathForResource:@"shaderv" ofType:@"vsh"];
     NSString *fragmentShaderPath = [[NSBundle mainBundle]pathForResource:@"shaderf" ofType:@"fsh"];
-//    _program = glProgram.initWithVertexShaderPath((char *)vertexShaderPath.UTF8String, (char *)fragmentShaderPath.UTF8String);
-//    glProgram.link();
-//    glProgram.use();
-//    glProgram.validate();
     _program = cpp_compileProgram(glProgram, (char *)vertexShaderPath.UTF8String, (char *)fragmentShaderPath.UTF8String);
-    
     //从program中获取position 顶点属性
     _position = glGetAttribLocation(_program, "position");
     //从program中获取textCoordinate 纹理属性
@@ -122,7 +144,6 @@ GLProgram glProgram;
     glViewport(self.frame.origin.x * scale, self.frame.origin.y * scale, self.frame.size.width * scale, self.frame.size.height *scale);
 }
 
-
 - (void)setupTexture
 {
     int w = 0, h = 0;
@@ -167,32 +188,6 @@ GLProgram glProgram;
 }
 
 /**************************************************************  native  **********************************************************************/
-
-#pragma mark -
-#pragma LifeCycle
-
-+ (Class)layerClass
-{
-    return [CAEAGLLayer class];
-}
-
-- (id)initWithFrame:(CGRect)frame
-{
-    if (!(self = [super initWithFrame:frame]))
-    {
-        return nil;
-    }
-    [self commonInit];
-    return self;
-}
-
-- (void)layoutSubviews
-{
-    [super layoutSubviews];
-    [self destroyDisplayFrameBuffer];
-    [self createDisplayFrameBuffer];
-    [self draw];
-}
 
 #pragma mark -
 #pragma mark Private methods
