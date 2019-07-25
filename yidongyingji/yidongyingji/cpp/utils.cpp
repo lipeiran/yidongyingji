@@ -83,3 +83,12 @@ GLuint cpp_compileProgram(GLProgram program, char *vertexPath, char *fragmentPat
     program.validate();
     return programId;
 }
+
+GLuint cpp_compileProgramWithContent(GLProgram program, char *vertexContent, char *fragmentContent)
+{
+    GLuint programId = program.initWithVertexShaderString(vertexContent, fragmentContent);
+    program.link();
+    program.use();
+    program.validate();
+    return programId;
+}

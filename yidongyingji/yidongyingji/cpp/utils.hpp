@@ -29,4 +29,6 @@ void cpp_upGPUTexture(GLint width, GLint height, GLubyte *byte);
 
 GLuint cpp_compileProgram(GLProgram program, char *vertexPath, char *fragmentPath);
 
+GLuint cpp_compileProgramWithContent(GLProgram program, char *vertexContent, char *fragmentContent);
+
 #endif /* utils_hpp */
