@@ -8,9 +8,11 @@
 
 #import "ViewController.h"
 #import "OpenGLESView.h"
+#import "GuideView.h"
 
 @interface ViewController ()
 @property (nonatomic, strong) OpenGLESView *glesView;
+@property (nonatomic, strong) GuideView *guideView;
 @end
 
 @implementation ViewController
@@ -18,8 +20,10 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.glesView = [[OpenGLESView alloc]initWithFrame:self.view.bounds];
-    self.view = self.glesView;
+//    self.glesView = [[OpenGLESView alloc]initWithFrame:self.view.bounds];
+    self.guideView = [[GuideView alloc]initWithFrame:self.view.bounds];
+//    self.view = self.glesView;
+    self.view = self.guideView;
 }
 
 

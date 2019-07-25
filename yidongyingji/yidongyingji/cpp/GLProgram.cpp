@@ -8,8 +8,6 @@
 
 #include "GLProgram.hpp"
 
-
-
 bool GLProgram::compileShader(GLuint &shader, GLenum type, char *shaderString)
 {
     GLint status;

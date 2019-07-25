@@ -7,18 +7,24 @@
 //
 
 #import "OpenGLESView.h"
+#include "Glm/glm.hpp"
+#include "Glm/ext.hpp"
+#include "GLESMath.h"
 
 //编辑顶点坐标数组
 GLfloat vertexData[] = {
     
-    0.5, -0.25, 0.0f,    1.0f, 0.0f, //右下
-    0.5, 0.25, -0.0f,    1.0f, 1.0f, //右上
-    -0.5, 0.25, 0.0f,    0.0f, 1.0f, //左上
+    0.5, -0.5, 0.0f,    1.0f, 0.0f, //右下
+    0.5, 0.5, -0.0f,    1.0f, 1.0f, //右上
+    -0.5, 0.5, 0.0f,    0.0f, 1.0f, //左上
     
-    0.5, -0.25, 0.0f,    1.0f, 0.0f, //右下
-    -0.5, 0.25, 0.0f,    0.0f, 1.0f, //左上
-    -0.5, -0.25, 0.0f,   0.0f, 0.0f, //左下
+    0.5, -0.5, 0.0f,    1.0f, 0.0f, //右下
+    -0.5, 0.5, 0.0f,    0.0f, 1.0f, //左上
+    -0.5, -0.5, 0.0f,   0.0f, 0.0f, //左下
 };
+
+CGFloat fov = 30.0f;
+
 
 @implementation OpenGLESView
 
@@ -49,7 +55,6 @@ GLProgram glProgram;
     [self createDisplayFrameBuffer];
     [self draw];
 }
-
 
 #pragma mark -
 #pragma private methods
@@ -148,7 +153,7 @@ GLProgram glProgram;
 {
     int w = 0, h = 0;
     GLubyte * byte = [self getImageDataWithName:@"test" width:&w height:&h];
-    _texture = cpp_setupTexture(GL_TEXTURE0);
+    _texture = cpp_setupTexture(GL_TEXTURE1);
     cpp_upGPUTexture(w, h, byte);
     //释放byte
     free(byte);
@@ -178,9 +183,66 @@ GLProgram glProgram;
     //设置纹理读取方式
     glVertexAttribPointer(_textCoordinate, 2, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 5, (GLfloat *) NULL + 3);
     
+    glActiveTexture(GL_TEXTURE1);
     glBindTexture(GL_TEXTURE_2D, _texture);
     //设置纹理采样器,这里的 0 对应 glBindTexture的 0
-    glUniform1i(glGetUniformLocation(_program, "colorMap"), 0);
+    glUniform1i(glGetUniformLocation(_program, "colorMap"), 1);
+
+    
+    
+    //获取view宽高 计算宽高比
+    float width = self.frame.size.width;
+    float height = self.frame.size.height;
+    float aspect = width / height; //长宽比
+    
+    //创建 4*4 投影矩阵
+    KSMatrix4 _projectionMatrix;
+    //加载投影矩阵
+    ksMatrixLoadIdentity(&_projectionMatrix);
+    //获取透视矩阵
+    /*
+     参数1：矩阵
+     参数2：视角，度数为单位
+     参数3：纵横比
+     参数4：近平面距离
+     参数5：远平面距离
+     */
+    ksPerspective(&_projectionMatrix, 60.0, aspect, -20.0f, 100.0f); //透视变换，视角30°
+    //将投影矩阵传递到顶点着色器
+    /*
+     void glUniformMatrix4fv(GLint location,  GLsizei count,  GLboolean transpose,  const GLfloat *value);
+     参数列表：
+     location:指要更改的uniform变量的位置
+     count:更改矩阵的个数
+     transpose:是否要转置矩阵，并将它作为uniform变量的值。必须为GL_FALSE
+     value:执行count个元素的指针，用来更新指定uniform变量
+     */
+    char *projection_uniformName = (char *)[@"projection" UTF8String];
+    char *model_uniformName = (char *)[@"model" UTF8String];
+    GLuint projectionMatrix_S = glGetUniformLocation(_program, projection_uniformName);//glProgram.uniformIndex(uniformName);
+    GLuint modelMatrix_S = glGetUniformLocation(_program, model_uniformName);//glProgram.uniformIndex(uniformName);
+    glUniformMatrix4fv(projectionMatrix_S, 1, GL_FALSE, (GLfloat*)&_projectionMatrix.m[0][0]);
+    //模型视图矩阵
+    KSMatrix4 _modelViewMatrix;
+    //加载矩阵
+    ksMatrixLoadIdentity(&_modelViewMatrix);
+    //沿着z轴平移
+    ksTranslate(&_modelViewMatrix, 0.0, 0.0, 10.0);
+    
+    //旋转矩阵
+    KSMatrix4 _rotateMartix;
+    //加载旋转矩阵
+    ksMatrixLoadIdentity(&_rotateMartix);
+    //旋转
+    ksRotate(&_rotateMartix, 0, 1.0, 0, 0);
+    ksRotate(&_rotateMartix, 0, 0, 1.0, 0);
+    ksRotate(&_rotateMartix, 0, 0, 0, 1.0);
+    
+    //把变换矩阵相乘.将_modelViewMatrix矩阵与_rotationMatrix矩阵相乘，结合到模型视图
+    ksMatrixMultiply(&_modelViewMatrix, &_rotateMartix, &_modelViewMatrix);
+    //将模型视图矩阵传递到顶点着色器
+    glUniformMatrix4fv(modelMatrix_S, 1, GL_FALSE, (GLfloat *)&_modelViewMatrix.m[0][0]);
+    
     //绘图
     glDrawArrays(GL_TRIANGLES, 0, 6);
     //将渲染缓冲区 呈现到 屏幕上

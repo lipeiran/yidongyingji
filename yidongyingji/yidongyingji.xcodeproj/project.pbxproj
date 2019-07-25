@@ -18,6 +18,12 @@
 		FE6119D922E7191200DD0741 /* shaderv.vsh in Resources */ = {isa = PBXBuildFile; fileRef = FE6119D822E7191200DD0741 /* shaderv.vsh */; };
 		FE6119DB22E7191E00DD0741 /* shaderf.fsh in Resources */ = {isa = PBXBuildFile; fileRef = FE6119DA22E7191E00DD0741 /* shaderf.fsh */; };
 		FE6119E122E71DE400DD0741 /* utils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FE6119DF22E71DE400DD0741 /* utils.cpp */; };
+		FE6119E322E948CF00DD0741 /* Glm in Resources */ = {isa = PBXBuildFile; fileRef = FE6119E222E948CF00DD0741 /* Glm */; };
+		FE6119EB22E9531A00DD0741 /* GLESUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = FE6119E522E9531A00DD0741 /* GLESUtils.m */; };
+		FE6119EC22E9531A00DD0741 /* GLESMath.c in Sources */ = {isa = PBXBuildFile; fileRef = FE6119E722E9531A00DD0741 /* GLESMath.c */; };
+		FE6119EF22E9582F00DD0741 /* GuideView.mm in Sources */ = {isa = PBXBuildFile; fileRef = FE6119EE22E9582F00DD0741 /* GuideView.mm */; };
+		FE6119F122E9588B00DD0741 /* guide.vsh in Resources */ = {isa = PBXBuildFile; fileRef = FE6119F022E9588B00DD0741 /* guide.vsh */; };
+		FE6119F322E9589800DD0741 /* guide.fsh in Resources */ = {isa = PBXBuildFile; fileRef = FE6119F222E9589800DD0741 /* guide.fsh */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -40,6 +46,17 @@
 		FE6119DA22E7191E00DD0741 /* shaderf.fsh */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = shaderf.fsh; sourceTree = "<group>"; };
 		FE6119DF22E71DE400DD0741 /* utils.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = utils.cpp; sourceTree = "<group>"; };
 		FE6119E022E71DE400DD0741 /* utils.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = utils.hpp; sourceTree = "<group>"; };
+		FE6119E222E948CF00DD0741 /* Glm */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Glm; sourceTree = "<group>"; };
+		FE6119E522E9531A00DD0741 /* GLESUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLESUtils.m; sourceTree = "<group>"; };
+		FE6119E622E9531A00DD0741 /* Quaternion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Quaternion.h; sourceTree = "<group>"; };
+		FE6119E722E9531A00DD0741 /* GLESMath.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = GLESMath.c; sourceTree = "<group>"; };
+		FE6119E822E9531A00DD0741 /* GLESUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLESUtils.h; sourceTree = "<group>"; };
+		FE6119E922E9531A00DD0741 /* Vector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Vector.h; sourceTree = "<group>"; };
+		FE6119EA22E9531A00DD0741 /* GLESMath.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLESMath.h; sourceTree = "<group>"; };
+		FE6119ED22E9582F00DD0741 /* GuideView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GuideView.h; sourceTree = "<group>"; };
+		FE6119EE22E9582F00DD0741 /* GuideView.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = GuideView.mm; sourceTree = "<group>"; };
+		FE6119F022E9588B00DD0741 /* guide.vsh */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = guide.vsh; sourceTree = "<group>"; };
+		FE6119F222E9589800DD0741 /* guide.fsh */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = guide.fsh; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -72,8 +89,10 @@
 		FE6119B622E6F6F700DD0741 /* yidongyingji */ = {
 			isa = PBXGroup;
 			children = (
+				FE6119E222E948CF00DD0741 /* Glm */,
 				FE6119D722E718FD00DD0741 /* glsl */,
 				FE6119CE22E6F84300DD0741 /* native */,
+				FE6119E422E9531A00DD0741 /* Utils */,
 				FE6119CD22E6F81300DD0741 /* cpp */,
 				FE6119B722E6F6F700DD0741 /* AppDelegate.h */,
 				FE6119B822E6F6F700DD0741 /* AppDelegate.m */,
@@ -105,6 +124,8 @@
 			children = (
 				FE6119CF22E6F89300DD0741 /* OpenGLESView.h */,
 				FE6119D022E6F89300DD0741 /* OpenGLESView.mm */,
+				FE6119ED22E9582F00DD0741 /* GuideView.h */,
+				FE6119EE22E9582F00DD0741 /* GuideView.mm */,
 			);
 			path = native;
 			sourceTree = "<group>";
@@ -114,8 +135,23 @@
 			children = (
 				FE6119D822E7191200DD0741 /* shaderv.vsh */,
 				FE6119DA22E7191E00DD0741 /* shaderf.fsh */,
+				FE6119F022E9588B00DD0741 /* guide.vsh */,
+				FE6119F222E9589800DD0741 /* guide.fsh */,
 			);
 			path = glsl;
+			sourceTree = "<group>";
+		};
+		FE6119E422E9531A00DD0741 /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				FE6119E822E9531A00DD0741 /* GLESUtils.h */,
+				FE6119E522E9531A00DD0741 /* GLESUtils.m */,
+				FE6119E622E9531A00DD0741 /* Quaternion.h */,
+				FE6119EA22E9531A00DD0741 /* GLESMath.h */,
+				FE6119E722E9531A00DD0741 /* GLESMath.c */,
+				FE6119E922E9531A00DD0741 /* Vector.h */,
+			);
+			path = Utils;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -178,7 +214,10 @@
 				FE6119DB22E7191E00DD0741 /* shaderf.fsh in Resources */,
 				FE6119D922E7191200DD0741 /* shaderv.vsh in Resources */,
 				FE6119C422E6F6F900DD0741 /* LaunchScreen.storyboard in Resources */,
+				FE6119E322E948CF00DD0741 /* Glm in Resources */,
+				FE6119F122E9588B00DD0741 /* guide.vsh in Resources */,
 				FE6119C122E6F6F900DD0741 /* Assets.xcassets in Resources */,
+				FE6119F322E9589800DD0741 /* guide.fsh in Resources */,
 				FE6119BF22E6F6F700DD0741 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -190,7 +229,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FE6119EC22E9531A00DD0741 /* GLESMath.c in Sources */,
 				FE6119D522E6FD5A00DD0741 /* GLProgram.cpp in Sources */,
+				FE6119EB22E9531A00DD0741 /* GLESUtils.m in Sources */,
+				FE6119EF22E9582F00DD0741 /* GuideView.mm in Sources */,
 				FE6119BC22E6F6F700DD0741 /* ViewController.mm in Sources */,
 				FE6119D122E6F89300DD0741 /* OpenGLESView.mm in Sources */,
 				FE6119C722E6F6F900DD0741 /* main.m in Sources */,
@@ -272,6 +314,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/yidongyingji";
 				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
@@ -325,6 +368,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/yidongyingji";
 				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
