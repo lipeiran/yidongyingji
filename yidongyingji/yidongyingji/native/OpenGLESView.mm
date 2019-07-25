@@ -25,6 +25,15 @@ GLfloat vertexData[] = {
 
 CGFloat fov = 30.0f;
 
+@interface OpenGLESView ()
+{
+    float xDegree;//X轴旋转角度
+    float yDegree;//Y轴旋转角度
+    float zDegree;//Z轴旋转角度
+}
+
+@end
+
 
 @implementation OpenGLESView
 
@@ -67,6 +76,10 @@ GLProgram glProgram;
     [self createDisplayFrameBuffer];
     _vBufferID = cpp_createBufferObject(GL_ARRAY_BUFFER, sizeof(vertexData), GL_STATIC_DRAW, vertexData);
     [self setupTexture];
+    
+    UIPanGestureRecognizer *pan = [[UIPanGestureRecognizer alloc]initWithTarget:self action:@selector(pan:)];
+    [self addGestureRecognizer:pan];
+    
 }
 
 - (void)destroyDisplayFrameBuffer
@@ -167,13 +180,17 @@ GLProgram glProgram;
     glClearColor(1.0, 1.0, 1.0, 1);
     //清除颜色缓冲
     glClear(GL_COLOR_BUFFER_BIT);
+    //开启正背面剔除
+    glEnable(GL_CULL_FACE);
+    //开启颜色混合
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     //获取缩放值
     CGFloat scale = [UIScreen mainScreen].scale;
     //设置视口
     glViewport(self.frame.origin.x * scale, self.frame.origin.y * scale, self.frame.size.width * scale, self.frame.size.height *scale);
     
     glBindBuffer(GL_ARRAY_BUFFER, _vBufferID);
-    
     //开启顶点属性通道
     glEnableVertexAttribArray(_position);
     //设置顶点读取方式
@@ -183,13 +200,8 @@ GLProgram glProgram;
     //设置纹理读取方式
     glVertexAttribPointer(_textCoordinate, 2, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 5, (GLfloat *) NULL + 3);
     
-    glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_2D, _texture);
-    //设置纹理采样器,这里的 0 对应 glBindTexture的 0
-    glUniform1i(glGetUniformLocation(_program, "colorMap"), 1);
-
-    
-    
+    GLuint projectionMatrix_S = glGetUniformLocation(_program, "projectionMatrix");
+    GLuint modelViewMartix_S = glGetUniformLocation(_program, "modelViewMatrix");
     //获取view宽高 计算宽高比
     float width = self.frame.size.width;
     float height = self.frame.size.height;
@@ -200,53 +212,77 @@ GLProgram glProgram;
     //加载投影矩阵
     ksMatrixLoadIdentity(&_projectionMatrix);
     //获取透视矩阵
-    /*
-     参数1：矩阵
-     参数2：视角，度数为单位
-     参数3：纵横比
-     参数4：近平面距离
-     参数5：远平面距离
-     */
-    ksPerspective(&_projectionMatrix, 60.0, aspect, -20.0f, 100.0f); //透视变换，视角30°
+    ksPerspective(&_projectionMatrix, 30.0, aspect, 0.00001f, 20.0f); //透视变换，视角30°
     //将投影矩阵传递到顶点着色器
-    /*
-     void glUniformMatrix4fv(GLint location,  GLsizei count,  GLboolean transpose,  const GLfloat *value);
-     参数列表：
-     location:指要更改的uniform变量的位置
-     count:更改矩阵的个数
-     transpose:是否要转置矩阵，并将它作为uniform变量的值。必须为GL_FALSE
-     value:执行count个元素的指针，用来更新指定uniform变量
-     */
-    char *projection_uniformName = (char *)[@"projection" UTF8String];
-    char *model_uniformName = (char *)[@"model" UTF8String];
-    GLuint projectionMatrix_S = glGetUniformLocation(_program, projection_uniformName);//glProgram.uniformIndex(uniformName);
-    GLuint modelMatrix_S = glGetUniformLocation(_program, model_uniformName);//glProgram.uniformIndex(uniformName);
     glUniformMatrix4fv(projectionMatrix_S, 1, GL_FALSE, (GLfloat*)&_projectionMatrix.m[0][0]);
     //模型视图矩阵
     KSMatrix4 _modelViewMatrix;
     //加载矩阵
     ksMatrixLoadIdentity(&_modelViewMatrix);
     //沿着z轴平移
-    ksTranslate(&_modelViewMatrix, 0.0, 0.0, 10.0);
+    ksTranslate(&_modelViewMatrix, 0, 0, -3.1);
     
     //旋转矩阵
     KSMatrix4 _rotateMartix;
     //加载旋转矩阵
     ksMatrixLoadIdentity(&_rotateMartix);
     //旋转
-    ksRotate(&_rotateMartix, 0, 1.0, 0, 0);
-    ksRotate(&_rotateMartix, 0, 0, 1.0, 0);
-    ksRotate(&_rotateMartix, 0, 0, 0, 1.0);
+    ksRotate(&_rotateMartix, xDegree, 1.0, 0, 0);
+    ksRotate(&_rotateMartix, yDegree, 0, 1.0, 0);
+    ksRotate(&_rotateMartix, zDegree, 0, 0, 1.0);
     
     //把变换矩阵相乘.将_modelViewMatrix矩阵与_rotationMatrix矩阵相乘，结合到模型视图
     ksMatrixMultiply(&_modelViewMatrix, &_rotateMartix, &_modelViewMatrix);
     //将模型视图矩阵传递到顶点着色器
-    glUniformMatrix4fv(modelMatrix_S, 1, GL_FALSE, (GLfloat *)&_modelViewMatrix.m[0][0]);
-    
+    glUniformMatrix4fv(modelViewMartix_S, 1, GL_FALSE, (GLfloat *)&_modelViewMatrix.m[0][0]);
+
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, _texture);
+    //设置纹理采样器,这里的 0 对应 glBindTexture的 0
+    glUniform1i(glGetUniformLocation(_program, "colorMap"), 1);
+
     //绘图
     glDrawArrays(GL_TRIANGLES, 0, 6);
     //将渲染缓冲区 呈现到 屏幕上
     [self.context presentRenderbuffer:GL_RENDERBUFFER];
+}
+
+//纹理加载方法
+-(void)loadTexture:(NSString *)name{
+    CGImageRef cgImg = [UIImage imageNamed:name].CGImage;
+    if (!cgImg) {
+        NSLog(@"获取图片失败！");
+        return;
+    }
+    size_t width = CGImageGetWidth(cgImg);
+    size_t height = CGImageGetHeight(cgImg);
+    
+    
+    // *4  因为RGBA
+    GLubyte * byte = (GLubyte *)calloc(width * height * 4, sizeof(GLubyte));
+    
+    CGContextRef contextRef = CGBitmapContextCreate(byte, width, height, 8, width * 4, CGImageGetColorSpace(cgImg), kCGImageAlphaPremultipliedLast);
+    
+    
+    CGRect rect = CGRectMake(0, 0, width, height);
+    CGContextDrawImage(contextRef, rect, cgImg);
+    
+    CGContextRelease(contextRef);
+    
+    glBindTexture(GL_TEXTURE_2D, 0);
+    
+    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
+    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
+    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    
+    float w = width;
+    float h = height;
+    
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, byte);
+    
+    
+    free(byte);
 }
 
 /**************************************************************  native  **********************************************************************/
@@ -298,6 +334,18 @@ GLProgram glProgram;
     
     self.opaque = YES;
     self.hidden = NO;
+}
+
+
+-(void)pan:(UIPanGestureRecognizer *)pan{
+    //获取偏移量
+    // 返回的是相对于最原始的手指的偏移量
+    CGPoint transP = [pan translationInView:self];
+    
+    xDegree = -transP.y;
+    yDegree = -transP.x;
+    
+    [self draw];
 }
 
 @end

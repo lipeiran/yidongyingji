@@ -24,6 +24,12 @@
 		FE6119EF22E9582F00DD0741 /* GuideView.mm in Sources */ = {isa = PBXBuildFile; fileRef = FE6119EE22E9582F00DD0741 /* GuideView.mm */; };
 		FE6119F122E9588B00DD0741 /* guide.vsh in Resources */ = {isa = PBXBuildFile; fileRef = FE6119F022E9588B00DD0741 /* guide.vsh */; };
 		FE6119F322E9589800DD0741 /* guide.fsh in Resources */ = {isa = PBXBuildFile; fileRef = FE6119F222E9589800DD0741 /* guide.fsh */; };
+		FE6119FF22E980A500DD0741 /* 6.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = FE6119F922E980A400DD0741 /* 6.jpeg */; };
+		FE611A0022E980A500DD0741 /* 1.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = FE6119FA22E980A500DD0741 /* 1.jpeg */; };
+		FE611A0122E980A500DD0741 /* 3.jpg in Resources */ = {isa = PBXBuildFile; fileRef = FE6119FB22E980A500DD0741 /* 3.jpg */; };
+		FE611A0222E980A500DD0741 /* 4.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = FE6119FC22E980A500DD0741 /* 4.jpeg */; };
+		FE611A0322E980A500DD0741 /* 5.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = FE6119FD22E980A500DD0741 /* 5.jpeg */; };
+		FE611A0422E980A500DD0741 /* 2.jpg in Resources */ = {isa = PBXBuildFile; fileRef = FE6119FE22E980A500DD0741 /* 2.jpg */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -57,6 +63,12 @@
 		FE6119EE22E9582F00DD0741 /* GuideView.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = GuideView.mm; sourceTree = "<group>"; };
 		FE6119F022E9588B00DD0741 /* guide.vsh */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = guide.vsh; sourceTree = "<group>"; };
 		FE6119F222E9589800DD0741 /* guide.fsh */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = guide.fsh; sourceTree = "<group>"; };
+		FE6119F922E980A400DD0741 /* 6.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 6.jpeg; sourceTree = "<group>"; };
+		FE6119FA22E980A500DD0741 /* 1.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 1.jpeg; sourceTree = "<group>"; };
+		FE6119FB22E980A500DD0741 /* 3.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 3.jpg; sourceTree = "<group>"; };
+		FE6119FC22E980A500DD0741 /* 4.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 4.jpeg; sourceTree = "<group>"; };
+		FE6119FD22E980A500DD0741 /* 5.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 5.jpeg; sourceTree = "<group>"; };
+		FE6119FE22E980A500DD0741 /* 2.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 2.jpg; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -89,6 +101,7 @@
 		FE6119B622E6F6F700DD0741 /* yidongyingji */ = {
 			isa = PBXGroup;
 			children = (
+				FE6119F822E9808A00DD0741 /* res */,
 				FE6119E222E948CF00DD0741 /* Glm */,
 				FE6119D722E718FD00DD0741 /* glsl */,
 				FE6119CE22E6F84300DD0741 /* native */,
@@ -154,6 +167,19 @@
 			path = Utils;
 			sourceTree = "<group>";
 		};
+		FE6119F822E9808A00DD0741 /* res */ = {
+			isa = PBXGroup;
+			children = (
+				FE6119FA22E980A500DD0741 /* 1.jpeg */,
+				FE6119FE22E980A500DD0741 /* 2.jpg */,
+				FE6119FB22E980A500DD0741 /* 3.jpg */,
+				FE6119FC22E980A500DD0741 /* 4.jpeg */,
+				FE6119FD22E980A500DD0741 /* 5.jpeg */,
+				FE6119F922E980A400DD0741 /* 6.jpeg */,
+			);
+			path = res;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -211,13 +237,19 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FE611A0322E980A500DD0741 /* 5.jpeg in Resources */,
+				FE611A0122E980A500DD0741 /* 3.jpg in Resources */,
+				FE611A0422E980A500DD0741 /* 2.jpg in Resources */,
 				FE6119DB22E7191E00DD0741 /* shaderf.fsh in Resources */,
 				FE6119D922E7191200DD0741 /* shaderv.vsh in Resources */,
 				FE6119C422E6F6F900DD0741 /* LaunchScreen.storyboard in Resources */,
 				FE6119E322E948CF00DD0741 /* Glm in Resources */,
 				FE6119F122E9588B00DD0741 /* guide.vsh in Resources */,
+				FE611A0022E980A500DD0741 /* 1.jpeg in Resources */,
 				FE6119C122E6F6F900DD0741 /* Assets.xcassets in Resources */,
+				FE6119FF22E980A500DD0741 /* 6.jpeg in Resources */,
 				FE6119F322E9589800DD0741 /* guide.fsh in Resources */,
+				FE611A0222E980A500DD0741 /* 4.jpeg in Resources */,
 				FE6119BF22E6F6F700DD0741 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

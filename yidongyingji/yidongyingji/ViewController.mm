@@ -20,10 +20,10 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-//    self.glesView = [[OpenGLESView alloc]initWithFrame:self.view.bounds];
-    self.guideView = [[GuideView alloc]initWithFrame:self.view.bounds];
-//    self.view = self.glesView;
-    self.view = self.guideView;
+    self.glesView = [[OpenGLESView alloc]initWithFrame:self.view.bounds];
+//    self.guideView = [[GuideView alloc]initWithFrame:self.view.bounds];
+    self.view = self.glesView;
+//    self.view = self.guideView;
 }
 
 

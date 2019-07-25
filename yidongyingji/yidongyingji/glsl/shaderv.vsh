@@ -1,12 +1,22 @@
+
+//顶点坐标
 attribute vec4 position;
+//坐标颜色
+attribute vec4 positionColor;
+//纹理坐标
 attribute vec2 textCoordinate;
-varying highp vec2 varyTextCoord;
-uniform vec4 projection;
-uniform vec4 model;
+//投影矩阵
+uniform mat4 projectionMatrix;
+//模型视图矩阵
+uniform mat4 modelViewMatrix;
+
+//传递给片元着色器的纹理
+varying lowp vec2 varyTextCoord;
+
 void main()
 {
-    //varying 修饰，将纹理坐标传递到片元着色器
+    //传递纹理坐标
     varyTextCoord = textCoordinate;
-    //给内建变量赋值
-    gl_Position = projection * model * position;
+    //内建变量赋值 投影矩阵 * 模型视图矩阵 * 顶点坐标
+    gl_Position = projectionMatrix * modelViewMatrix * position;
 }
