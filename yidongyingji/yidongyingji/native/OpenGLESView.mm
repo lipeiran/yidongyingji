@@ -257,7 +257,6 @@ GLProgram glProgram;
     size_t width = CGImageGetWidth(cgImg);
     size_t height = CGImageGetHeight(cgImg);
     
-    
     // *4  因为RGBA
     GLubyte * byte = (GLubyte *)calloc(width * height * 4, sizeof(GLubyte));
     
