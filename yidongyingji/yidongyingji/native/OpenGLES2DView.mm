@@ -106,7 +106,8 @@ GLProgram glProgram1;
     [self setupContext];
     [self compileProgram];
     [self createDisplayFrameBuffer];
-    [self setupTexture];
+    [self setupTextureOne];
+    [self setupTextureTwo];
     _vBufferID = cpp_createBufferObject(GL_ARRAY_BUFFER, sizeof(vertexData1), GL_STATIC_DRAW, vertexData1);
     
     UIPanGestureRecognizer *pan = [[UIPanGestureRecognizer alloc]initWithTarget:self action:@selector(pan:)];
@@ -147,6 +148,11 @@ GLProgram glProgram1;
     _position = glGetAttribLocation(_program, "position");
     //从program中获取textCoordinate 纹理属性
     _textCoordinate = glGetAttribLocation(_program, "textCoordinate");
+    
+    _modelViewMartix_S = glGetUniformLocation(_program, "modelViewMatrix");
+    _projectionMatrix_S = glGetUniformLocation(_program, "projectionMatrix");
+    
+    glUniform1i(glGetUniformLocation(_program, "colorMap"), 0);
 }
 
 - (void)setupContext
@@ -188,16 +194,14 @@ GLProgram glProgram1;
     }
     
     glBindFramebuffer(GL_FRAMEBUFFER, _frameBuffer);
-    //获取缩放值
-    CGFloat scale = [UIScreen mainScreen].scale;
     //设置视口
-    glViewport(self.frame.origin.x * scale, self.frame.origin.y * scale, self.frame.size.width * scale, self.frame.size.height *scale);
+    glViewport(self.frame.origin.x * _scale, self.frame.origin.y * _scale, self.frame.size.width * _scale, self.frame.size.height *_scale);
 }
 
-- (void)setupTexture
+- (void)setupTextureOne
 {
     int w = 0, h = 0;
-    GLubyte * byte = [self getImageDataWithName:@"1.jpeg" width:&w height:&h];
+    GLubyte * byte = [self getImageDataWithName:@"2.jpg" width:&w height:&h];
     _texture = cpp_setupTexture(GL_TEXTURE1);
     cpp_upGPUTexture(w, h, byte);
     //释放byte
@@ -208,6 +212,22 @@ GLProgram glProgram1;
         vertexData1[i*5+0] *= 1.0;
         vertexData1[i*5+1] *= h*1.0/w;
     }
+}
+
+- (void)setupTextureTwo
+{
+    int w = 0, h = 0;
+    GLubyte * byte = [self getImageDataWithName:@"1.jpeg" width:&w height:&h];
+    _textureTwo = cpp_setupTexture(GL_TEXTURE1);
+    cpp_upGPUTexture(w, h, byte);
+    //释放byte
+    free(byte);
+    
+//    for (int i = 0; i < 6; i++)
+//    {
+//        vertexData1[i*5+0] *= 1.0;
+//        vertexData1[i*5+1] *= h*1.0/w;
+//    }
 }
 
 - (void)draw
@@ -223,10 +243,8 @@ GLProgram glProgram1;
     //开启颜色混合
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    //获取缩放值
-    CGFloat scale = [UIScreen mainScreen].scale;
     //设置视口
-    glViewport(self.frame.origin.x * scale, self.frame.origin.y * scale, self.frame.size.width * scale, self.frame.size.height *scale);
+    glViewport(self.frame.origin.x * _scale, self.frame.origin.y * _scale, self.frame.size.width * _scale, self.frame.size.height *_scale);
     
     glBindBuffer(GL_ARRAY_BUFFER, _vBufferID);
     //开启顶点属性通道
@@ -238,118 +256,81 @@ GLProgram glProgram1;
     //设置纹理读取方式
     glVertexAttribPointer(_textCoordinate, 2, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 5, (GLfloat *) NULL + 3);
     
-    GLuint modelViewMartix_S = glGetUniformLocation(_program, "modelViewMatrix");
-    GLuint projectionMatrix_S = glGetUniformLocation(_program, "projectionMatrix");
-    GLuint viewMatrix_S = glGetUniformLocation(_program, "ViewViewMatrix");
+    // ******************** 第一个纹理 **********************//
+    {
+        float anchorPX = 1.0;
+        float anchorPY = 1.5;
+        float rotateAngleX = 0.0f;
+        float rotateAngleY = 0.0f;
+        float rotateAngleZ = 45.0f;
+        float scaleX = 0.5;
+        float scaleY = 0.5;
+        float scaleZ = 1.0;
+        
+        KSMatrix4 project;
+        ksMatrixLoadIdentity(&project);
+        ksOrtho(&project, -1, 1, -_aspectRatio, _aspectRatio, 0.1f, 100.0f);
+        glUniformMatrix4fv(_projectionMatrix_S, 1, GL_FALSE, (GLfloat*)&project.m[0][0]);
+        //模型视图矩阵
+        KSMatrix4 _modelViewMatrix;
+        //加载矩阵
+        ksMatrixLoadIdentity(&_modelViewMatrix);
+        //------------------------------------------ View位移开始 ------------------------------------------//
+        cpp_glTranslate(1.0, 0.0, -10.0, _modelViewMatrix);
+        //------------------------------------------ View位移结束 ------------------------------------------//
+        //------------------------------------------ 按照锚点来旋转开始 ------------------------------------------//
+        cpp_glRotate(anchorPX, anchorPY, rotateAngleX, rotateAngleY, rotateAngleZ, _modelViewMatrix);
+        //------------------------------------------ 按照锚点来旋转结束 ------------------------------------------//
+        //------------------------------------------ 按照锚点来缩放开始 ------------------------------------------//
+        cpp_glScale(anchorPX, anchorPY, scaleX, scaleY, scaleZ, _modelViewMatrix);
+        //------------------------------------------ 按照锚点来缩放结束 ------------------------------------------//
+        cpp_glTranslate(0.0, 0.0, 0.0, _modelViewMatrix);
+        //将模型视图矩阵传递到顶点着色器
+        glUniformMatrix4fv(_modelViewMartix_S, 1, GL_FALSE, (GLfloat *)&_modelViewMatrix.m[0][0]);
+        
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, _texture);
+        
+        glDrawArrays(GL_TRIANGLES, 0, 6);
+    }
     
-    //模型视图矩阵
-    KSMatrix4 _viewViewMatrix;
-    //加载矩阵
-    ksMatrixLoadIdentity(&_viewViewMatrix);
-    //沿着z轴平移
-    ksTranslate(&_viewViewMatrix, 0, 0, -10.0);
-    glUniformMatrix4fv(viewMatrix_S, 1, GL_FALSE, (GLfloat*)&_viewViewMatrix.m[0][0]);
-    
-    float screenWidth = [UIScreen mainScreen].bounds.size.width;
-    float screenHeight = [UIScreen mainScreen].bounds.size.height;
-    float aspectRatio = screenHeight/screenWidth;
-    
-    KSMatrix4 project;
-    ksMatrixLoadIdentity(&project);
-    ksOrtho(&project, -1, 1, -aspectRatio, aspectRatio, 0.1f, 100.0f);
-    glUniformMatrix4fv(projectionMatrix_S, 1, GL_FALSE, (GLfloat*)&project.m[0][0]);
-    
-    //模型视图矩阵
-    KSMatrix4 _modelViewMatrix;
-    //加载矩阵
-    ksMatrixLoadIdentity(&_modelViewMatrix);
-    //沿着z轴平移
-    ksTranslate(&_modelViewMatrix, 0, 0, -10.0);
-    
-    //****************************************** 按照锚点来旋转开始 *************************************//
-    /*
-    // 设置旋转锚点
-    float x_p = 1.0;
-    float y_p = 1.5;
-    //模型视图矩阵
-    KSMatrix4 tmp_modelViewMatrix;
-    //加载矩阵
-    ksMatrixLoadIdentity(&tmp_modelViewMatrix);
-    // 先平移
-    ksTranslate(&tmp_modelViewMatrix, x_p, y_p, 0.0);
-    
-    //旋转矩阵
-    KSMatrix4 _rotateMartix;
-    //加载旋转矩阵
-    ksMatrixLoadIdentity(&_rotateMartix);
-    //旋转
-    xDegree = 0.0;
-    yDegree = 0.0;
-    zDegree = 45.0;
-    ksRotate(&_rotateMartix, xDegree, 1.0, 0, 0);
-    ksRotate(&_rotateMartix, yDegree, 0, 1.0, 0);
-    ksRotate(&_rotateMartix, zDegree, 0, 0, 1.0);
-    //把变换矩阵相乘.将_modelViewMatrix矩阵与_rotationMatrix矩阵相乘，结合到模型视图
-    ksMatrixMultiply(&tmp_modelViewMatrix, &_rotateMartix, &tmp_modelViewMatrix);
-
-    //模型视图矩阵
-    KSMatrix4 _translateMatrix;
-    //加载矩阵
-    ksMatrixLoadIdentity(&_translateMatrix);
-    //沿着z轴平移
-    ksTranslate(&_translateMatrix, -x_p, -y_p, 0.0);
-    ksMatrixMultiply(&tmp_modelViewMatrix,  &_translateMatrix, &tmp_modelViewMatrix);
-    
-    ksMatrixMultiply(&_modelViewMatrix,  &tmp_modelViewMatrix, &_modelViewMatrix);*/
-    
-    cpp_glRotate(1.0, 1.5, 0.0, 0.0, 45.0, _modelViewMatrix);
-    
-    //****************************************** 按照锚点来旋转结束 *************************************//
-    
-    //****************************************** 按照锚点来缩放开始 *************************************//
-    
-//    // 设置旋转锚点
-//    float x_s_p = 1.0;
-//    float y_s_p = 1.5;
-//    //模型视图矩阵
-//    KSMatrix4 tmp_modelViewMatrix_s;
-//    //加载矩阵
-//    ksMatrixLoadIdentity(&tmp_modelViewMatrix_s);
-//    // 先平移
-//    ksTranslate(&tmp_modelViewMatrix_s, x_s_p, y_s_p, 0.0);
-//
-//    //缩放矩阵
-//    KSMatrix4 _scaleMartix;
-//    //加载缩放矩阵
-//    ksMatrixLoadIdentity(&_scaleMartix);
-//    //缩放
-//    xSDegree = 0.5;
-//    ySDegree = 0.5;
-//    ksScale(&_scaleMartix, xSDegree, ySDegree, 1.0);
-//    //把变换矩阵相乘.将_modelViewMatrix矩阵与_rotationMatrix矩阵相乘，结合到模型视图
-//    ksMatrixMultiply(&tmp_modelViewMatrix_s, &_scaleMartix, &tmp_modelViewMatrix_s);
-//
-//    //模型视图矩阵
-//    KSMatrix4 _translateMatrix_s;
-//    //加载矩阵
-//    ksMatrixLoadIdentity(&_translateMatrix_s);
-//    //沿着z轴平移
-//    ksTranslate(&_translateMatrix_s, -x_s_p, -y_s_p, 0.0);
-//
-//    ksMatrixMultiply(&tmp_modelViewMatrix_s, &_translateMatrix_s, &tmp_modelViewMatrix_s);
-//    ksMatrixMultiply(&_modelViewMatrix,  &tmp_modelViewMatrix_s, &_modelViewMatrix);
-    cpp_glScale(1.0, 1.5, 0.5, 0.5, 1.0, _modelViewMatrix);
-    
-    //****************************************** 按照锚点来缩放结束 *************************************//
-
-    //将模型视图矩阵传递到顶点着色器
-    glUniformMatrix4fv(modelViewMartix_S, 1, GL_FALSE, (GLfloat *)&_modelViewMatrix.m[0][0]);
-    
-    glActiveTexture(GL_TEXTURE0);
-    [self loadTexture:@"2.jpg"];
-    glUniform1i(glGetUniformLocation(_program, "colorMap"), 0);
-    glDrawArrays(GL_TRIANGLES, 0, 6);
-    
+    // ******************** 第二个纹理 **********************//
+    {
+        float anchorPX = 0.0;
+        float anchorPY = 0.0;
+        float rotateAngleX = 0.0f;
+        float rotateAngleY = 0.0f;
+        float rotateAngleZ = 45.0f;
+        float scaleX = 0.5;
+        float scaleY = 0.5;
+        float scaleZ = 1.0;
+        
+        KSMatrix4 project;
+        ksMatrixLoadIdentity(&project);
+        ksOrtho(&project, -1, 1, -_aspectRatio, _aspectRatio, 0.1f, 100.0f);
+        glUniformMatrix4fv(_projectionMatrix_S, 1, GL_FALSE, (GLfloat*)&project.m[0][0]);
+        //模型视图矩阵
+        KSMatrix4 _modelViewMatrix;
+        //加载矩阵
+        ksMatrixLoadIdentity(&_modelViewMatrix);
+        //------------------------------------------ View位移开始 ------------------------------------------//
+        cpp_glTranslate(1.0, 0.0, -10.0, _modelViewMatrix);
+        //------------------------------------------ View位移结束 ------------------------------------------//
+        //------------------------------------------ Model旋转开始 ------------------------------------------//
+        cpp_glRotate(anchorPX, anchorPY, rotateAngleX, rotateAngleY, rotateAngleZ, _modelViewMatrix);
+        //------------------------------------------ Model旋转结束 ------------------------------------------//
+        //------------------------------------------ Model缩放开始 ------------------------------------------//
+        cpp_glScale(anchorPX, anchorPY, scaleX, scaleY, scaleZ, _modelViewMatrix);
+        //------------------------------------------ Model缩放结束 ------------------------------------------//
+        //将模型视图矩阵传递到顶点着色器
+        glUniformMatrix4fv(_modelViewMartix_S, 1, GL_FALSE, (GLfloat *)&_modelViewMatrix.m[0][0]);
+        
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, _textureTwo);
+        
+        glDrawArrays(GL_TRIANGLES, 0, 6);
+    }
+   
     //将渲染缓冲区 呈现到 屏幕上
     [self.context presentRenderbuffer:GL_RENDERBUFFER];
 }
@@ -441,6 +422,11 @@ GLProgram glProgram1;
     
     self.opaque = YES;
     self.hidden = NO;
+    
+    _screenWidth = [UIScreen mainScreen].bounds.size.width;
+    _screenHeight = [UIScreen mainScreen].bounds.size.height;
+    _aspectRatio = _screenHeight/_screenWidth;
+    _scale = [UIScreen mainScreen].scale;
 }
 
 

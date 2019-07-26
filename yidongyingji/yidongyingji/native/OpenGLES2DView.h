@@ -21,6 +21,14 @@ NS_ASSUME_NONNULL_BEGIN
     GLuint _position;
     GLuint _textCoordinate;
     GLuint _texture;
+    GLuint _textureTwo;
+    GLuint _modelViewMartix_S;
+    GLuint _projectionMatrix_S;
+    
+    float _screenWidth;
+    float _screenHeight;
+    float _aspectRatio;
+    CGFloat _scale;
 }
 
 @property (nonatomic, strong) CAEAGLLayer *eaglLayer;

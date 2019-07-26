@@ -95,24 +95,17 @@ GLuint cpp_compileProgramWithContent(GLProgram program, char *vertexContent, cha
 
 void cpp_glRotate(float anchorX,float anchorY, float xDegree, float yDegree, float zDegree, KSMatrix4 &sourceMatrix)
 {
-    // 设置旋转锚点
-    float x_p = 1.0;
-    float y_p = 1.5;
     //模型视图矩阵
     KSMatrix4 tmp_modelViewMatrix;
     //加载矩阵
     ksMatrixLoadIdentity(&tmp_modelViewMatrix);
     // 先平移
-    ksTranslate(&tmp_modelViewMatrix, x_p, y_p, 0.0);
+    ksTranslate(&tmp_modelViewMatrix, anchorX, anchorY, 0.0);
     
     //旋转矩阵
     KSMatrix4 _rotateMartix;
     //加载旋转矩阵
     ksMatrixLoadIdentity(&_rotateMartix);
-    //旋转
-    xDegree = 0.0;
-    yDegree = 0.0;
-    zDegree = 45.0;
     ksRotate(&_rotateMartix, xDegree, 1.0, 0, 0);
     ksRotate(&_rotateMartix, yDegree, 0, 1.0, 0);
     ksRotate(&_rotateMartix, zDegree, 0, 0, 1.0);
@@ -124,7 +117,7 @@ void cpp_glRotate(float anchorX,float anchorY, float xDegree, float yDegree, flo
     //加载矩阵
     ksMatrixLoadIdentity(&_translateMatrix);
     //沿着z轴平移
-    ksTranslate(&_translateMatrix, -x_p, -y_p, 0.0);
+    ksTranslate(&_translateMatrix, -anchorX, -anchorY, 0.0);
     ksMatrixMultiply(&tmp_modelViewMatrix,  &_translateMatrix, &tmp_modelViewMatrix);
     
     ksMatrixMultiply(&sourceMatrix,  &tmp_modelViewMatrix, &sourceMatrix);
@@ -156,5 +149,16 @@ void cpp_glScale(float anchorX,float anchorY, float xScale, float yScale, float 
     ksTranslate(&_translateMatrix_s, -anchorX, -anchorY, 0.0);
     
     ksMatrixMultiply(&tmp_modelViewMatrix_s, &_translateMatrix_s, &tmp_modelViewMatrix_s);
+    ksMatrixMultiply(&sourceMatrix,  &tmp_modelViewMatrix_s, &sourceMatrix);
+}
+
+void cpp_glTranslate(float xDelta, float yDelta, float zDelta, KSMatrix4 &sourceMatrix)
+{
+    //模型视图矩阵
+    KSMatrix4 tmp_modelViewMatrix_s;
+    //加载矩阵
+    ksMatrixLoadIdentity(&tmp_modelViewMatrix_s);
+    //位移
+    ksTranslate(&tmp_modelViewMatrix_s, xDelta, yDelta, zDelta);
     ksMatrixMultiply(&sourceMatrix,  &tmp_modelViewMatrix_s, &sourceMatrix);
 }

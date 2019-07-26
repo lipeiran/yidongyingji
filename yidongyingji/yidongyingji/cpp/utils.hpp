@@ -46,4 +46,7 @@ void cpp_glRotate(float anchorX,float anchorY, float xDegree, float yDegree, flo
 // 缩放
 void cpp_glScale(float anchorX,float anchorY, float xScale, float yScale, float zScale, KSMatrix4 &sourceMatrix);
 
+// 位移
+void cpp_glTranslate(float xDelta, float yDelta, float zDelta, KSMatrix4 &sourceMatrix);
+
 #endif /* utils_hpp */
