@@ -40,13 +40,28 @@ GLuint cpp_compileProgram(GLProgram program, char *vertexPath, char *fragmentPat
 // 编译program
 GLuint cpp_compileProgramWithContent(GLProgram program, char *vertexContent, char *fragmentContent);
 
-// 旋转
+// 激活纹理
+void cpp_glBindTexture(GLenum texture_tgt, GLuint texture);
+
+
+
+// 生成&上传动画矩阵
+void cpp_generateAndUniform2DMatrix(float perspective_left, float perspective_right, float perspective_bottom, float perspective_top, float perspective_near, float perspective_far, float deltaX, float deltaY, float deltaZ, float rotateAngleX, float rotateAngleY, float rotateAngleZ, float scaleX, float scaleY, float scaleZ, float anchorPX,float anchorPY, GLuint modelViewProjectionMatrix_location);
+
+// 生成动画矩阵
+void cpp_generate2DMatrix(float perspective_left, float perspective_right, float perspective_bottom, float perspective_top, float perspective_near, float perspective_far, float deltaX, float deltaY, float deltaZ, float rotateAngleX, float rotateAngleY, float rotateAngleZ, float scaleX, float scaleY, float scaleZ, float anchorPX,float anchorPY, KSMatrix4 &sourceMatrix);
+
+// Projection，正交投影2D效果
+void cpp_glProjection(float left, float right, float bottom, float top, float nearZ, float farZ, KSMatrix4 &sourceMatrix);
+
+// View，位移
+void cpp_glTranslate(float xDelta, float yDelta, float zDelta, KSMatrix4 &sourceMatrix);
+
+// Model，旋转
 void cpp_glRotate(float anchorX,float anchorY, float xDegree, float yDegree, float zDegree, KSMatrix4 &sourceMatrix);
 
-// 缩放
+// Model，缩放
 void cpp_glScale(float anchorX,float anchorY, float xScale, float yScale, float zScale, KSMatrix4 &sourceMatrix);
 
-// 位移
-void cpp_glTranslate(float xDelta, float yDelta, float zDelta, KSMatrix4 &sourceMatrix);
 
 #endif /* utils_hpp */

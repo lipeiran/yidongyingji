@@ -23,12 +23,23 @@ NS_ASSUME_NONNULL_BEGIN
     GLuint _texture;
     GLuint _textureTwo;
     GLuint _modelViewMartix_S;
-    GLuint _projectionMatrix_S;
     
     float _screenWidth;
     float _screenHeight;
     float _aspectRatio;
     CGFloat _scale;
+    
+    float _perspective_left;
+    float _perspective_right;
+    float _perspective_bottom;
+    float _perspective_top;
+    float _perspective_near;
+    float _perspective_far;
+    
+    float _viewPort_x;
+    float _viewPort_y;
+    float _viewPort_w;
+    float _viewPort_h;
 }
 
 @property (nonatomic, strong) CAEAGLLayer *eaglLayer;
