@@ -74,8 +74,9 @@ GLProgram glProgram;
     [self setupContext];
     [self compileProgram];
     [self createDisplayFrameBuffer];
-    _vBufferID = cpp_createBufferObject(GL_ARRAY_BUFFER, sizeof(vertexData), GL_STATIC_DRAW, vertexData);
     [self setupTexture];
+
+    _vBufferID = cpp_createBufferObject(GL_ARRAY_BUFFER, sizeof(vertexData), GL_STATIC_DRAW, vertexData);
     
     UIPanGestureRecognizer *pan = [[UIPanGestureRecognizer alloc]initWithTarget:self action:@selector(pan:)];
     [self addGestureRecognizer:pan];

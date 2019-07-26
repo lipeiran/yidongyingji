@@ -7,8 +7,6 @@
 //
 
 #import "OpenGLES2DView.h"
-#include "Glm/glm.hpp"
-#include "Glm/ext.hpp"
 #include "GLESMath.h"
 
 #define STRINGIZE(x) #x
@@ -61,6 +59,9 @@ CGFloat fov1 = 30.0f;
     float xDegree;//X轴旋转角度
     float yDegree;//Y轴旋转角度
     float zDegree;//Z轴旋转角度
+    
+    float xSDegree;
+    float ySDegree;
 }
 
 @end
@@ -196,18 +197,16 @@ GLProgram glProgram1;
 - (void)setupTexture
 {
     int w = 0, h = 0;
-    int screenWidth = [UIScreen mainScreen].bounds.size.width;
-    int screenScale = [UIScreen mainScreen].scale;
     GLubyte * byte = [self getImageDataWithName:@"1.jpeg" width:&w height:&h];
     _texture = cpp_setupTexture(GL_TEXTURE1);
     cpp_upGPUTexture(w, h, byte);
     //释放byte
     free(byte);
-    
+
     for (int i = 0; i < 6; i++)
     {
-        vertexData1[i*5+0] *= w*1.0/screenWidth/screenScale;
-        vertexData1[i*5+1] *= w*1.0/screenWidth/screenScale * 0.5;
+        vertexData1[i*5+0] *= 1.0;
+        vertexData1[i*5+1] *= h*1.0/w;
     }
 }
 
@@ -243,7 +242,6 @@ GLProgram glProgram1;
     GLuint projectionMatrix_S = glGetUniformLocation(_program, "projectionMatrix");
     GLuint viewMatrix_S = glGetUniformLocation(_program, "ViewViewMatrix");
     
-    
     //模型视图矩阵
     KSMatrix4 _viewViewMatrix;
     //加载矩阵
@@ -252,9 +250,13 @@ GLProgram glProgram1;
     ksTranslate(&_viewViewMatrix, 0, 0, -10.0);
     glUniformMatrix4fv(viewMatrix_S, 1, GL_FALSE, (GLfloat*)&_viewViewMatrix.m[0][0]);
     
+    float screenWidth = [UIScreen mainScreen].bounds.size.width;
+    float screenHeight = [UIScreen mainScreen].bounds.size.height;
+    float aspectRatio = screenHeight/screenWidth;
+    
     KSMatrix4 project;
     ksMatrixLoadIdentity(&project);
-    ksOrtho(&project, -1, 1, -1, 1, 0.1f, 100.0f);
+    ksOrtho(&project, -1, 1, -aspectRatio, aspectRatio, 0.1f, 100.0f);
     glUniformMatrix4fv(projectionMatrix_S, 1, GL_FALSE, (GLfloat*)&project.m[0][0]);
     
     //模型视图矩阵
@@ -262,28 +264,40 @@ GLProgram glProgram1;
     //加载矩阵
     ksMatrixLoadIdentity(&_modelViewMatrix);
     //沿着z轴平移
-    ksTranslate(&_modelViewMatrix, 0, 0, -30.0);
+    ksTranslate(&_modelViewMatrix, 0, 0, -10.0);
+    
     //旋转矩阵
     KSMatrix4 _rotateMartix;
     //加载旋转矩阵
     ksMatrixLoadIdentity(&_rotateMartix);
     //旋转
+    xDegree = 0.0;
+    yDegree = 0.0;
+    zDegree = 45.0;
     ksRotate(&_rotateMartix, xDegree, 1.0, 0, 0);
     ksRotate(&_rotateMartix, yDegree, 0, 1.0, 0);
     ksRotate(&_rotateMartix, zDegree, 0, 0, 1.0);
-    
     //把变换矩阵相乘.将_modelViewMatrix矩阵与_rotationMatrix矩阵相乘，结合到模型视图
     ksMatrixMultiply(&_modelViewMatrix, &_rotateMartix, &_modelViewMatrix);
+    
+    //缩放矩阵
+    KSMatrix4 _scaleMartix;
+    //加载缩放矩阵
+    ksMatrixLoadIdentity(&_scaleMartix);
+    //缩放
+    xSDegree = 1.0;
+    ySDegree = 1.0;
+    ksScale(&_scaleMartix, xSDegree, ySDegree, 1.0);
+    //把变换矩阵相乘.将_modelViewMatrix矩阵与_rotationMatrix矩阵相乘，结合到模型视图
+    ksMatrixMultiply(&_modelViewMatrix, &_scaleMartix, &_modelViewMatrix);
     //将模型视图矩阵传递到顶点着色器
     glUniformMatrix4fv(modelViewMartix_S, 1, GL_FALSE, (GLfloat *)&_modelViewMatrix.m[0][0]);
     
-    //加载纹理
+    glActiveTexture(GL_TEXTURE0);
     [self loadTexture:@"2.jpg"];
-    //设置纹理采样器,这里的 0 对应 glBindTexture的 0
     glUniform1i(glGetUniformLocation(_program, "colorMap"), 0);
-    
-    //绘图
     glDrawArrays(GL_TRIANGLES, 0, 6);
+    
     //将渲染缓冲区 呈现到 屏幕上
     [self.context presentRenderbuffer:GL_RENDERBUFFER];
 }
