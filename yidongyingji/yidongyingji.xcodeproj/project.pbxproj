@@ -23,7 +23,6 @@
 		FE6119E122E71DE400DD0741 /* utils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FE6119DF22E71DE400DD0741 /* utils.cpp */; };
 		FE6119E322E948CF00DD0741 /* Glm in Resources */ = {isa = PBXBuildFile; fileRef = FE6119E222E948CF00DD0741 /* Glm */; };
 		FE6119EB22E9531A00DD0741 /* GLESUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = FE6119E522E9531A00DD0741 /* GLESUtils.m */; };
-		FE6119EC22E9531A00DD0741 /* GLESMath.c in Sources */ = {isa = PBXBuildFile; fileRef = FE6119E722E9531A00DD0741 /* GLESMath.c */; };
 		FE6119EF22E9582F00DD0741 /* GuideView.mm in Sources */ = {isa = PBXBuildFile; fileRef = FE6119EE22E9582F00DD0741 /* GuideView.mm */; };
 		FE6119F122E9588B00DD0741 /* guide.vsh in Resources */ = {isa = PBXBuildFile; fileRef = FE6119F022E9588B00DD0741 /* guide.vsh */; };
 		FE6119F322E9589800DD0741 /* guide.fsh in Resources */ = {isa = PBXBuildFile; fileRef = FE6119F222E9589800DD0741 /* guide.fsh */; };
@@ -63,10 +62,8 @@
 		FE6119E222E948CF00DD0741 /* Glm */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Glm; sourceTree = "<group>"; };
 		FE6119E522E9531A00DD0741 /* GLESUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLESUtils.m; sourceTree = "<group>"; };
 		FE6119E622E9531A00DD0741 /* Quaternion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Quaternion.h; sourceTree = "<group>"; };
-		FE6119E722E9531A00DD0741 /* GLESMath.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = GLESMath.c; sourceTree = "<group>"; };
 		FE6119E822E9531A00DD0741 /* GLESUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLESUtils.h; sourceTree = "<group>"; };
 		FE6119E922E9531A00DD0741 /* Vector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Vector.h; sourceTree = "<group>"; };
-		FE6119EA22E9531A00DD0741 /* GLESMath.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLESMath.h; sourceTree = "<group>"; };
 		FE6119ED22E9582F00DD0741 /* GuideView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GuideView.h; sourceTree = "<group>"; };
 		FE6119EE22E9582F00DD0741 /* GuideView.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = GuideView.mm; sourceTree = "<group>"; };
 		FE6119F022E9588B00DD0741 /* guide.vsh */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = guide.vsh; sourceTree = "<group>"; };
@@ -174,8 +171,6 @@
 				FE6119E822E9531A00DD0741 /* GLESUtils.h */,
 				FE6119E522E9531A00DD0741 /* GLESUtils.m */,
 				FE6119E622E9531A00DD0741 /* Quaternion.h */,
-				FE6119EA22E9531A00DD0741 /* GLESMath.h */,
-				FE6119E722E9531A00DD0741 /* GLESMath.c */,
 				FE6119E922E9531A00DD0741 /* Vector.h */,
 			);
 			path = Utils;
@@ -279,7 +274,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FE6119EC22E9531A00DD0741 /* GLESMath.c in Sources */,
 				FE6119D522E6FD5A00DD0741 /* GLProgram.cpp in Sources */,
 				FE6119EB22E9531A00DD0741 /* GLESUtils.m in Sources */,
 				FE6119EF22E9582F00DD0741 /* GuideView.mm in Sources */,
