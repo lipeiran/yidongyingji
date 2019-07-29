@@ -25,8 +25,8 @@
 //    self.glesView = [[OpenGLESView alloc]initWithFrame:self.view.bounds];
 //    self.view = self.glesView;
     
-    self.gles2DView = [[OpenGLES2DView alloc]initWithFrame:self.view.bounds];
-    self.view = self.gles2DView;
+    self.gles2DView = [[OpenGLES2DView alloc]initWithFrame:CGRectMake(self.view.bounds.origin.x, self.view.bounds.origin.y, self.view.bounds.size.width, self.view.bounds.size.height)];
+    [self.view addSubview:self.gles2DView];
     
 //    self.guideView = [[GuideView alloc]initWithFrame:self.view.bounds];
 //    self.view = self.guideView;

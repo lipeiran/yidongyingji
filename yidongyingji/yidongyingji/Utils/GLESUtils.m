@@ -9,7 +9,7 @@
 
 @implementation GLESUtils
 
-+(GLuint)loadShader:(GLenum)type withFilepath:(NSString *)shaderFilepath
++ (GLuint)loadShader:(GLenum)type withFilepath:(NSString *)shaderFilepath
 {
     NSError* error;
     NSString* shaderString = [NSString stringWithContentsOfFile:shaderFilepath 
@@ -23,7 +23,7 @@
     return [self loadShader:type withString:shaderString];
 }
 
-+(GLuint)loadShader:(GLenum)type withString:(NSString *)shaderString
++ (GLuint)loadShader:(GLenum)type withString:(NSString *)shaderString
 {   
     // Create the shader object
     GLuint shader = glCreateShader(type);
@@ -62,7 +62,7 @@
     return shader;
 }
 
-+(GLuint)loadProgram:(NSString *)vertexShaderFilepath withFragmentShaderFilepath:(NSString *)fragmentShaderFilepath
++ (GLuint)loadProgram:(NSString *)vertexShaderFilepath withFragmentShaderFilepath:(NSString *)fragmentShaderFilepath
 {
     // Load the vertex/fragment shaders
     GLuint vertexShader = [self loadShader:GL_VERTEX_SHADER
