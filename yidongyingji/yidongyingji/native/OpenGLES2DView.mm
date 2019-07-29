@@ -109,6 +109,16 @@ GLProgram glProgram1;
     [self setupTextureTwo];
     _vBufferID = cpp_createBufferObject(GL_ARRAY_BUFFER, sizeof(vertexData1), GL_STATIC_DRAW, vertexData1);
     
+    glBindBuffer(GL_ARRAY_BUFFER, _vBufferID);
+    //开启顶点属性通道
+    glEnableVertexAttribArray(_position);
+    //设置顶点读取方式
+    glVertexAttribPointer(_position, 3, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 5, (GLfloat *) NULL + 0);
+    //开启纹理属性通道
+    glEnableVertexAttribArray(_textCoordinate);
+    //设置纹理读取方式
+    glVertexAttribPointer(_textCoordinate, 2, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 5, (GLfloat *) NULL + 3);
+    
     UIPanGestureRecognizer *pan = [[UIPanGestureRecognizer alloc]initWithTarget:self action:@selector(pan:)];
     [self addGestureRecognizer:pan];
 }
@@ -263,14 +273,14 @@ GLProgram glProgram1;
     glViewport(_viewPort_x, _viewPort_y, _viewPort_w, _viewPort_h);
     
     glBindBuffer(GL_ARRAY_BUFFER, _vBufferID);
-    //开启顶点属性通道
-    glEnableVertexAttribArray(_position);
-    //设置顶点读取方式
-    glVertexAttribPointer(_position, 3, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 5, (GLfloat *) NULL + 0);
-    //开启纹理属性通道
-    glEnableVertexAttribArray(_textCoordinate);
-    //设置纹理读取方式
-    glVertexAttribPointer(_textCoordinate, 2, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 5, (GLfloat *) NULL + 3);
+//    //开启顶点属性通道
+//    glEnableVertexAttribArray(_position);
+//    //设置顶点读取方式
+//    glVertexAttribPointer(_position, 3, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 5, (GLfloat *) NULL + 0);
+//    //开启纹理属性通道
+//    glEnableVertexAttribArray(_textCoordinate);
+//    //设置纹理读取方式
+//    glVertexAttribPointer(_textCoordinate, 2, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 5, (GLfloat *) NULL + 3);
     
      // ******************** 第一个纹理 **********************//
     {

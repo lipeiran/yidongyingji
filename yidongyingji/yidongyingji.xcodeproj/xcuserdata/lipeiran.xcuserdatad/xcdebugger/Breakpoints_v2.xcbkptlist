@@ -10,11 +10,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "yidongyingji/native/OpenGLES2DView.mm"
-            timestampString = "585831877.791715"
+            timestampString = "586059151.55225"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "407"
-            endingLineNumber = "407"
+            startingLineNumber = "417"
+            endingLineNumber = "417"
             landmarkName = "-setupLayer"
             landmarkType = "7">
          </BreakpointContent>
