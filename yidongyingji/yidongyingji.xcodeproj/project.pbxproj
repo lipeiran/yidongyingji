@@ -33,6 +33,7 @@
 		FE611A0322E980A500DD0741 /* 5.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = FE6119FD22E980A500DD0741 /* 5.jpeg */; };
 		FE611A0422E980A500DD0741 /* 2.jpg in Resources */ = {isa = PBXBuildFile; fileRef = FE6119FE22E980A500DD0741 /* 2.jpg */; };
 		FEE27AE922EEFB3100FF5511 /* GLESMath.c in Sources */ = {isa = PBXBuildFile; fileRef = FEE27AE822EEFB3100FF5511 /* GLESMath.c */; };
+		FEE27AEE22EF041700FF5511 /* OpenGLES2DView.mm in Sources */ = {isa = PBXBuildFile; fileRef = FEE27AED22EF041700FF5511 /* OpenGLES2DView.mm */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -76,6 +77,8 @@
 		FEE27AE822EEFB3100FF5511 /* GLESMath.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = GLESMath.c; sourceTree = "<group>"; };
 		FEE27AEA22EEFBBA00FF5511 /* Vector.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Vector.h; sourceTree = "<group>"; };
 		FEE27AEB22EEFC5400FF5511 /* Quaternion.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Quaternion.h; sourceTree = "<group>"; };
+		FEE27AEC22EF041700FF5511 /* OpenGLES2DView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OpenGLES2DView.h; sourceTree = "<group>"; };
+		FEE27AED22EF041700FF5511 /* OpenGLES2DView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = OpenGLES2DView.mm; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -170,6 +173,8 @@
 		FE6119E422E9531A00DD0741 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				FEE27AEC22EF041700FF5511 /* OpenGLES2DView.h */,
+				FEE27AED22EF041700FF5511 /* OpenGLES2DView.mm */,
 				FE6119E822E9531A00DD0741 /* GLESUtils.h */,
 				FE6119E522E9531A00DD0741 /* GLESUtils.m */,
 			);
@@ -284,6 +289,7 @@
 				FE56E89322EEE489001BD700 /* GPUImageFilter.cpp in Sources */,
 				FE6119B922E6F6F700DD0741 /* AppDelegate.m in Sources */,
 				FE6119E122E71DE400DD0741 /* utils.cpp in Sources */,
+				FEE27AEE22EF041700FF5511 /* OpenGLES2DView.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
