@@ -116,8 +116,8 @@
 // 获取图片数据
 - (void)setImageData
 {
-    byte1 = [GLESUtils getImageDataWithName:@"10_480_480.jpeg" width:&w1 height:&h1];
-    byte2 = [GLESUtils getImageDataWithName:@"11_320_480.jpeg" width:&w2 height:&h2];
+    byte1 = [OpenGLES2DTools getImageDataWithName:@"10_480_480.jpeg" width:&w1 height:&h1];
+    byte2 = [OpenGLES2DTools getImageDataWithName:@"11_320_480.jpeg" width:&w2 height:&h2];
 }
 
 @end

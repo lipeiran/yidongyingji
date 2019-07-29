@@ -22,7 +22,6 @@
 		FE6119DB22E7191E00DD0741 /* shaderf.fsh in Resources */ = {isa = PBXBuildFile; fileRef = FE6119DA22E7191E00DD0741 /* shaderf.fsh */; };
 		FE6119E122E71DE400DD0741 /* utils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FE6119DF22E71DE400DD0741 /* utils.cpp */; };
 		FE6119E322E948CF00DD0741 /* Glm in Resources */ = {isa = PBXBuildFile; fileRef = FE6119E222E948CF00DD0741 /* Glm */; };
-		FE6119EB22E9531A00DD0741 /* GLESUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = FE6119E522E9531A00DD0741 /* GLESUtils.m */; };
 		FE6119EF22E9582F00DD0741 /* GuideView.mm in Sources */ = {isa = PBXBuildFile; fileRef = FE6119EE22E9582F00DD0741 /* GuideView.mm */; };
 		FE6119F122E9588B00DD0741 /* guide.vsh in Resources */ = {isa = PBXBuildFile; fileRef = FE6119F022E9588B00DD0741 /* guide.vsh */; };
 		FE6119F322E9589800DD0741 /* guide.fsh in Resources */ = {isa = PBXBuildFile; fileRef = FE6119F222E9589800DD0741 /* guide.fsh */; };
@@ -37,6 +36,7 @@
 		FEE27AF222EF091900FF5511 /* Parse_AE.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FEE27AF122EF091900FF5511 /* Parse_AE.cpp */; };
 		FEE27AF522EF094800FF5511 /* BasicTools.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FEE27AF422EF094800FF5511 /* BasicTools.cpp */; };
 		FEE27AF822EF09AA00FF5511 /* cJSON.c in Sources */ = {isa = PBXBuildFile; fileRef = FEE27AF722EF09AA00FF5511 /* cJSON.c */; };
+		FEE27AFB22EF0A5800FF5511 /* OpenGLES2DTools.m in Sources */ = {isa = PBXBuildFile; fileRef = FEE27AFA22EF0A5800FF5511 /* OpenGLES2DTools.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -64,8 +64,6 @@
 		FE6119DF22E71DE400DD0741 /* utils.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = utils.cpp; sourceTree = "<group>"; };
 		FE6119E022E71DE400DD0741 /* utils.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = utils.hpp; sourceTree = "<group>"; };
 		FE6119E222E948CF00DD0741 /* Glm */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Glm; sourceTree = "<group>"; };
-		FE6119E522E9531A00DD0741 /* GLESUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLESUtils.m; sourceTree = "<group>"; };
-		FE6119E822E9531A00DD0741 /* GLESUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLESUtils.h; sourceTree = "<group>"; };
 		FE6119ED22E9582F00DD0741 /* GuideView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GuideView.h; sourceTree = "<group>"; };
 		FE6119EE22E9582F00DD0741 /* GuideView.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = GuideView.mm; sourceTree = "<group>"; };
 		FE6119F022E9588B00DD0741 /* guide.vsh */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = guide.vsh; sourceTree = "<group>"; };
@@ -89,6 +87,8 @@
 		FEE27AF422EF094800FF5511 /* BasicTools.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BasicTools.cpp; sourceTree = "<group>"; };
 		FEE27AF622EF09AA00FF5511 /* cJSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cJSON.h; sourceTree = "<group>"; };
 		FEE27AF722EF09AA00FF5511 /* cJSON.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = cJSON.c; sourceTree = "<group>"; };
+		FEE27AF922EF0A5800FF5511 /* OpenGLES2DTools.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OpenGLES2DTools.h; sourceTree = "<group>"; };
+		FEE27AFA22EF0A5800FF5511 /* OpenGLES2DTools.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OpenGLES2DTools.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -145,16 +145,16 @@
 			children = (
 				FEE27AF622EF09AA00FF5511 /* cJSON.h */,
 				FEE27AF722EF09AA00FF5511 /* cJSON.c */,
+				FEE27AEA22EEFBBA00FF5511 /* Vector.h */,
+				FEE27AEB22EEFC5400FF5511 /* Quaternion.h */,
+				FEE27AE722EEFB3100FF5511 /* GLESMath.h */,
+				FEE27AE822EEFB3100FF5511 /* GLESMath.c */,
+				FE6119D622E6FD8900DD0741 /* GL_Header.h */,
 				FEE27AF322EF094800FF5511 /* BasicTools.hpp */,
 				FEE27AF422EF094800FF5511 /* BasicTools.cpp */,
 				FEE27AF022EF091900FF5511 /* AE_struct.h */,
 				FEE27AEF22EF091900FF5511 /* Parse_AE.h */,
 				FEE27AF122EF091900FF5511 /* Parse_AE.cpp */,
-				FE6119D622E6FD8900DD0741 /* GL_Header.h */,
-				FEE27AEA22EEFBBA00FF5511 /* Vector.h */,
-				FEE27AEB22EEFC5400FF5511 /* Quaternion.h */,
-				FEE27AE722EEFB3100FF5511 /* GLESMath.h */,
-				FEE27AE822EEFB3100FF5511 /* GLESMath.c */,
 				FE6119E022E71DE400DD0741 /* utils.hpp */,
 				FE6119DF22E71DE400DD0741 /* utils.cpp */,
 				FE6119D422E6FD5A00DD0741 /* GLProgram.hpp */,
@@ -192,8 +192,8 @@
 			children = (
 				FEE27AEC22EF041700FF5511 /* OpenGLES2DView.h */,
 				FEE27AED22EF041700FF5511 /* OpenGLES2DView.mm */,
-				FE6119E822E9531A00DD0741 /* GLESUtils.h */,
-				FE6119E522E9531A00DD0741 /* GLESUtils.m */,
+				FEE27AF922EF0A5800FF5511 /* OpenGLES2DTools.h */,
+				FEE27AFA22EF0A5800FF5511 /* OpenGLES2DTools.m */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -297,7 +297,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				FE6119D522E6FD5A00DD0741 /* GLProgram.cpp in Sources */,
-				FE6119EB22E9531A00DD0741 /* GLESUtils.m in Sources */,
+				FEE27AFB22EF0A5800FF5511 /* OpenGLES2DTools.m in Sources */,
 				FE6119EF22E9582F00DD0741 /* GuideView.mm in Sources */,
 				FEE27AE922EEFB3100FF5511 /* GLESMath.c in Sources */,
 				FE6119BC22E6F6F700DD0741 /* ViewController.mm in Sources */,

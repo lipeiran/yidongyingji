@@ -10,7 +10,7 @@
 #import "GLProgram.hpp"
 #import "utils.hpp"
 #import "GPUImageFilter.hpp"
-#import "GLESUtils.h"
+#import "OpenGLES2DTools.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
