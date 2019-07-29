@@ -199,3 +199,25 @@ void cpp_generateAndUniform2DMatrix(float perspective_left, float perspective_ri
     cpp_generate2DMatrix( perspective_left,  perspective_right, perspective_bottom, perspective_top,  perspective_near,  perspective_far,  deltaX,  deltaY,  deltaZ,  rotateAngleX,  rotateAngleY,  rotateAngleZ,  scaleX,  scaleY,  scaleZ,  anchorPX,  anchorPY, _modelViewMatrix);
     glUniformMatrix4fv(modelViewProjectionMatrix_location, 1, GL_FALSE, (GLfloat *)&_modelViewMatrix.m[0][0]);
 }
+
+GLuint cpp_createVAO(GLuint size, GLfloat* data, GLuint position_loc, GLuint texCoord_loc)
+{
+    GLuint aBufferID;
+    GLuint vBufferID;
+    glGenVertexArrays(1, &aBufferID);
+    glGenBuffers(1, &vBufferID);
+    
+    glBindVertexArray(aBufferID);
+    
+    glBindBuffer(GL_ARRAY_BUFFER, vBufferID);
+    glBufferData(GL_ARRAY_BUFFER, size, data, GL_STATIC_DRAW);
+    
+    glEnableVertexAttribArray(position_loc);
+    glVertexAttribPointer(position_loc, 3, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 5, (GLfloat *) NULL + 0);
+    glEnableVertexAttribArray(texCoord_loc);
+    glVertexAttribPointer(texCoord_loc, 2, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 5, (GLfloat *) NULL + 3);
+    
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindVertexArray(0);
+    return aBufferID;
+}

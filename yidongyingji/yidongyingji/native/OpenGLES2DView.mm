@@ -114,51 +114,23 @@ GLProgram glProgram1;
     [self createDisplayFrameBuffer];
     [self setupTextureOne];
     [self setupTextureTwo];
-    [self createEBObject];
-    [self createEBObject2];
+    [self createVAObject];
+    [self createVAObject2];
     
     UIPanGestureRecognizer *pan = [[UIPanGestureRecognizer alloc]initWithTarget:self action:@selector(pan:)];
     [self addGestureRecognizer:pan];
 }
 
-- (void)createEBObject
+- (void)createVAObject
 {
     NSLog(@"%s",__func__);
-    glGenVertexArrays(1, &_aBufferID);
-    glGenBuffers(1, &_vBufferID);
-    
-    glBindVertexArray(_aBufferID);
-    
-    glBindBuffer(GL_ARRAY_BUFFER, _vBufferID);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertexData1), vertexData1, GL_STATIC_DRAW);
-    
-    glEnableVertexAttribArray(_position);
-    glVertexAttribPointer(_position, 3, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 5, (GLfloat *) NULL + 0);
-    glEnableVertexAttribArray(_textCoordinate);
-    glVertexAttribPointer(_textCoordinate, 2, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 5, (GLfloat *) NULL + 3);
-    
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glBindVertexArray(0);
+    _aBufferID = cpp_createVAO(sizeof(vertexData1), vertexData1, _position, _textCoordinate);
 }
 
-- (void)createEBObject2
+- (void)createVAObject2
 {
     NSLog(@"%s",__func__);
-    glGenVertexArrays(1, &_aBufferID2);
-    glGenBuffers(1, &_vBufferID2);
-    
-    glBindVertexArray(_aBufferID2);
-    
-    glBindBuffer(GL_ARRAY_BUFFER, _vBufferID2);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertexData2), vertexData2, GL_STATIC_DRAW);
-    
-    glEnableVertexAttribArray(_position);
-    glVertexAttribPointer(_position, 3, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 5, (GLfloat *) NULL + 0);
-    glEnableVertexAttribArray(_textCoordinate);
-    glVertexAttribPointer(_textCoordinate, 2, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 5, (GLfloat *) NULL + 3);
-    
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glBindVertexArray(0);
+    _aBufferID2 = cpp_createVAO(sizeof(vertexData2), vertexData2, _position, _textCoordinate);
 }
 
 - (void)setupLocalData
