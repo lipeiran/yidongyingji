@@ -32,7 +32,6 @@
 		FE611A0222E980A500DD0741 /* 4.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = FE6119FC22E980A500DD0741 /* 4.jpeg */; };
 		FE611A0322E980A500DD0741 /* 5.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = FE6119FD22E980A500DD0741 /* 5.jpeg */; };
 		FE611A0422E980A500DD0741 /* 2.jpg in Resources */ = {isa = PBXBuildFile; fileRef = FE6119FE22E980A500DD0741 /* 2.jpg */; };
-		FE611A0822E9A3BE00DD0741 /* OpenGLES2DView.mm in Sources */ = {isa = PBXBuildFile; fileRef = FE611A0722E9A3BE00DD0741 /* OpenGLES2DView.mm */; };
 		FEE27AE922EEFB3100FF5511 /* GLESMath.c in Sources */ = {isa = PBXBuildFile; fileRef = FEE27AE822EEFB3100FF5511 /* GLESMath.c */; };
 /* End PBXBuildFile section */
 
@@ -73,8 +72,6 @@
 		FE6119FC22E980A500DD0741 /* 4.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 4.jpeg; sourceTree = "<group>"; };
 		FE6119FD22E980A500DD0741 /* 5.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 5.jpeg; sourceTree = "<group>"; };
 		FE6119FE22E980A500DD0741 /* 2.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 2.jpg; sourceTree = "<group>"; };
-		FE611A0622E9A3BE00DD0741 /* OpenGLES2DView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OpenGLES2DView.h; sourceTree = "<group>"; };
-		FE611A0722E9A3BE00DD0741 /* OpenGLES2DView.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = OpenGLES2DView.mm; sourceTree = "<group>"; };
 		FEE27AE722EEFB3100FF5511 /* GLESMath.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLESMath.h; sourceTree = "<group>"; };
 		FEE27AE822EEFB3100FF5511 /* GLESMath.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = GLESMath.c; sourceTree = "<group>"; };
 		FEE27AEA22EEFBBA00FF5511 /* Vector.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Vector.h; sourceTree = "<group>"; };
@@ -155,8 +152,6 @@
 				FE6119D022E6F89300DD0741 /* OpenGLESView.mm */,
 				FE6119ED22E9582F00DD0741 /* GuideView.h */,
 				FE6119EE22E9582F00DD0741 /* GuideView.mm */,
-				FE611A0622E9A3BE00DD0741 /* OpenGLES2DView.h */,
-				FE611A0722E9A3BE00DD0741 /* OpenGLES2DView.mm */,
 			);
 			path = native;
 			sourceTree = "<group>";
@@ -286,7 +281,6 @@
 				FE6119BC22E6F6F700DD0741 /* ViewController.mm in Sources */,
 				FE6119D122E6F89300DD0741 /* OpenGLESView.mm in Sources */,
 				FE6119C722E6F6F900DD0741 /* main.m in Sources */,
-				FE611A0822E9A3BE00DD0741 /* OpenGLES2DView.mm in Sources */,
 				FE56E89322EEE489001BD700 /* GPUImageFilter.cpp in Sources */,
 				FE6119B922E6F6F700DD0741 /* AppDelegate.m in Sources */,
 				FE6119E122E71DE400DD0741 /* utils.cpp in Sources */,
