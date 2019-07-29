@@ -63,4 +63,8 @@ void cpp_glScale(float anchorX,float anchorY, float xScale, float yScale, float 
 
 GLuint cpp_createVAO(GLuint size, GLfloat* data, GLuint position_loc, GLuint texCoord_loc);
 
+GLuint cpp_createImageTexture(GLubyte *byte, GLuint w, GLuint h, GLuint screenWidthPixel, GLfloat *dst_data);
+
+void cpp_glDraw_header(GLint x, GLint y, GLsizei width, GLsizei height);
+
 #endif /* utils_hpp */

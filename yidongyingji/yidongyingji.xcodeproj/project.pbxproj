@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		FE56E88D22EE96A5001BD700 /* 11_320_480.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = FE56E88B22EE96A5001BD700 /* 11_320_480.jpeg */; };
 		FE56E88E22EE96A5001BD700 /* 10_480_480.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = FE56E88C22EE96A5001BD700 /* 10_480_480.jpeg */; };
+		FE56E89322EEE489001BD700 /* GPUImageFilter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FE56E89122EEE489001BD700 /* GPUImageFilter.cpp */; };
 		FE6119B922E6F6F700DD0741 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = FE6119B822E6F6F700DD0741 /* AppDelegate.m */; };
 		FE6119BC22E6F6F700DD0741 /* ViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = FE6119BB22E6F6F700DD0741 /* ViewController.mm */; };
 		FE6119BF22E6F6F700DD0741 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FE6119BD22E6F6F700DD0741 /* Main.storyboard */; };
@@ -38,6 +39,8 @@
 /* Begin PBXFileReference section */
 		FE56E88B22EE96A5001BD700 /* 11_320_480.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 11_320_480.jpeg; sourceTree = "<group>"; };
 		FE56E88C22EE96A5001BD700 /* 10_480_480.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 10_480_480.jpeg; sourceTree = "<group>"; };
+		FE56E89122EEE489001BD700 /* GPUImageFilter.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = GPUImageFilter.cpp; sourceTree = "<group>"; };
+		FE56E89222EEE489001BD700 /* GPUImageFilter.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = GPUImageFilter.hpp; sourceTree = "<group>"; };
 		FE6119B422E6F6F700DD0741 /* yidongyingji.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = yidongyingji.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FE6119B722E6F6F700DD0741 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		FE6119B822E6F6F700DD0741 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -135,6 +138,8 @@
 				FE6119DF22E71DE400DD0741 /* utils.cpp */,
 				FE6119D422E6FD5A00DD0741 /* GLProgram.hpp */,
 				FE6119D322E6FD5A00DD0741 /* GLProgram.cpp */,
+				FE56E89222EEE489001BD700 /* GPUImageFilter.hpp */,
+				FE56E89122EEE489001BD700 /* GPUImageFilter.cpp */,
 			);
 			path = cpp;
 			sourceTree = "<group>";
@@ -282,6 +287,7 @@
 				FE6119D122E6F89300DD0741 /* OpenGLESView.mm in Sources */,
 				FE6119C722E6F6F900DD0741 /* main.m in Sources */,
 				FE611A0822E9A3BE00DD0741 /* OpenGLES2DView.mm in Sources */,
+				FE56E89322EEE489001BD700 /* GPUImageFilter.cpp in Sources */,
 				FE6119B922E6F6F700DD0741 /* AppDelegate.m in Sources */,
 				FE6119E122E71DE400DD0741 /* utils.cpp in Sources */,
 			);

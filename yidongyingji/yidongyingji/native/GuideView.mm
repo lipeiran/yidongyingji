@@ -33,6 +33,8 @@
 
 -(void)setupLayer{
     
+    
+    
     self.eaglLayer = (CAEAGLLayer *)self.layer;
     
     [self setContentScaleFactor:[UIScreen mainScreen].scale];

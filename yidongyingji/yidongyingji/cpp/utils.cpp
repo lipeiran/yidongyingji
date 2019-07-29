@@ -221,3 +221,36 @@ GLuint cpp_createVAO(GLuint size, GLfloat* data, GLuint position_loc, GLuint tex
     glBindVertexArray(0);
     return aBufferID;
 }
+
+GLuint cpp_createImageTexture(GLubyte *byte, GLuint w, GLuint h, GLuint screenWidthPixel, GLfloat *dst_data)
+{
+    GLuint texture;
+    texture = cpp_setupTexture(GL_TEXTURE1);
+    cpp_upGPUTexture(w, h, byte);
+    //释放byte
+    free(byte);
+    
+    float w_ratio = w*1.0/screenWidthPixel;
+    float h_w_ratio = h*1.0/w*w_ratio;
+    for (int i = 0; i < 6; i++)
+    {
+        dst_data[i*5+0] *= w_ratio;
+        dst_data[i*5+1] *= h_w_ratio;
+    }
+    return texture;
+}
+
+void cpp_glDraw_header(GLint x, GLint y, GLsizei width, GLsizei height)
+{
+    //设置背景色
+    glClearColor(1.0, 1.0, 1.0, 1);
+    //清除颜色缓冲
+    glClear(GL_COLOR_BUFFER_BIT);
+    //开启正背面剔除
+    glEnable(GL_CULL_FACE);
+    //开启颜色混合
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    //设置视口
+    glViewport(x, y, width, height);
+}

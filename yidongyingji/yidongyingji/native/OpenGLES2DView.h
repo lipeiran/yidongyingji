@@ -9,40 +9,21 @@
 #import <UIKit/UIKit.h>
 #import "GLProgram.hpp"
 #import "utils.hpp"
+#import "GPUImageFilter.hpp"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface OpenGLES2DView : UIView
 {
-    GLuint _program;
-    GLuint _aBufferID;
-    GLuint _vBufferID;
-    GLuint _aBufferID2;
-    GLuint _vBufferID2;
-    GLuint _frameBuffer;
-    GLuint _renderBuffer;
-    GLuint _position;
-    GLuint _textCoordinate;
-    GLuint _texture;
-    GLuint _textureTwo;
-    GLuint _modelViewMartix_S;
+    GPUImageFilter filter;
     
-    float _screenWidth;
-    float _screenHeight;
-    float _aspectRatio;
-    CGFloat _scale;
-    
-    float _perspective_left;
-    float _perspective_right;
-    float _perspective_bottom;
-    float _perspective_top;
-    float _perspective_near;
-    float _perspective_far;
-    
-    float _viewPort_x;
-    float _viewPort_y;
-    float _viewPort_w;
-    float _viewPort_h;
+    int w1,h1;
+    GLubyte * byte1;
+    int w2,h2;
+    GLubyte * byte2;
+    char *tmpV;
+    char *tmpF;
+    float scale;
 }
 
 @property (nonatomic, strong) CAEAGLLayer *eaglLayer;

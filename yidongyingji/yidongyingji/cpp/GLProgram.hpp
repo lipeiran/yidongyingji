@@ -25,7 +25,7 @@ public:
     char *fragmentShaderLog;
     char *programLog;
     
-    GLuint initWithVertexShaderString(char *vShaderString, char *fShaderString);
+    GLuint initWithVertexShaderString( char *vShaderString, char *fShaderString);
     GLuint initWithVertexShaderPath(char *vShaderPath, char *fShaderPath);
     GLuint uniformIndex(char *uniformName);
     bool link();

@@ -48,7 +48,7 @@ bool GLProgram::compileShader(GLuint &shader, GLenum type, char *shaderString)
     return status == GL_TRUE;
 }
 
-GLuint GLProgram::initWithVertexShaderString(char *vShaderString, char *fShaderString)
+GLuint GLProgram::initWithVertexShaderString( char *vShaderString, char *fShaderString)
 {
     initialized = false;
     program = glCreateProgram();
