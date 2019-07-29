@@ -10,6 +10,7 @@
 #import "GLProgram.hpp"
 #import "utils.hpp"
 #import "GPUImageFilter.hpp"
+#import "GLESUtils.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -21,8 +22,6 @@ NS_ASSUME_NONNULL_BEGIN
     GLubyte * byte1;
     int w2,h2;
     GLubyte * byte2;
-    char *tmpV;
-    char *tmpF;
     float scale;
 }
 

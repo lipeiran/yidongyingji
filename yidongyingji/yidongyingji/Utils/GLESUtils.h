@@ -7,6 +7,7 @@
 
 #import <Foundation/Foundation.h>
 #include <OpenGLES/ES2/gl.h>
+#import <UIKit/UIKit.h>
 
 @interface GLESUtils : NSObject
 
@@ -25,5 +26,8 @@
 /// return A new program object linked with the vertex/fragment shader pair, 0 on failure
 //
 +(GLuint)loadProgram:(NSString *)vertexShaderFilepath withFragmentShaderFilepath:(NSString *)fragmentShaderFilepath;
+
+
++ (GLubyte *)getImageDataWithName:(NSString *)imageName width:(int*)width height:(int*)height;
 
 @end

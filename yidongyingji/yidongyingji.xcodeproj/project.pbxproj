@@ -153,10 +153,10 @@
 			children = (
 				FE6119CF22E6F89300DD0741 /* OpenGLESView.h */,
 				FE6119D022E6F89300DD0741 /* OpenGLESView.mm */,
-				FE611A0622E9A3BE00DD0741 /* OpenGLES2DView.h */,
-				FE611A0722E9A3BE00DD0741 /* OpenGLES2DView.mm */,
 				FE6119ED22E9582F00DD0741 /* GuideView.h */,
 				FE6119EE22E9582F00DD0741 /* GuideView.mm */,
+				FE611A0622E9A3BE00DD0741 /* OpenGLES2DView.h */,
+				FE611A0722E9A3BE00DD0741 /* OpenGLES2DView.mm */,
 			);
 			path = native;
 			sourceTree = "<group>";
