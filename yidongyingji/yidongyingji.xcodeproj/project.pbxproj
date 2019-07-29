@@ -62,7 +62,6 @@
 		FE6119E022E71DE400DD0741 /* utils.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = utils.hpp; sourceTree = "<group>"; };
 		FE6119E222E948CF00DD0741 /* Glm */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Glm; sourceTree = "<group>"; };
 		FE6119E522E9531A00DD0741 /* GLESUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLESUtils.m; sourceTree = "<group>"; };
-		FE6119E622E9531A00DD0741 /* Quaternion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Quaternion.h; sourceTree = "<group>"; };
 		FE6119E822E9531A00DD0741 /* GLESUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLESUtils.h; sourceTree = "<group>"; };
 		FE6119ED22E9582F00DD0741 /* GuideView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GuideView.h; sourceTree = "<group>"; };
 		FE6119EE22E9582F00DD0741 /* GuideView.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = GuideView.mm; sourceTree = "<group>"; };
@@ -176,7 +175,6 @@
 			children = (
 				FE6119E822E9531A00DD0741 /* GLESUtils.h */,
 				FE6119E522E9531A00DD0741 /* GLESUtils.m */,
-				FE6119E622E9531A00DD0741 /* Quaternion.h */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
