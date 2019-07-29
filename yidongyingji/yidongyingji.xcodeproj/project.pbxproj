@@ -78,6 +78,7 @@
 		FE611A0722E9A3BE00DD0741 /* OpenGLES2DView.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = OpenGLES2DView.mm; sourceTree = "<group>"; };
 		FEE27AE722EEFB3100FF5511 /* GLESMath.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLESMath.h; sourceTree = "<group>"; };
 		FEE27AE822EEFB3100FF5511 /* GLESMath.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = GLESMath.c; sourceTree = "<group>"; };
+		FEE27AEA22EEFBBA00FF5511 /* Vector.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Vector.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -133,6 +134,7 @@
 			isa = PBXGroup;
 			children = (
 				FE6119D622E6FD8900DD0741 /* GL_Header.h */,
+				FEE27AEA22EEFBBA00FF5511 /* Vector.h */,
 				FEE27AE822EEFB3100FF5511 /* GLESMath.c */,
 				FEE27AE722EEFB3100FF5511 /* GLESMath.h */,
 				FE6119E022E71DE400DD0741 /* utils.hpp */,
