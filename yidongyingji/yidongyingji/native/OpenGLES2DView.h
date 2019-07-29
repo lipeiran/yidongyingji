@@ -15,7 +15,10 @@ NS_ASSUME_NONNULL_BEGIN
 @interface OpenGLES2DView : UIView
 {
     GLuint _program;
+    GLuint _aBufferID;
     GLuint _vBufferID;
+    GLuint _aBufferID2;
+    GLuint _vBufferID2;
     GLuint _frameBuffer;
     GLuint _renderBuffer;
     GLuint _position;

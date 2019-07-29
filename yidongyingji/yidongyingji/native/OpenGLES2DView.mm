@@ -50,16 +50,23 @@ GLfloat vertexData1[30] = {
     -1.0, -1.0, 0.0f,   0.0f, 0.0f, //左下
 };
 
+//编辑顶点坐标数组
+GLfloat vertexData2[30] = {
+    
+    1.0, -1.0, 0.0f,    1.0f, 0.0f, //右下
+    1.0, 1.0, -0.0f,    1.0f, 1.0f, //右上
+    -1.0, 1.0, 0.0f,    0.0f, 1.0f, //左上
+    
+    1.0, -1.0, 0.0f,    1.0f, 0.0f, //右下
+    -1.0, 1.0, 0.0f,    0.0f, 1.0f, //左上
+    -1.0, -1.0, 0.0f,   0.0f, 0.0f, //左下
+};
+
 CGFloat fov1 = 30.0f;
 
 @interface OpenGLES2DView ()
 {
-    float xDegree;//X轴旋转角度
-    float yDegree;//Y轴旋转角度
-    float zDegree;//Z轴旋转角度
-    
-    float xSDegree;
-    float ySDegree;
+
 }
 
 @end
@@ -107,20 +114,51 @@ GLProgram glProgram1;
     [self createDisplayFrameBuffer];
     [self setupTextureOne];
     [self setupTextureTwo];
-    _vBufferID = cpp_createBufferObject(GL_ARRAY_BUFFER, sizeof(vertexData1), GL_STATIC_DRAW, vertexData1);
-    
-    glBindBuffer(GL_ARRAY_BUFFER, _vBufferID);
-    //开启顶点属性通道
-    glEnableVertexAttribArray(_position);
-    //设置顶点读取方式
-    glVertexAttribPointer(_position, 3, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 5, (GLfloat *) NULL + 0);
-    //开启纹理属性通道
-    glEnableVertexAttribArray(_textCoordinate);
-    //设置纹理读取方式
-    glVertexAttribPointer(_textCoordinate, 2, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 5, (GLfloat *) NULL + 3);
+    [self createEBObject];
+    [self createEBObject2];
     
     UIPanGestureRecognizer *pan = [[UIPanGestureRecognizer alloc]initWithTarget:self action:@selector(pan:)];
     [self addGestureRecognizer:pan];
+}
+
+- (void)createEBObject
+{
+    NSLog(@"%s",__func__);
+    glGenVertexArrays(1, &_aBufferID);
+    glGenBuffers(1, &_vBufferID);
+    
+    glBindVertexArray(_aBufferID);
+    
+    glBindBuffer(GL_ARRAY_BUFFER, _vBufferID);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertexData1), vertexData1, GL_STATIC_DRAW);
+    
+    glEnableVertexAttribArray(_position);
+    glVertexAttribPointer(_position, 3, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 5, (GLfloat *) NULL + 0);
+    glEnableVertexAttribArray(_textCoordinate);
+    glVertexAttribPointer(_textCoordinate, 2, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 5, (GLfloat *) NULL + 3);
+    
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindVertexArray(0);
+}
+
+- (void)createEBObject2
+{
+    NSLog(@"%s",__func__);
+    glGenVertexArrays(1, &_aBufferID2);
+    glGenBuffers(1, &_vBufferID2);
+    
+    glBindVertexArray(_aBufferID2);
+    
+    glBindBuffer(GL_ARRAY_BUFFER, _vBufferID2);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertexData2), vertexData2, GL_STATIC_DRAW);
+    
+    glEnableVertexAttribArray(_position);
+    glVertexAttribPointer(_position, 3, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 5, (GLfloat *) NULL + 0);
+    glEnableVertexAttribArray(_textCoordinate);
+    glVertexAttribPointer(_textCoordinate, 2, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 5, (GLfloat *) NULL + 3);
+    
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindVertexArray(0);
 }
 
 - (void)setupLocalData
@@ -175,9 +213,7 @@ GLProgram glProgram1;
     _position = glGetAttribLocation(_program, "position");
     //从program中获取textCoordinate 纹理属性
     _textCoordinate = glGetAttribLocation(_program, "textCoordinate");
-    
     _modelViewMartix_S = glGetUniformLocation(_program, "modelViewMatrix");
-    
     glUniform1i(glGetUniformLocation(_program, "colorMap"), 0);
 }
 
@@ -227,33 +263,37 @@ GLProgram glProgram1;
 - (void)setupTextureOne
 {
     int w = 0, h = 0;
-    GLubyte * byte = [self getImageDataWithName:@"2.jpg" width:&w height:&h];
+    GLubyte * byte = [self getImageDataWithName:@"10_480_480.jpeg" width:&w height:&h];
     _texture = cpp_setupTexture(GL_TEXTURE1);
     cpp_upGPUTexture(w, h, byte);
     //释放byte
     free(byte);
 
+    float w_ratio = w*1.0/_screenWidth/_scale;
+    float h_w_ratio = h*1.0/w*w_ratio;
     for (int i = 0; i < 6; i++)
     {
-        vertexData1[i*5+0] *= 1.0;
-        vertexData1[i*5+1] *= h*1.0/w;
+        vertexData1[i*5+0] *= w_ratio;
+        vertexData1[i*5+1] *= h_w_ratio;
     }
 }
 
 - (void)setupTextureTwo
 {
     int w = 0, h = 0;
-    GLubyte * byte = [self getImageDataWithName:@"1.jpeg" width:&w height:&h];
+    GLubyte * byte = [self getImageDataWithName:@"11_320_480.jpeg" width:&w height:&h];
     _textureTwo = cpp_setupTexture(GL_TEXTURE1);
     cpp_upGPUTexture(w, h, byte);
     //释放byte
     free(byte);
     
-//    for (int i = 0; i < 6; i++)
-//    {
-//        vertexData1[i*5+0] *= 1.0;
-//        vertexData1[i*5+1] *= h*1.0/w;
-//    }
+    float w_ratio = w*1.0/_screenWidth/_scale;
+    float h_w_ratio = h*1.0/w*w_ratio;
+    for (int i = 0; i < 6; i++)
+    {
+        vertexData2[i*5+0] *= w_ratio;
+        vertexData2[i*5+1] *= h_w_ratio;
+    }
 }
 
 - (void)draw
@@ -272,25 +312,29 @@ GLProgram glProgram1;
     //设置视口
     glViewport(_viewPort_x, _viewPort_y, _viewPort_w, _viewPort_h);
     
-    glBindBuffer(GL_ARRAY_BUFFER, _vBufferID);
-//    //开启顶点属性通道
-//    glEnableVertexAttribArray(_position);
-//    //设置顶点读取方式
-//    glVertexAttribPointer(_position, 3, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 5, (GLfloat *) NULL + 0);
-//    //开启纹理属性通道
-//    glEnableVertexAttribArray(_textCoordinate);
-//    //设置纹理读取方式
-//    glVertexAttribPointer(_textCoordinate, 2, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 5, (GLfloat *) NULL + 3);
-    
+    glBindVertexArray(_aBufferID);
      // ******************** 第一个纹理 **********************//
     {
         float anchorPX = 1.0;
         float anchorPY = 1.5;
         float rotateAngleX = 0.0f;
         float rotateAngleY = 0.0f;
-        float rotateAngleZ = 45.0f;
-        float scaleX = 0.5;
-        float scaleY = 0.5;
+        float rotateAngleZ = 0.0f;
+        static float scaleX = 0.5;
+        static float scaleY = 0.5;
+        static int mut_i = 1.0f;
+        
+        if (scaleX >= 1.0f)
+        {
+            mut_i = -1.0f;
+        }
+        if (scaleX <= 0.5f)
+        {
+            mut_i = 1.0f;
+        }
+        scaleX += 0.01f*mut_i;
+        scaleY += 0.01f*mut_i;
+
         float scaleZ = 1.0;
         float deltaX = 0.0;
         float deltaY = 0.0;
@@ -298,19 +342,34 @@ GLProgram glProgram1;
         
         cpp_generateAndUniform2DMatrix( _perspective_left,  _perspective_right, _perspective_bottom, _perspective_top,  _perspective_near,  _perspective_far,  deltaX,  deltaY,  deltaZ,  rotateAngleX,  rotateAngleY,  rotateAngleZ,  scaleX,  scaleY,  scaleZ,  anchorPX,  anchorPY, _modelViewMartix_S);
         cpp_glBindTexture(GL_TEXTURE0, _texture);
-
         glDrawArrays(GL_TRIANGLES, 0, 6);
     }
-    
+    glBindVertexArray(0);
     // ******************** 第二个纹理 **********************//
+    glBindVertexArray(_aBufferID2);
     {
         float anchorPX = 0.0;
         float anchorPY = 0.0;
         float rotateAngleX = 0.0f;
         float rotateAngleY = 0.0f;
-        float rotateAngleZ = 45.0f;
-        float scaleX = 0.5;
-        float scaleY = 0.5;
+        static float rotateAngleZ = 0.0f;
+        rotateAngleZ += 1.0f;
+  
+        static float scaleX = 0.5;
+        static float scaleY = 0.5;
+        static int mut_i = 1.0f;
+        
+        if (scaleX >= 1.0f)
+        {
+            mut_i = -1.0f;
+        }
+        if (scaleX <= 0.5f)
+        {
+            mut_i = 1.0f;
+        }
+        scaleX += 0.01f*mut_i;
+        scaleY += 0.01f*mut_i;
+        
         float scaleZ = 1.0;
         float deltaX = 0.0;
         float deltaY = 0.0;
@@ -318,52 +377,13 @@ GLProgram glProgram1;
 
         cpp_generateAndUniform2DMatrix( _perspective_left,  _perspective_right, _perspective_bottom, _perspective_top,  _perspective_near,  _perspective_far,  deltaX,  deltaY,  deltaZ,  rotateAngleX,  rotateAngleY,  rotateAngleZ,  scaleX,  scaleY,  scaleZ,  anchorPX,  anchorPY, _modelViewMartix_S);
         cpp_glBindTexture(GL_TEXTURE0, _textureTwo);
-
         glDrawArrays(GL_TRIANGLES, 0, 6);
     }
     glBindTexture(GL_TEXTURE_2D, 0);
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindVertexArray(0);
 
     //将渲染缓冲区 呈现到 屏幕上
     [self.context presentRenderbuffer:GL_RENDERBUFFER];
-}
-
-//纹理加载方法
--(void)loadTexture:(NSString *)name{
-    CGImageRef cgImg = [UIImage imageNamed:name].CGImage;
-    if (!cgImg) {
-        NSLog(@"获取图片失败！");
-        return;
-    }
-    size_t width = CGImageGetWidth(cgImg);
-    size_t height = CGImageGetHeight(cgImg);
-    
-    
-    // *4  因为RGBA
-    GLubyte * byte = (GLubyte *)calloc(width * height * 4, sizeof(GLubyte));
-    
-    CGContextRef contextRef = CGBitmapContextCreate(byte, width, height, 8, width * 4, CGImageGetColorSpace(cgImg), kCGImageAlphaPremultipliedLast);
-    
-    
-    CGRect rect = CGRectMake(0, 0, width, height);
-    CGContextDrawImage(contextRef, rect, cgImg);
-    
-    CGContextRelease(contextRef);
-    
-    glBindTexture(GL_TEXTURE_2D, 0);
-    
-    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
-    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
-    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-    
-    float w = width;
-    float h = height;
-    
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, byte);
-    
-    
-    free(byte);
 }
 
 /**************************************************************  native  **********************************************************************/
@@ -418,14 +438,11 @@ GLProgram glProgram1;
 }
 
 
--(void)pan:(UIPanGestureRecognizer *)pan{
+-(void)pan:(UIPanGestureRecognizer *)pan
+{
     //获取偏移量
     // 返回的是相对于最原始的手指的偏移量
     CGPoint transP = [pan translationInView:self];
-    
-    xDegree = -transP.y;
-    yDegree = -transP.x;
-    
     [self draw];
 }
 

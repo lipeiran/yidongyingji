@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		FE56E88D22EE96A5001BD700 /* 11_320_480.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = FE56E88B22EE96A5001BD700 /* 11_320_480.jpeg */; };
+		FE56E88E22EE96A5001BD700 /* 10_480_480.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = FE56E88C22EE96A5001BD700 /* 10_480_480.jpeg */; };
 		FE6119B922E6F6F700DD0741 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = FE6119B822E6F6F700DD0741 /* AppDelegate.m */; };
 		FE6119BC22E6F6F700DD0741 /* ViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = FE6119BB22E6F6F700DD0741 /* ViewController.mm */; };
 		FE6119BF22E6F6F700DD0741 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FE6119BD22E6F6F700DD0741 /* Main.storyboard */; };
@@ -34,6 +36,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		FE56E88B22EE96A5001BD700 /* 11_320_480.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 11_320_480.jpeg; sourceTree = "<group>"; };
+		FE56E88C22EE96A5001BD700 /* 10_480_480.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 10_480_480.jpeg; sourceTree = "<group>"; };
 		FE6119B422E6F6F700DD0741 /* yidongyingji.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = yidongyingji.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FE6119B722E6F6F700DD0741 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		FE6119B822E6F6F700DD0741 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -181,6 +185,8 @@
 				FE6119FC22E980A500DD0741 /* 4.jpeg */,
 				FE6119FD22E980A500DD0741 /* 5.jpeg */,
 				FE6119F922E980A400DD0741 /* 6.jpeg */,
+				FE56E88C22EE96A5001BD700 /* 10_480_480.jpeg */,
+				FE56E88B22EE96A5001BD700 /* 11_320_480.jpeg */,
 			);
 			path = res;
 			sourceTree = "<group>";
@@ -246,6 +252,7 @@
 				FE611A0122E980A500DD0741 /* 3.jpg in Resources */,
 				FE611A0422E980A500DD0741 /* 2.jpg in Resources */,
 				FE6119DB22E7191E00DD0741 /* shaderf.fsh in Resources */,
+				FE56E88D22EE96A5001BD700 /* 11_320_480.jpeg in Resources */,
 				FE6119D922E7191200DD0741 /* shaderv.vsh in Resources */,
 				FE6119C422E6F6F900DD0741 /* LaunchScreen.storyboard in Resources */,
 				FE6119E322E948CF00DD0741 /* Glm in Resources */,
@@ -256,6 +263,7 @@
 				FE6119F322E9589800DD0741 /* guide.fsh in Resources */,
 				FE611A0222E980A500DD0741 /* 4.jpeg in Resources */,
 				FE6119BF22E6F6F700DD0741 /* Main.storyboard in Resources */,
+				FE56E88E22EE96A5001BD700 /* 10_480_480.jpeg in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
