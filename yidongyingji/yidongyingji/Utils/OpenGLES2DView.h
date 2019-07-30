@@ -17,11 +17,6 @@ NS_ASSUME_NONNULL_BEGIN
 @interface OpenGLES2DView : UIView
 {
     GPUImageFilter filter;
-    
-    int w1,h1;
-    GLubyte * byte1;
-    int w2,h2;
-    GLubyte * byte2;
     float scale;
 }
 

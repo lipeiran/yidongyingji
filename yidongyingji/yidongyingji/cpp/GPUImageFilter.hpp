@@ -23,7 +23,9 @@ public:
     GLuint _position;
     GLuint _textCoordinate;
     GLuint _modelViewMartix_S;
-
+    
+    AEConfigEntity configEntity;
+    
     GLuint _aBufferID[512];
     GLuint _aBufferID_num;
     GLuint _texture[512];
@@ -58,9 +60,13 @@ public:
     void setDisplayFrameBuffer();
     void destropDisplayFrameBuffer();
     
-    void addImageTexture(GPUImage image);
+    void addImageTexture(GPUImage &image);
+    
+    void addConfigure(char *configFilePath);
+    
+    void upImageTexture();
 
-    void addImageAsset(GPUImage image);
+    void addImageAsset(GPUImage &image);
 
 private:
     

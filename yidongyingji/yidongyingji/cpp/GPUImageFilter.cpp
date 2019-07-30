@@ -106,40 +106,21 @@ void GPUImageFilter::draw()
         glBindVertexArray(_aBufferID[i]);
         // ******************** 第一个纹理 **********************//
         {
-            if (i == 0)
-            {
-                GPUAnimateAttr animateAttr;
-                animateAttr.anchorPX = 1.0f;
-                animateAttr.anchorPY = 1.5f;
-                animateAttr.rotateAngleX = 0.0f;
-                animateAttr.rotateAngleY = 0.0f;
-                animateAttr.rotateAngleZ = 0.0f;
-                animateAttr.scaleX = 0.5f;
-                animateAttr.scaleY = 0.5f;
-                animateAttr.scaleZ = 1.0f;
-                animateAttr.deltaX = 0.0f;
-                animateAttr.deltaY = 0.0f;
-                animateAttr.deltaZ = -10.0f;
-                animateAttr.alpha = 1.0f;
-                cpp_generateAndUniform2DMatrix(_perspective_left, _perspective_right, _perspective_bottom, _perspective_top, _perspective_near, _perspective_far, animateAttr.deltaX, animateAttr.deltaY, animateAttr.deltaZ, animateAttr.rotateAngleX, animateAttr.rotateAngleY, animateAttr.rotateAngleZ, animateAttr.scaleX, animateAttr.scaleY, animateAttr.scaleZ, animateAttr.anchorPX, animateAttr.anchorPY, _modelViewMartix_S);
-            }
-            else if (i == 1)
-            {
-                GPUAnimateAttr animateAttr;
-                animateAttr.anchorPX = 0.0f;
-                animateAttr.anchorPY = 0.0f;
-                animateAttr.rotateAngleX = 0.0f;
-                animateAttr.rotateAngleY = 0.0f;
-                animateAttr.rotateAngleZ = 45.0f;
-                animateAttr.scaleX = 0.5f;
-                animateAttr.scaleY = 0.5f;
-                animateAttr.scaleZ = 1.0f;
-                animateAttr.deltaX = 0.0f;
-                animateAttr.deltaY = 0.0f;
-                animateAttr.deltaZ = -10.0f;
-                animateAttr.alpha = 1.0f;
-                cpp_generateAndUniform2DMatrix(_perspective_left, _perspective_right, _perspective_bottom, _perspective_top, _perspective_near, _perspective_far, animateAttr.deltaX, animateAttr.deltaY, animateAttr.deltaZ, animateAttr.rotateAngleX, animateAttr.rotateAngleY, animateAttr.rotateAngleZ, animateAttr.scaleX, animateAttr.scaleY, animateAttr.scaleZ, animateAttr.anchorPX, animateAttr.anchorPY, _modelViewMartix_S);
-            }
+            GPUAnimateAttr animateAttr;
+            animateAttr.anchorPX = i * 0.3f;
+            animateAttr.anchorPY = 0.0f;
+            animateAttr.rotateAngleX = 0.0f;
+            animateAttr.rotateAngleY = 0.0f;
+            animateAttr.rotateAngleZ = 45.0f;
+            animateAttr.scaleX = 1.0f;
+            animateAttr.scaleY = 1.0f;
+            animateAttr.scaleZ = 1.0f;
+            animateAttr.deltaX = 0.0f;
+            animateAttr.deltaY = 0.0f;
+            animateAttr.deltaZ = -10.0f;
+            animateAttr.alpha = 1.0f;
+            
+            cpp_generateAndUniform2DMatrix(_perspective_left, _perspective_right, _perspective_bottom, _perspective_top, _perspective_near, _perspective_far, animateAttr.deltaX, animateAttr.deltaY, animateAttr.deltaZ, animateAttr.rotateAngleX, animateAttr.rotateAngleY, animateAttr.rotateAngleZ, animateAttr.scaleX, animateAttr.scaleY, animateAttr.scaleZ, animateAttr.anchorPX, animateAttr.anchorPY, _modelViewMartix_S);
             cpp_glBindTexture(GL_TEXTURE0, _texture[i]);
             glDrawArrays(GL_TRIANGLES, 0, 6);
         }
@@ -148,7 +129,7 @@ void GPUImageFilter::draw()
     glBindVertexArray(0);
 }
 
-void GPUImageFilter::addImageTexture(GPUImage image)
+void GPUImageFilter::addImageTexture(GPUImage &image)
 {
     memcpy(vertexData_dst, vertexData_src, 30*sizeof(GLfloat));
     _texture[_texture_num] = cpp_createImageTexture(image.byte, image.w, image.h, _screenWidth, vertexData_dst);
@@ -157,7 +138,22 @@ void GPUImageFilter::addImageTexture(GPUImage image)
     _aBufferID_num++;
 }
 
-void GPUImageFilter::addImageAsset(GPUImage image)
+void GPUImageFilter::addConfigure(char *configFilePath)
+{
+    ParseAE parseAE;
+    parseAE.dofile(configFilePath, configEntity);
+}
+
+void GPUImageFilter::upImageTexture()
+{
+    for (int i = 0; i < _imageAsset_num; ++i)
+    {
+        GPUImage *tmpImage = _imageAsset[i];
+        addImageTexture(*tmpImage);
+    }
+}
+
+void GPUImageFilter::addImageAsset(GPUImage &image)
 {
     GPUImage *tmpImage = &image;
     tmpImage->index = _imageAsset_num;
