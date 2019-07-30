@@ -11,22 +11,23 @@
 
 #include <stdio.h>
 #include "GLProgram.hpp"
+#include "GPUImage.hpp"
+#include "GPUAnimateAttr.hpp"
 
 class GPUImageFilter {
 public:
     GLuint _program;
-    GLuint _aBufferID;
-    GLuint _vBufferID;
-    GLuint _aBufferID2;
-    GLuint _vBufferID2;
     GLuint _frameBuffer;
     GLuint _renderBuffer;
     GLuint _position;
     GLuint _textCoordinate;
-    GLuint _texture;
-    GLuint _texture2;
     GLuint _modelViewMartix_S;
 
+    GLuint _aBufferID[512];
+    GLuint _aBufferID_num;
+    GLuint _texture[512];
+    GLuint _texture_num;
+    
     float _screenWidth;
     float _screenHeight;
     float _aspectRatio;
@@ -46,12 +47,14 @@ public:
 
     void setLocalData(GLuint screenX, GLuint screenY, GLuint screenW, GLuint screenH);
     
-    void initWithProgramAndImageByte(GLubyte *byte1, int w1, int h1, GLubyte *byte2, int w2, int h2);
+    void initWithProgram(GLuint screenX, GLuint screenY, GLuint screenW, GLuint screenH);
     
     void draw();
     
     void setDisplayFrameBuffer();
     void destropDisplayFrameBuffer();
+    
+    void addImageObj(GPUImage image);
 private:
     
     

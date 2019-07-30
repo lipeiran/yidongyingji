@@ -28,11 +28,17 @@ GLuint cpp_setupFrameBuffer();
 // 创建RBO
 GLuint cpp_setupRenderBuffer();
 
+// 创建VAO
+GLuint cpp_createVAO(GLuint size, GLfloat* data, GLuint position_loc, GLuint texCoord_loc);
+
 // 创建纹理
 GLuint cpp_setupTexture(GLenum texture);
 
 // 上传GPU纹理数据
 void cpp_upGPUTexture(GLint width, GLint height, GLubyte *byte);
+
+// 创建纹理并上传，根据图片大小返回顶点数据
+GLuint cpp_createImageTexture(GLubyte *byte, GLuint w, GLuint h, GLuint screenWidthPixel, GLfloat *dst_data);
 
 // 编译program
 GLuint cpp_compileProgram(GLProgram program, char *vertexPath, char *fragmentPath);
@@ -61,10 +67,7 @@ void cpp_glRotate(float anchorX,float anchorY, float xDegree, float yDegree, flo
 // Model，缩放
 void cpp_glScale(float anchorX,float anchorY, float xScale, float yScale, float zScale, KSMatrix4 &sourceMatrix);
 
-GLuint cpp_createVAO(GLuint size, GLfloat* data, GLuint position_loc, GLuint texCoord_loc);
-
-GLuint cpp_createImageTexture(GLubyte *byte, GLuint w, GLuint h, GLuint screenWidthPixel, GLfloat *dst_data);
-
+// 绘制前准备
 void cpp_glDraw_header(GLint x, GLint y, GLsizei width, GLsizei height);
 
 #endif /* utils_hpp */

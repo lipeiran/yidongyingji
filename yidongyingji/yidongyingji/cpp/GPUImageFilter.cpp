@@ -8,8 +8,8 @@
 
 #include "GPUImageFilter.hpp"
 
-//编辑顶点坐标数组
-GLfloat vertexData1[30] = {
+//编辑顶点坐标源数组
+GLfloat vertexData_src[30] = {
     
     1.0, -1.0, 0.0f,    1.0f, 0.0f, //右下
     1.0, 1.0, -0.0f,    1.0f, 1.0f, //右上
@@ -20,8 +20,8 @@ GLfloat vertexData1[30] = {
     -1.0, -1.0, 0.0f,   0.0f, 0.0f, //左下
 };
 
-//编辑顶点坐标数组
-GLfloat vertexData2[30] = {
+//编辑顶点坐标目标数组
+GLfloat vertexData_dst[30] = {
     
     1.0, -1.0, 0.0f,    1.0f, 0.0f, //右下
     1.0, 1.0, -0.0f,    1.0f, 1.0f, //右上
@@ -31,6 +31,7 @@ GLfloat vertexData2[30] = {
     -1.0, 1.0, 0.0f,    0.0f, 1.0f, //左上
     -1.0, -1.0, 0.0f,   0.0f, 0.0f, //左下
 };
+
 
 char kSamplingVertexShaderC[] = "attribute vec4 position;attribute vec4 positionColor;attribute vec2 textCoordinate;uniform mat4 modelViewMatrix;varying lowp vec2 varyTextCoord;void main(){varyTextCoord = textCoordinate;gl_Position = modelViewMatrix * position;}";
 
@@ -73,8 +74,10 @@ void GPUImageFilter::destropDisplayFrameBuffer()
     }
 }
 
-void GPUImageFilter::initWithProgramAndImageByte(GLubyte *byte1, int w1, int h1, GLubyte *byte2, int w2, int h2)
+void GPUImageFilter::initWithProgram(GLuint screenX, GLuint screenY, GLuint screenW, GLuint screenH)
 {
+    setLocalData(screenX, screenY, screenW, screenH);
+    
     GLProgram glProgram1;
     //编译program
     _program = cpp_compileProgramWithContent(glProgram1, kSamplingVertexShaderC, kSamplingFragmentShaderC);
@@ -91,55 +94,65 @@ void GPUImageFilter::initWithProgramAndImageByte(GLubyte *byte1, int w1, int h1,
     _frameBuffer = cpp_setupFrameBuffer();
     // 生成帧缓冲区，把renderbuffer 跟 framebuffer绑定到一起
     glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, _renderBuffer);
-    _texture = cpp_createImageTexture(byte1, w1, h1, _screenWidth, vertexData1);
-    _texture2 = cpp_createImageTexture(byte2, w2, h2, _screenWidth, vertexData2);
-    _aBufferID = cpp_createVAO(sizeof(vertexData1), vertexData1, _position, _textCoordinate);
-    _aBufferID2 = cpp_createVAO(sizeof(vertexData2), vertexData2, _position, _textCoordinate);
 }
 
 void GPUImageFilter::draw()
 {
     glUseProgram(_program);
     cpp_glDraw_header(_viewPort_x, _viewPort_y, _viewPort_w, _viewPort_h);
-    glBindVertexArray(_aBufferID);
-    // ******************** 第一个纹理 **********************//
+    
+    for (int i = 0; i < _aBufferID_num; ++i)
     {
-        float anchorPX = 1.0;
-        float anchorPY = 1.5;
-        float rotateAngleX = 0.0f;
-        float rotateAngleY = 0.0f;
-        float rotateAngleZ = 0.0f;
-        float scaleX = 0.5;
-        float scaleY = 0.5;
-        float scaleZ = 1.0;
-        float deltaX = 0.0;
-        float deltaY = 0.0;
-        float deltaZ = -10.0;
-        
-        cpp_generateAndUniform2DMatrix(_perspective_left, _perspective_right, _perspective_bottom, _perspective_top, _perspective_near, _perspective_far,  deltaX,  deltaY,  deltaZ,  rotateAngleX,  rotateAngleY,  rotateAngleZ,  scaleX,  scaleY,  scaleZ,  anchorPX,  anchorPY, _modelViewMartix_S);
-        cpp_glBindTexture(GL_TEXTURE0, _texture);
-        glDrawArrays(GL_TRIANGLES, 0, 6);
+        glBindVertexArray(_aBufferID[i]);
+        // ******************** 第一个纹理 **********************//
+        {
+            if (i == 0)
+            {
+                GPUAnimateAttr animateAttr;
+                animateAttr.anchorPX = 1.0f;
+                animateAttr.anchorPY = 1.5f;
+                animateAttr.rotateAngleX = 0.0f;
+                animateAttr.rotateAngleY = 0.0f;
+                animateAttr.rotateAngleZ = 0.0f;
+                animateAttr.scaleX = 0.5f;
+                animateAttr.scaleY = 0.5f;
+                animateAttr.scaleZ = 1.0f;
+                animateAttr.deltaX = 0.0f;
+                animateAttr.deltaY = 0.0f;
+                animateAttr.deltaZ = -10.0f;
+                animateAttr.alpha = 1.0f;
+                cpp_generateAndUniform2DMatrix(_perspective_left, _perspective_right, _perspective_bottom, _perspective_top, _perspective_near, _perspective_far, animateAttr.deltaX, animateAttr.deltaY, animateAttr.deltaZ, animateAttr.rotateAngleX, animateAttr.rotateAngleY, animateAttr.rotateAngleZ, animateAttr.scaleX, animateAttr.scaleY, animateAttr.scaleZ, animateAttr.anchorPX, animateAttr.anchorPY, _modelViewMartix_S);
+            }
+            else if (i == 1)
+            {
+                GPUAnimateAttr animateAttr;
+                animateAttr.anchorPX = 0.0f;
+                animateAttr.anchorPY = 0.0f;
+                animateAttr.rotateAngleX = 0.0f;
+                animateAttr.rotateAngleY = 0.0f;
+                animateAttr.rotateAngleZ = 45.0f;
+                animateAttr.scaleX = 0.5f;
+                animateAttr.scaleY = 0.5f;
+                animateAttr.scaleZ = 1.0f;
+                animateAttr.deltaX = 0.0f;
+                animateAttr.deltaY = 0.0f;
+                animateAttr.deltaZ = -10.0f;
+                animateAttr.alpha = 1.0f;
+                cpp_generateAndUniform2DMatrix(_perspective_left, _perspective_right, _perspective_bottom, _perspective_top, _perspective_near, _perspective_far, animateAttr.deltaX, animateAttr.deltaY, animateAttr.deltaZ, animateAttr.rotateAngleX, animateAttr.rotateAngleY, animateAttr.rotateAngleZ, animateAttr.scaleX, animateAttr.scaleY, animateAttr.scaleZ, animateAttr.anchorPX, animateAttr.anchorPY, _modelViewMartix_S);
+            }
+            cpp_glBindTexture(GL_TEXTURE0, _texture[i]);
+            glDrawArrays(GL_TRIANGLES, 0, 6);
+        }
+        glBindVertexArray(0);
     }
     glBindVertexArray(0);
-    // ******************** 第二个纹理 **********************//
-    glBindVertexArray(_aBufferID2);
-    {
-        float anchorPX = 0.0;
-        float anchorPY = 0.0;
-        float rotateAngleX = 0.0f;
-        float rotateAngleY = 0.0f;
-        float rotateAngleZ = 45.0f;
-        float scaleX = 0.5;
-        float scaleY = 0.5;
-        float scaleZ = 1.0;
-        float deltaX = 0.0;
-        float deltaY = 0.0;
-        float deltaZ = -10.0;
-        
-        cpp_generateAndUniform2DMatrix(_perspective_left, _perspective_right, _perspective_bottom, _perspective_top, _perspective_near, _perspective_far,  deltaX,  deltaY,  deltaZ,  rotateAngleX,  rotateAngleY,  rotateAngleZ,  scaleX,  scaleY,  scaleZ,  anchorPX,  anchorPY, _modelViewMartix_S);
-        cpp_glBindTexture(GL_TEXTURE0, _texture2);
-        glDrawArrays(GL_TRIANGLES, 0, 6);
-    }
-    glBindTexture(GL_TEXTURE_2D, 0);
-    glBindVertexArray(0);
+}
+
+void GPUImageFilter::addImageObj(GPUImage image)
+{
+    memcpy(vertexData_dst, vertexData_src, 30*sizeof(GLfloat));
+    _texture[_texture_num] = cpp_createImageTexture(image.byte, image.w, image.h, _screenWidth, vertexData_dst);
+    _aBufferID[_aBufferID_num] = cpp_createVAO(sizeof(vertexData_dst), vertexData_dst, _position, _textCoordinate);
+    _texture_num++;
+    _aBufferID_num++;
 }
