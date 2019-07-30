@@ -27,7 +27,6 @@ public:
     float alpha;
 private:
     
-    
 };
 
 #endif /* GPUAnimateAttr_hpp */
