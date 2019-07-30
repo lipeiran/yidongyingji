@@ -13,6 +13,7 @@
 #include "GLProgram.hpp"
 #include "GPUImage.hpp"
 #include "GPUAnimateAttr.hpp"
+#include "Parse_AE.h"
 
 class GPUImageFilter {
 public:
@@ -28,6 +29,9 @@ public:
     GLuint _texture[512];
     GLuint _texture_num;
     
+    GPUImage *_imageAsset[512];
+    GLuint _imageAsset_num;
+
     float _screenWidth;
     float _screenHeight;
     float _aspectRatio;
@@ -54,7 +58,10 @@ public:
     void setDisplayFrameBuffer();
     void destropDisplayFrameBuffer();
     
-    void addImageObj(GPUImage image);
+    void addImageTexture(GPUImage image);
+
+    void addImageAsset(GPUImage image);
+
 private:
     
     

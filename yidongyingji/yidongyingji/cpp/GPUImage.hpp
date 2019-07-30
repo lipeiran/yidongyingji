@@ -17,6 +17,7 @@
 class GPUImage {
 public:
     GLubyte *byte;
+    int index;
     int w;
     int h;
     

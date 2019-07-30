@@ -44,17 +44,19 @@
     // Filter配置
     filter.initWithProgram(self.frame.origin.x * scale, self.frame.origin.y * scale, self.frame.size.width * scale, self.frame.size.height * scale);
     
+    
+    
     GPUImage image1;
     image1.byte = byte1;
     image1.w = w1;
     image1.h = h1;
-    filter.addImageObj(image1);
+    filter.addImageTexture(image1);
     
     GPUImage image2;
     image2.byte = byte2;
     image2.w = w2;
     image2.h = h2;
-    filter.addImageObj(image2);
+    filter.addImageTexture(image2);
     
     // Filter后原生配置
     [self setConfigTail];

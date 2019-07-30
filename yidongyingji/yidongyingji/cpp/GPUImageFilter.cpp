@@ -148,11 +148,19 @@ void GPUImageFilter::draw()
     glBindVertexArray(0);
 }
 
-void GPUImageFilter::addImageObj(GPUImage image)
+void GPUImageFilter::addImageTexture(GPUImage image)
 {
     memcpy(vertexData_dst, vertexData_src, 30*sizeof(GLfloat));
     _texture[_texture_num] = cpp_createImageTexture(image.byte, image.w, image.h, _screenWidth, vertexData_dst);
     _aBufferID[_aBufferID_num] = cpp_createVAO(sizeof(vertexData_dst), vertexData_dst, _position, _textCoordinate);
     _texture_num++;
     _aBufferID_num++;
+}
+
+void GPUImageFilter::addImageAsset(GPUImage image)
+{
+    GPUImage *tmpImage = &image;
+    tmpImage->index = _imageAsset_num;
+    _imageAsset[_imageAsset_num] = tmpImage;
+    _imageAsset_num++;
 }
