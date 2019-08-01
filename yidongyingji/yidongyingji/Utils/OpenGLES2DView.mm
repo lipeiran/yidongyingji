@@ -73,7 +73,6 @@
     image4.w = w4;
     image4.h = h4;
     filter.addImageAsset(image4);
-    filter.upImageTexture();
 
     char configPath[] = "/Users/lipeiran/yidongyingji/yidongyingji/yidongyingji/guxiangzhimei/tp.json";
     filter.addConfigure(configPath);

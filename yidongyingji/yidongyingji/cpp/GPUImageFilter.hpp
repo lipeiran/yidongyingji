@@ -14,6 +14,8 @@
 #include "GPUImage.hpp"
 #include "GPUAnimateAttr.hpp"
 #include "Parse_AE.h"
+#include "TimeWheel.hpp"
+#include <pthread.h>
 
 class GPUImageFilter {
 public:
@@ -55,6 +57,8 @@ public:
     
     void initWithProgram(GLuint screenX, GLuint screenY, GLuint screenW, GLuint screenH);
     
+    void draw(int fr);
+    
     void draw();
     
     void setDisplayFrameBuffer();
@@ -68,6 +72,13 @@ public:
 
     void addImageAsset(GPUImage &image);
 
+    void create_threads(void);
+
+    pthread_t draw_t;
+protected:
+    void draw1(void);
+    
+    static void* game_draw_thread_callback(void*);
 private:
     
     

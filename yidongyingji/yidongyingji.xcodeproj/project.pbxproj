@@ -48,6 +48,7 @@
 		FEE27B1822F035FB00FF5511 /* tp.json in Resources */ = {isa = PBXBuildFile; fileRef = FEE27B1022F035FB00FF5511 /* tp.json */; };
 		FEE27B1922F035FB00FF5511 /* tp_mask.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = FEE27B1122F035FB00FF5511 /* tp_mask.mp4 */; };
 		FEE27B1A22F035FB00FF5511 /* tp.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = FEE27B1222F035FB00FF5511 /* tp.mp4 */; };
+		FEE27B1E22F1958800FF5511 /* TimeWheel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FEE27B1C22F1958800FF5511 /* TimeWheel.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -114,6 +115,9 @@
 		FEE27B1022F035FB00FF5511 /* tp.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = tp.json; sourceTree = "<group>"; };
 		FEE27B1122F035FB00FF5511 /* tp_mask.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = tp_mask.mp4; sourceTree = "<group>"; };
 		FEE27B1222F035FB00FF5511 /* tp.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = tp.mp4; sourceTree = "<group>"; };
+		FEE27B1C22F1958800FF5511 /* TimeWheel.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = TimeWheel.cpp; sourceTree = "<group>"; };
+		FEE27B1D22F1958800FF5511 /* TimeWheel.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = TimeWheel.hpp; sourceTree = "<group>"; };
+		FEE27B1F22F195F100FF5511 /* time_wheel.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = time_wheel.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -169,6 +173,7 @@
 		FE6119CD22E6F81300DD0741 /* cpp */ = {
 			isa = PBXGroup;
 			children = (
+				FEE27B1B22F1957600FF5511 /* clock */,
 				FEE27B0222EF0B7F00FF5511 /* ae */,
 				FEE27B0122EF0B4F00FF5511 /* cJSON */,
 				FEE27AFF22EF0B4F00FF5511 /* math */,
@@ -300,6 +305,16 @@
 			path = images;
 			sourceTree = "<group>";
 		};
+		FEE27B1B22F1957600FF5511 /* clock */ = {
+			isa = PBXGroup;
+			children = (
+				FEE27B1D22F1958800FF5511 /* TimeWheel.hpp */,
+				FEE27B1C22F1958800FF5511 /* TimeWheel.cpp */,
+				FEE27B1F22F195F100FF5511 /* time_wheel.cpp */,
+			);
+			path = clock;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -401,6 +416,7 @@
 				FE6119C722E6F6F900DD0741 /* main.m in Sources */,
 				FEE27AFE22EF0AFC00FF5511 /* GLESUtils.m in Sources */,
 				FE56E89322EEE489001BD700 /* GPUImageFilter.cpp in Sources */,
+				FEE27B1E22F1958800FF5511 /* TimeWheel.cpp in Sources */,
 				FE6119B922E6F6F700DD0741 /* AppDelegate.m in Sources */,
 				FEE27AF222EF091900FF5511 /* Parse_AE.cpp in Sources */,
 				FEE27AF522EF094800FF5511 /* BasicTools.cpp in Sources */,

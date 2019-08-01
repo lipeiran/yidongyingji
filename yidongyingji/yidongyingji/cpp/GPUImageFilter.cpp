@@ -7,6 +7,14 @@
 //
 
 #include "GPUImageFilter.hpp"
+#include <iostream>
+
+#include <cstdlib>
+#include <pthread.h>
+#include <unistd.h>
+
+using namespace std;
+std::thread::id main_thread_id = std::this_thread::get_id();
 
 //编辑顶点坐标源数组
 GLfloat vertexData_src[30] = {
@@ -96,7 +104,7 @@ void GPUImageFilter::initWithProgram(GLuint screenX, GLuint screenY, GLuint scre
     glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, _renderBuffer);
 }
 
-void GPUImageFilter::draw()
+void GPUImageFilter::draw(int fr)
 {
     glUseProgram(_program);
     cpp_glDraw_header(_viewPort_x, _viewPort_y, _viewPort_w, _viewPort_h);
@@ -129,6 +137,81 @@ void GPUImageFilter::draw()
     glBindVertexArray(0);
 }
 
+void fun100()
+{
+    cout << "func 100" << endl;
+    
+}
+
+void GPUImageFilter::draw()
+{
+    create_threads();
+}
+
+void* GPUImageFilter::game_draw_thread_callback(void *game_ptr)
+{
+    GPUImageFilter * game = (GPUImageFilter*)game_ptr;
+    game->draw(-1);
+    return NULL;
+}
+
+
+#define NUM_THREADS     5
+
+void *wait(void *t)
+{
+    int i;
+    int tid;
+    
+    tid = (int)t;
+    
+    sleep(2);
+    cout << "Sleeping in thread " << endl;
+    cout << "Thread with id : " << tid << "  ...exiting " << endl;
+    pthread_exit(NULL);
+}
+
+
+
+void GPUImageFilter::create_threads(void)
+{
+//    pthread_create(&draw_t, NULL, GPUImageFilter::game_draw_thread_callback, this);
+    
+    int rc;
+    int i;
+    pthread_t threads[NUM_THREADS];
+    pthread_attr_t attr;
+    void *status;
+    
+    // 初始化并设置线程为可连接的（joinable）
+    pthread_attr_init(&attr);
+    pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_JOINABLE);
+    
+    for( i=0; i < NUM_THREADS; i++ ){
+        cout << "main() : creating thread, " << i << endl;
+        rc = pthread_create(&threads[i], NULL, wait, (void *)&i );
+        if (rc){
+            cout << "Error:unable to create thread," << rc << endl;
+            exit(-1);
+        }
+    }
+
+    // 删除属性，并等待其他线程
+    pthread_attr_destroy(&attr);
+    for( i=0; i < NUM_THREADS; i++ ){
+        rc = pthread_join(threads[i], &status);
+        if (rc){
+            cout << "Error:unable to join," << rc << endl;
+            exit(-1);
+        }
+        cout << "Main: completed thread id :" << i ;
+        cout << "  exiting with status :" << status << endl;
+    }
+    
+    cout << "Main: program exiting." << endl;
+    pthread_exit(NULL);
+}
+
 void GPUImageFilter::addImageTexture(GPUImage &image)
 {
     memcpy(vertexData_dst, vertexData_src, 30*sizeof(GLfloat));
@@ -142,13 +225,17 @@ void GPUImageFilter::addConfigure(char *configFilePath)
 {
     ParseAE parseAE;
     parseAE.dofile(configFilePath, configEntity);
+    upImageTexture();
 }
 
 void GPUImageFilter::upImageTexture()
 {
-    for (int i = 0; i < _imageAsset_num; ++i)
+    ParseAE parseAE;
+    for (int i = 0; i < configEntity.layers_num; i++)
     {
-        GPUImage *tmpImage = _imageAsset[i];
+        AELayerEntity &layer = configEntity.layers[i];
+        int asset_index = parseAE.asset_index_refId(layer.refId, configEntity);
+        GPUImage *tmpImage = _imageAsset[asset_index];
         addImageTexture(*tmpImage);
     }
 }
