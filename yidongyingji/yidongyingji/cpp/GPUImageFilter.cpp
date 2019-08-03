@@ -133,7 +133,6 @@ void GPUImageFilter::draw(int fr)
         AEAssetEntity tmpAsset = configEntity.assets[tmpAsset_index];
         float ae_w = tmpAsset.w;
         float ae_h = tmpAsset.h;
-        
         float ae_a_x = 0.0f;
         float ae_a_y = 0.0f;
         float ae_p_x = 0.0f;
@@ -173,7 +172,9 @@ void GPUImageFilter::draw(int fr)
 
 void GPUImageFilter::draw()
 {
-    draw(125);
+    static int i = 0;
+    draw(i);
+    i++;
 }
 
 void GPUImageFilter::addImageTexture(GPUImage &image)
@@ -189,6 +190,11 @@ void GPUImageFilter::addConfigure(char *configFilePath)
 {
     ParseAE parseAE;
     parseAE.dofile(configFilePath, configEntity);
+    for (int i = 0; i < configEntity.layers_num; i++)
+    {
+        
+    }
+    
     upImageTexture();
 }
 

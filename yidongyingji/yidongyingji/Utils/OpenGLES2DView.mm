@@ -11,7 +11,8 @@
 
 @interface OpenGLES2DView ()
 {
-    
+    CADisplayLink *_displayLink;
+    NSTimer *_theTimer;
 }
 
 @end
@@ -86,10 +87,19 @@
     // Filter后原生配置
     [self setConfigTail];
     
+//    _displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(updateDisplay:)];
+//    _displayLink.frameInterval = 2;
+//    [_displayLink addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
+    
+    float theInterval = 1.0/25.0f;  //每秒调用30次
+    _theTimer = [NSTimer scheduledTimerWithTimeInterval:theInterval target:self selector:@selector(updateDisplay:) userInfo:nil repeats:YES];
+    return self;
+}
+
+- (void)updateDisplay:(NSTimer *)timer
+{
     filter.draw();
     [self.context presentRenderbuffer:GL_RENDERBUFFER];
-
-    return self;
 }
 
 #pragma mark -
