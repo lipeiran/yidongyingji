@@ -11,7 +11,7 @@
 
 @interface OpenGLES2DView ()
 {
-
+    
 }
 
 @end
@@ -30,6 +30,22 @@
 {
     // Filter销毁
     filter.destropDisplayFrameBuffer();
+}
+
+- (void)drawRect:(CGRect)rect
+{
+    [super drawRect:rect];
+    NSLog(@"%s",__func__);
+}
+
+void showTimer(void *game_ptr)
+{
+    OpenGLES2DView *tmp_view = (__bridge OpenGLES2DView *)game_ptr;
+
+    dispatch_async(dispatch_get_main_queue(), ^{
+        tmp_view->filter.showGLScreen();
+        [tmp_view.context presentRenderbuffer:GL_RENDERBUFFER];
+    });
 }
 
 - (id)initWithFrame:(CGRect)frame
@@ -74,17 +90,15 @@
     image4.h = h4;
     filter.addImageAsset(image4);
 
-    char configPath[] = "/Users/lipeiran/yidongyingji/yidongyingji/yidongyingji/guxiangzhimei/tp.json";
+    char *configPath = (char *)[[[NSBundle mainBundle]pathForResource:@"tp" ofType:@"json"] UTF8String];
     filter.addConfigure(configPath);
     
     // Filter后原生配置
     [self setConfigTail];
     
-    // Filter绘制
+    filter.setTimerCallback(showTimer, (__bridge void *)self);
+
     filter.draw();
-    
-    // 显示在屏幕上
-    [self.context presentRenderbuffer:GL_RENDERBUFFER];
 
     return self;
 }

@@ -13,8 +13,18 @@
 #include <pthread.h>
 #include <unistd.h>
 
-using namespace std;
 std::thread::id main_thread_id = std::this_thread::get_id();
+
+void hello()
+{
+    if (main_thread_id == std::this_thread::get_id())
+        std::cout << "This is the main thread.\n";
+    else
+        std::cout << "This is not the main thread.\n";
+}
+
+using namespace std;
+pthread_mutex_t sum_mutex; //互斥锁
 
 //编辑顶点坐标源数组
 GLfloat vertexData_src[30] = {
@@ -40,7 +50,6 @@ GLfloat vertexData_dst[30] = {
     -1.0, -1.0, 0.0f,   0.0f, 0.0f, //左下
 };
 
-
 char kSamplingVertexShaderC[] = "attribute vec4 position;attribute vec4 positionColor;attribute vec2 textCoordinate;uniform mat4 modelViewMatrix;varying lowp vec2 varyTextCoord;void main(){varyTextCoord = textCoordinate;gl_Position = modelViewMatrix * position;}";
 
 char kSamplingFragmentShaderC[] = "varying lowp vec2 varyTextCoord;uniform sampler2D colorMap;void main(){lowp vec4 tex = texture2D(colorMap, vec2(varyTextCoord.x,1.0-varyTextCoord.y));gl_FragColor = tex ;}";
@@ -60,6 +69,8 @@ void GPUImageFilter::setLocalData(GLuint screenX, GLuint screenY, GLuint screenW
     _viewPort_y = screenY;
     _viewPort_w = screenW;
     _viewPort_h = screenH;
+    _draw_b = false;
+    _conti = true;
 }
 
 void GPUImageFilter::setDisplayFrameBuffer()
@@ -137,79 +148,25 @@ void GPUImageFilter::draw(int fr)
     glBindVertexArray(0);
 }
 
-void fun100()
+void GPUImageFilter::showGLScreen()
 {
-    cout << "func 100" << endl;
-    
-}
-
-void GPUImageFilter::draw()
-{
-    create_threads();
+    draw(-1);
 }
 
 void* GPUImageFilter::game_draw_thread_callback(void *game_ptr)
 {
-    GPUImageFilter * game = (GPUImageFilter*)game_ptr;
-    game->draw(-1);
+    while (1)
+    {
+        this_thread::sleep_for(std::chrono::seconds(1));
+        GPUImageFilter * game = (GPUImageFilter *)game_ptr;
+        game->timerinvokeCallback();
+    }
     return NULL;
 }
 
-
-#define NUM_THREADS     5
-
-void *wait(void *t)
+void GPUImageFilter::draw()
 {
-    int i;
-    int tid;
-    
-    tid = (int)t;
-    
-    sleep(2);
-    cout << "Sleeping in thread " << endl;
-    cout << "Thread with id : " << tid << "  ...exiting " << endl;
-    pthread_exit(NULL);
-}
-
-
-
-void GPUImageFilter::create_threads(void)
-{
-//    pthread_create(&draw_t, NULL, GPUImageFilter::game_draw_thread_callback, this);
-    
-    int rc;
-    int i;
-    pthread_t threads[NUM_THREADS];
-    pthread_attr_t attr;
-    void *status;
-    
-    // 初始化并设置线程为可连接的（joinable）
-    pthread_attr_init(&attr);
-    pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_JOINABLE);
-    
-    for( i=0; i < NUM_THREADS; i++ ){
-        cout << "main() : creating thread, " << i << endl;
-        rc = pthread_create(&threads[i], NULL, wait, (void *)&i );
-        if (rc){
-            cout << "Error:unable to create thread," << rc << endl;
-            exit(-1);
-        }
-    }
-
-    // 删除属性，并等待其他线程
-    pthread_attr_destroy(&attr);
-    for( i=0; i < NUM_THREADS; i++ ){
-        rc = pthread_join(threads[i], &status);
-        if (rc){
-            cout << "Error:unable to join," << rc << endl;
-            exit(-1);
-        }
-        cout << "Main: completed thread id :" << i ;
-        cout << "  exiting with status :" << status << endl;
-    }
-    
-    cout << "Main: program exiting." << endl;
-    pthread_exit(NULL);
+    pthread_create(&_draw_t, NULL, GPUImageFilter::game_draw_thread_callback, this);
 }
 
 void GPUImageFilter::addImageTexture(GPUImage &image)
@@ -247,3 +204,15 @@ void GPUImageFilter::addImageAsset(GPUImage &image)
     _imageAsset[_imageAsset_num] = tmpImage;
     _imageAsset_num++;
 }
+
+void GPUImageFilter::setTimerCallback(CPPCallback cb, void *param)
+{
+    timerCallback = cb;
+    callBackParam = param;
+}
+
+void GPUImageFilter::timerinvokeCallback()
+{
+    timerCallback(callBackParam);
+}
+

@@ -17,6 +17,8 @@
 #include "TimeWheel.hpp"
 #include <pthread.h>
 
+typedef void (*CPPCallback)(void *param);
+
 class GPUImageFilter {
 public:
     GLuint _program;
@@ -52,7 +54,14 @@ public:
     float _viewPort_y;
     float _viewPort_w;
     float _viewPort_h;
-
+    
+    bool _draw_b;
+    bool _conti;
+    pthread_t _draw_t;
+    CPPCallback timerCallback;
+    
+    void *callBackParam;
+    
     void setLocalData(GLuint screenX, GLuint screenY, GLuint screenW, GLuint screenH);
     
     void initWithProgram(GLuint screenX, GLuint screenY, GLuint screenW, GLuint screenH);
@@ -73,12 +82,17 @@ public:
     void addImageAsset(GPUImage &image);
 
     void create_threads(void);
-
-    pthread_t draw_t;
-protected:
-    void draw1(void);
     
+    void setTimerCallback(CPPCallback cb,void *param);
+
+    void timerinvokeCallback();
+
     static void* game_draw_thread_callback(void*);
+
+    void showGLScreen();
+
+protected:
+    
 private:
     
     

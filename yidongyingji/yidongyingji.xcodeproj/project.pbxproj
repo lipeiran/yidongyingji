@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		FE0AC5B222F2E9EF002A81CD /* GCDCountDown.m in Sources */ = {isa = PBXBuildFile; fileRef = FE0AC5B122F2E9EF002A81CD /* GCDCountDown.m */; };
 		FE56E88D22EE96A5001BD700 /* 11_320_480.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = FE56E88B22EE96A5001BD700 /* 11_320_480.jpeg */; };
 		FE56E88E22EE96A5001BD700 /* 10_480_480.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = FE56E88C22EE96A5001BD700 /* 10_480_480.jpeg */; };
 		FE56E89322EEE489001BD700 /* GPUImageFilter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FE56E89122EEE489001BD700 /* GPUImageFilter.cpp */; };
@@ -52,6 +53,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		FE0AC5B022F2E9EF002A81CD /* GCDCountDown.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GCDCountDown.h; sourceTree = "<group>"; };
+		FE0AC5B122F2E9EF002A81CD /* GCDCountDown.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GCDCountDown.m; sourceTree = "<group>"; };
 		FE56E88B22EE96A5001BD700 /* 11_320_480.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 11_320_480.jpeg; sourceTree = "<group>"; };
 		FE56E88C22EE96A5001BD700 /* 10_480_480.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 10_480_480.jpeg; sourceTree = "<group>"; };
 		FE56E89122EEE489001BD700 /* GPUImageFilter.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = GPUImageFilter.cpp; sourceTree = "<group>"; };
@@ -222,6 +225,8 @@
 				FEE27AED22EF041700FF5511 /* OpenGLES2DView.mm */,
 				FEE27AF922EF0A5800FF5511 /* OpenGLES2DTools.h */,
 				FEE27AFA22EF0A5800FF5511 /* OpenGLES2DTools.m */,
+				FE0AC5B022F2E9EF002A81CD /* GCDCountDown.h */,
+				FE0AC5B122F2E9EF002A81CD /* GCDCountDown.m */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -410,6 +415,7 @@
 				FE6119D522E6FD5A00DD0741 /* GLProgram.cpp in Sources */,
 				FEE27AFB22EF0A5800FF5511 /* OpenGLES2DTools.m in Sources */,
 				FE6119EF22E9582F00DD0741 /* GuideView.mm in Sources */,
+				FE0AC5B222F2E9EF002A81CD /* GCDCountDown.m in Sources */,
 				FEE27AE922EEFB3100FF5511 /* GLESMath.c in Sources */,
 				FE6119BC22E6F6F700DD0741 /* ViewController.mm in Sources */,
 				FE6119D122E6F89300DD0741 /* OpenGLESView.mm in Sources */,
