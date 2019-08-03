@@ -122,7 +122,6 @@ void cpp_glRotate(float anchorX,float anchorY, float xDegree, float yDegree, flo
     KSMatrix4 _translateMatrix;
     //加载矩阵
     ksMatrixLoadIdentity(&_translateMatrix);
-    //沿着z轴平移
     ksTranslate(&_translateMatrix, -anchorX, -anchorY, 0.0);
     ksMatrixMultiply(&tmp_modelViewMatrix,  &_translateMatrix, &tmp_modelViewMatrix);
     
@@ -151,7 +150,6 @@ void cpp_glScale(float anchorX,float anchorY, float xScale, float yScale, float 
     KSMatrix4 _translateMatrix_s;
     //加载矩阵
     ksMatrixLoadIdentity(&_translateMatrix_s);
-    //沿着z轴平移
     ksTranslate(&_translateMatrix_s, -anchorX, -anchorY, 0.0);
     
     ksMatrixMultiply(&tmp_modelViewMatrix_s, &_translateMatrix_s, &tmp_modelViewMatrix_s);
@@ -188,6 +186,8 @@ void cpp_generate2DMatrix(float perspective_left, float perspective_right, float
     //------------------------------------------ Model缩放开始 ------------------------------------------//
     cpp_glScale(anchorPX, anchorPY, scaleX, scaleY, scaleZ, sourceMatrix);
     //------------------------------------------ Model缩放结束 ------------------------------------------//
+//    ksTranslate(&sourceMatrix, deltaX, deltaY, 0);
+
 }
 
 void cpp_generateAndUniform2DMatrix(float perspective_left, float perspective_right, float perspective_bottom, float perspective_top, float perspective_near, float perspective_far, float deltaX, float deltaY, float deltaZ, float rotateAngleX, float rotateAngleY, float rotateAngleZ, float scaleX, float scaleY, float scaleZ, float anchorPX,float anchorPY, GLuint modelViewProjectionMatrix_location)

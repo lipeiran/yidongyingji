@@ -81,16 +81,6 @@ public:
 
     void addImageAsset(GPUImage &image);
 
-    void create_threads(void);
-    
-    void setTimerCallback(CPPCallback cb,void *param);
-
-    void timerinvokeCallback();
-
-    static void* game_draw_thread_callback(void*);
-
-    void showGLScreen();
-
 protected:
     
 private:

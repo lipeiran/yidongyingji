@@ -117,56 +117,63 @@ void GPUImageFilter::initWithProgram(GLuint screenX, GLuint screenY, GLuint scre
 
 void GPUImageFilter::draw(int fr)
 {
+    ParseAE parseAE;
     glUseProgram(_program);
     cpp_glDraw_header(_viewPort_x, _viewPort_y, _viewPort_w, _viewPort_h);
     
     for (int i = 0; i < _aBufferID_num; ++i)
     {
-        glBindVertexArray(_aBufferID[i]);
-        // ******************** 第一个纹理 **********************//
+        AELayerEntity tmpEntity = configEntity.layers[_aBufferID_num-i-1];
+        if (fr < tmpEntity.ip || fr > tmpEntity.op)
         {
-            GPUAnimateAttr animateAttr;
-            animateAttr.anchorPX = i * 0.3f;
-            animateAttr.anchorPY = 0.0f;
-            animateAttr.rotateAngleX = 0.0f;
-            animateAttr.rotateAngleY = 0.0f;
-            animateAttr.rotateAngleZ = 45.0f;
-            animateAttr.scaleX = 1.0f;
-            animateAttr.scaleY = 1.0f;
-            animateAttr.scaleZ = 1.0f;
-            animateAttr.deltaX = 0.0f;
-            animateAttr.deltaY = 0.0f;
-            animateAttr.deltaZ = -10.0f;
-            animateAttr.alpha = 1.0f;
-            
-            cpp_generateAndUniform2DMatrix(_perspective_left, _perspective_right, _perspective_bottom, _perspective_top, _perspective_near, _perspective_far, animateAttr.deltaX, animateAttr.deltaY, animateAttr.deltaZ, animateAttr.rotateAngleX, animateAttr.rotateAngleY, animateAttr.rotateAngleZ, animateAttr.scaleX, animateAttr.scaleY, animateAttr.scaleZ, animateAttr.anchorPX, animateAttr.anchorPY, _modelViewMartix_S);
-            cpp_glBindTexture(GL_TEXTURE0, _texture[i]);
-            glDrawArrays(GL_TRIANGLES, 0, 6);
+            continue;
         }
+      
+        int tmpAsset_index = parseAE.asset_index_refId(tmpEntity.refId, configEntity);
+        AEAssetEntity tmpAsset = configEntity.assets[tmpAsset_index];
+        float ae_w = tmpAsset.w;
+        float ae_h = tmpAsset.h;
+        
+        float ae_a_x = 0.0f;
+        float ae_a_y = 0.0f;
+        float ae_p_x = 0.0f;
+        float ae_p_y = 0.0f;
+        float ae_s_x = 0.0f;
+        float ae_s_y = 0.0f;
+        float ae_r = 0.0f;
+        int ae_blur = 0;
+        float ae_alpha = 0;
+
+        parseAE.get_ae_params(fr, tmpEntity, &ae_r, &ae_s_x, &ae_s_y, &ae_p_x, &ae_p_y, &ae_a_x, &ae_a_y, &ae_alpha, &ae_blur);        
+        
+        float ae_a_x_result = (ae_a_x-ae_w/2.0)/_viewPort_w*2.0;
+        float ae_a_y_result = (ae_h/2.0-ae_a_y)/_viewPort_w*2.0;
+        
+        glBindVertexArray(_aBufferID[i]);
+        GPUAnimateAttr animateAttr;
+        animateAttr.anchorPX = ae_a_x_result;
+        animateAttr.anchorPY = ae_a_y_result;
+        animateAttr.rotateAngleZ = ae_r;
+        animateAttr.scaleX = ae_s_x;
+        animateAttr.scaleY = ae_s_y;
+
+        float end_deltaX = (ae_w/2.0-_viewPort_w/2.0) + ae_p_x;
+        float end_deltaY = (_viewPort_h/2.0-ae_h/2.0) - ae_p_y;
+        
+        animateAttr.deltaX = end_deltaX/_viewPort_w*2.0;
+        animateAttr.deltaY = end_deltaY/_viewPort_w*2.0;
+        
+        cpp_generateAndUniform2DMatrix(_perspective_left, _perspective_right, _perspective_bottom, _perspective_top, _perspective_near, _perspective_far, animateAttr.deltaX, animateAttr.deltaY, animateAttr.deltaZ, animateAttr.rotateAngleX, animateAttr.rotateAngleY, animateAttr.rotateAngleZ, animateAttr.scaleX, animateAttr.scaleY, animateAttr.scaleZ, animateAttr.anchorPX, animateAttr.anchorPY, _modelViewMartix_S);
+        cpp_glBindTexture(GL_TEXTURE0, _texture[_aBufferID_num-i-1]);
+        glDrawArrays(GL_TRIANGLES, 0, 6);
         glBindVertexArray(0);
     }
     glBindVertexArray(0);
 }
 
-void GPUImageFilter::showGLScreen()
-{
-    draw(-1);
-}
-
-void* GPUImageFilter::game_draw_thread_callback(void *game_ptr)
-{
-    while (1)
-    {
-        this_thread::sleep_for(std::chrono::seconds(1));
-        GPUImageFilter * game = (GPUImageFilter *)game_ptr;
-        game->timerinvokeCallback();
-    }
-    return NULL;
-}
-
 void GPUImageFilter::draw()
 {
-    pthread_create(&_draw_t, NULL, GPUImageFilter::game_draw_thread_callback, this);
+    draw(125);
 }
 
 void GPUImageFilter::addImageTexture(GPUImage &image)
@@ -203,16 +210,5 @@ void GPUImageFilter::addImageAsset(GPUImage &image)
     tmpImage->index = _imageAsset_num;
     _imageAsset[_imageAsset_num] = tmpImage;
     _imageAsset_num++;
-}
-
-void GPUImageFilter::setTimerCallback(CPPCallback cb, void *param)
-{
-    timerCallback = cb;
-    callBackParam = param;
-}
-
-void GPUImageFilter::timerinvokeCallback()
-{
-    timerCallback(callBackParam);
 }
 

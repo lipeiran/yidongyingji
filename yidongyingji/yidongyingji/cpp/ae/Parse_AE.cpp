@@ -758,7 +758,7 @@ void ParseAE::get_ae_params(int i, AELayerEntity tmpLayerEntity, float *angle_f_
         {
             if (tmpLayerEntity.ks.r.k_entity[i-tmpLayerEntity.ip].s_num > 0)
             {
-                angle_f = tmpLayerEntity.ks.r.k_entity[i-tmpLayerEntity.ip].s[0] * M_PI / 180.0;
+                angle_f = tmpLayerEntity.ks.r.k_entity[i-tmpLayerEntity.ip].s[0];
             }
             else
             {
@@ -767,7 +767,7 @@ void ParseAE::get_ae_params(int i, AELayerEntity tmpLayerEntity, float *angle_f_
                 {
                     if (tmpLayerEntity.ks.r.k_entity[i-tmpLayerEntity.ip-tmp_i].s_num > 0)
                     {
-                        angle_f = tmpLayerEntity.ks.r.k_entity[i-tmpLayerEntity.ip-tmp_i].e[0] * M_PI / 180.0;
+                        angle_f = tmpLayerEntity.ks.r.k_entity[i-tmpLayerEntity.ip-tmp_i].e[0];
                         break;
                     }
                     tmp_i++;
@@ -781,7 +781,7 @@ void ParseAE::get_ae_params(int i, AELayerEntity tmpLayerEntity, float *angle_f_
             {
                 if (tmpLayerEntity.ks.r.k_entity[i-tmpLayerEntity.ip-tmp_i].s_num > 0)
                 {
-                    angle_f = tmpLayerEntity.ks.r.k_entity[i-tmpLayerEntity.ip-tmp_i].e[0] * M_PI / 180.0;
+                    angle_f = tmpLayerEntity.ks.r.k_entity[i-tmpLayerEntity.ip-tmp_i].e[0];
                     break;
                 }
                 tmp_i++;
@@ -790,7 +790,7 @@ void ParseAE::get_ae_params(int i, AELayerEntity tmpLayerEntity, float *angle_f_
     }
     else
     {
-        angle_f = tmpLayerEntity.ks.r.k * M_PI / 180.0;
+        angle_f = tmpLayerEntity.ks.r.k;
     }
     // 缩放大小，获得值需要除以 100，得到小数
     if (tmpLayerEntity.ks.s.k_entity_num > 0)

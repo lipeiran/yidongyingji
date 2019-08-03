@@ -38,16 +38,6 @@
     NSLog(@"%s",__func__);
 }
 
-void showTimer(void *game_ptr)
-{
-    OpenGLES2DView *tmp_view = (__bridge OpenGLES2DView *)game_ptr;
-
-    dispatch_async(dispatch_get_main_queue(), ^{
-        tmp_view->filter.showGLScreen();
-        [tmp_view.context presentRenderbuffer:GL_RENDERBUFFER];
-    });
-}
-
 - (id)initWithFrame:(CGRect)frame
 {
     if (!(self = [super initWithFrame:frame]))
@@ -96,9 +86,8 @@ void showTimer(void *game_ptr)
     // Filter后原生配置
     [self setConfigTail];
     
-    filter.setTimerCallback(showTimer, (__bridge void *)self);
-
     filter.draw();
+    [self.context presentRenderbuffer:GL_RENDERBUFFER];
 
     return self;
 }
