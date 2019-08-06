@@ -71,6 +71,12 @@ void GPUImageFilter::setLocalData(GLuint screenX, GLuint screenY, GLuint screenW
     _viewPort_h = screenH;
     _draw_b = false;
     _conti = true;
+    _aBufferID_num = 0;
+    _texture_num = 0;
+    _imageAsset_num = 0;
+    memset(_aBufferID, 0, 512);
+    memset(_texture, 0, 512);
+    memset(_imageAsset, NULL, 512);
 }
 
 void GPUImageFilter::setDisplayFrameBuffer()

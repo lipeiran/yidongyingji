@@ -17,6 +17,7 @@
     GLuint _position;
     GLuint _textCoordinate;
     GLuint _modelViewMartix_S;
+    CGRect _screenRect;
 }
 @property(atomic, assign) BOOL playFlag;
 @property(atomic, assign) BOOL isInitContext;
@@ -46,21 +47,18 @@
 
 - (void)dealloc
 {
-    // Filter销毁
-    filter.destropDisplayFrameBuffer();
-}
-
-- (void)drawRect:(CGRect)rect
-{
-    [super drawRect:rect];
-    NSLog(@"%s",__func__);
+    self->filter.destropDisplayFrameBuffer();
 }
 
 - (void)layoutSubviews
 {
     @synchronized (self)
     {
-        _isSurfaceChanged = TRUE;
+        [GPUImageContext useImageProcessingContext];
+        runSynchronouslyOnVideoProcessingQueue(^{
+            self->filter.destropDisplayFrameBuffer();
+            [self createFrameBuffer];
+        });
     }
 }
 
@@ -75,209 +73,69 @@
     self.layer.opaque = YES;
     self.layer.contentsScale = [[UIScreen mainScreen] scale];
     ((CAEAGLLayer *) self.layer).drawableProperties = @{kEAGLDrawablePropertyRetainedBacking: [NSNumber numberWithBool:YES],kEAGLDrawablePropertyColorFormat:kEAGLColorFormatRGBA8};
+    float scale = [UIScreen mainScreen].scale;
+    _screenRect = CGRectMake(self.frame.origin.x * scale, self.frame.origin.y * scale, self.frame.size.width * scale, self.frame.size.height * scale);
     
-    runAsynchronouslyOnVideoProcessingQueue(^{
-        runSynchronouslyOnVideoProcessingQueue(^{
-            NSLog(@"lipeiran\n");
-        });
+    [self createFrameBuffer];
+
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        @autoreleasepool {
+            self->_renderTimer = [NSTimer scheduledTimerWithTimeInterval:1.0/25 target:self selector:@selector(startQueue) userInfo:nil repeats:YES];
+            [[NSRunLoop currentRunLoop]run];
+        }
     });
-    
-    _renderLoopThread = [[NSThread alloc] initWithTarget:self selector:@selector(renderThreadFunc) object:nil];
-    [_renderLoopThread start];
     return self;
+}
+
+- (void)startQueue
+{
+    runAsynchronouslyOnVideoProcessingQueue(^{
+        [self renderThreadFunc];
+    });
 }
 
 - (void)renderThreadFunc
 {
-    [GPUImageContext useImageProcessingContext];
-
-    @autoreleasepool {
-        _renderTimer = [NSTimer scheduledTimerWithTimeInterval:0.0333 target:self selector:@selector(renderLoop) userInfo:nil repeats:YES];
-        [[NSRunLoop currentRunLoop] run];
-    }
-    [EAGLContext setCurrentContext:nil];
-    self.context = nil;
-    NSLog(@"this is the render thread destroy!");
-}
-
-- (void)renderLoop
-{
-    if (_isSurfaceChanged)
-    {
-        @synchronized (self)
-        {
-            [self createFrameBuffer];
-            _isSurfaceChanged = FALSE;
-            [[[GPUImageContext sharedImageProcessingContext] context] renderbufferStorage:GL_RENDERBUFFER fromDrawable:self.layerPtr];
-        }
-    }
-    filter.draw();
-    [[[GPUImageContext sharedImageProcessingContext] context] presentRenderbuffer:GL_RENDERBUFFER];
+    runSynchronouslyOnVideoProcessingQueue(^{
+        [GPUImageContext useImageProcessingContext];
+        self->filter.draw();
+        [[[GPUImageContext sharedImageProcessingContext] context] presentRenderbuffer:GL_RENDERBUFFER];
+    });
 }
 
 - (void)createFrameBuffer
 {
-    scale = [UIScreen mainScreen].scale;
-    filter.initWithProgram(self.frame.origin.x * scale, self.frame.origin.y * scale, self.frame.size.width * scale, self.frame.size.height * scale);
+    self->filter.initWithProgram(_screenRect.origin.x,_screenRect.origin.y,_screenRect.size.width,_screenRect.size.height);
     int w1,h1,w2,h2,w3,h3,w4,h4;
     GLubyte *byte1 = NULL,*byte2 = NULL,*byte3 = NULL,*byte4 = NULL;
-    
     byte1 = [OpenGLES2DTools getImageDataWithName:@"img_0.png" width:&w1 height:&h1];
     byte2 = [OpenGLES2DTools getImageDataWithName:@"img_1.png" width:&w2 height:&h2];
     byte3 = [OpenGLES2DTools getImageDataWithName:@"img_2.png" width:&w3 height:&h3];
     byte4 = [OpenGLES2DTools getImageDataWithName:@"img_3.png" width:&w4 height:&h4];
-    
     GPUImage image1;
     image1.byte = byte1;
     image1.w = w1;
     image1.h = h1;
-    filter.addImageAsset(image1);
     GPUImage image2;
     image2.byte = byte2;
     image2.w = w2;
     image2.h = h2;
-    filter.addImageAsset(image2);
     GPUImage image3;
     image3.byte = byte3;
     image3.w = w3;
     image3.h = h3;
-    filter.addImageAsset(image3);
     GPUImage image4;
     image4.byte = byte4;
     image4.w = w4;
     image4.h = h4;
-    filter.addImageAsset(image4);
     char *configPath = (char *)[[[NSBundle mainBundle]pathForResource:@"tp" ofType:@"json"] UTF8String];
-    filter.addConfigure(configPath);
-}
-
-// =================================================================
-
-/*
-- (id)initWithFrame:(CGRect)frame
-{
-    if (!(self = [super initWithFrame:frame]))
-    {
-        return nil;
-    }
-    // Filter前原生配置
-    [self setConfigPre];
     
-    // Filter配置
-    filter.initWithProgram(self.frame.origin.x * scale, self.frame.origin.y * scale, self.frame.size.width * scale, self.frame.size.height * scale);
-
-    //---------------- 获取图片数据可以放到C++文件中，由ffmpeg解码 ---------------//
-    int w1,h1,w2,h2,w3,h3,w4,h4;
-    GLubyte * byte1 = NULL,*byte2 = NULL,*byte3 = NULL,*byte4 = NULL;
-    
-    byte1 = [OpenGLES2DTools getImageDataWithName:@"img_0.png" width:&w1 height:&h1];
-    byte2 = [OpenGLES2DTools getImageDataWithName:@"img_1.png" width:&w2 height:&h2];
-    byte3 = [OpenGLES2DTools getImageDataWithName:@"img_2.png" width:&w3 height:&h3];
-    byte4 = [OpenGLES2DTools getImageDataWithName:@"img_3.png" width:&w4 height:&h4];
-    
-    GPUImage image1;
-    image1.byte = byte1;
-    image1.w = w1;
-    image1.h = h1;
-    filter.addImageAsset(image1);
-    GPUImage image2;
-    image2.byte = byte2;
-    image2.w = w2;
-    image2.h = h2;
-    filter.addImageAsset(image2);
-    GPUImage image3;
-    image3.byte = byte3;
-    image3.w = w3;
-    image3.h = h3;
-    filter.addImageAsset(image3);
-    GPUImage image4;
-    image4.byte = byte4;
-    image4.w = w4;
-    image4.h = h4;
-    filter.addImageAsset(image4);
-
-    char *configPath = (char *)[[[NSBundle mainBundle]pathForResource:@"tp" ofType:@"json"] UTF8String];
-    filter.addConfigure(configPath);
-    
-    // Filter后原生配置
-    [self setConfigTail];
-    
-//    _displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(updateDisplay:)];
-//    _displayLink.frameInterval = 2;
-//    [_displayLink addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
-    
-    float theInterval = 1.0/25.0f;  //每秒调用30次
-    _theTimer = [NSTimer scheduledTimerWithTimeInterval:theInterval target:self selector:@selector(updateDisplay:) userInfo:nil repeats:YES];
-    return self;
+    self->filter.addImageAsset(image1);
+    self->filter.addImageAsset(image2);
+    self->filter.addImageAsset(image3);
+    self->filter.addImageAsset(image4);
+    self->filter.addConfigure(configPath);
+    [[[GPUImageContext sharedImageProcessingContext] context] renderbufferStorage:GL_RENDERBUFFER fromDrawable:self.layerPtr];
 }
-
-- (void)updateDisplay:(NSTimer *)timer
-{
-    filter.draw();
-    [self.context presentRenderbuffer:GL_RENDERBUFFER];
-}
-
-#pragma mark -
-#pragma private methods
-
-- (void)setConfigPre
-{
-    // 设置全局数据
-    [self setLocalData];
-    // 设置 EAGL layer 环境
-    [self setupLayer];
-    // 设置OpenGLES上下文
-    [self setupContext];
-    // 获取图片数据
-    [self setImageData];
-}
-
-- (void)setConfigTail
-{
-    [self.context renderbufferStorage:GL_RENDERBUFFER fromDrawable:self.eaglLayer];
-}
-
-// 设置全局数据
-- (void)setLocalData
-{
-    scale = [UIScreen mainScreen].scale;
-}
-
-// 设置 EAGL layer 环境
-- (void)setupLayer
-{
-    self.opaque = YES;
-    self.hidden = NO;
-    // 创建特殊图层
-    self.eaglLayer = (CAEAGLLayer *)self.layer;
-    [self setContentScaleFactor:[UIScreen mainScreen].scale];
-    self.eaglLayer.opaque = YES;
-    NSDictionary *options = @{kEAGLDrawablePropertyRetainedBacking:@(false),kEAGLDrawablePropertyColorFormat:kEAGLColorFormatRGBA8};
-    self.eaglLayer.drawableProperties = options;
-}
-
-// 设置OpenGLES上下文
-- (void)setupContext
-{
-    // 创建context
-    self.context = [[EAGLContext alloc]initWithAPI:kEAGLRenderingAPIOpenGLES3];
-    if (!_context)
-    {
-        NSLog(@"context创建失败");
-        return;
-    }
-    // 设置当前context并判断是否设置成功
-    if ([EAGLContext setCurrentContext:self.context] == false)
-    {
-        NSLog(@"设置当前context失败！");
-    }
-}
-
-// 获取图片数据
-- (void)setImageData
-{
-//    byte1 = [OpenGLES2DTools getImageDataWithName:@"10_480_480.jpeg" width:&w1 height:&h1];
-//    byte2 = [OpenGLES2DTools getImageDataWithName:@"11_320_480.jpeg" width:&w2 height:&h2];
-}*/
 
 @end

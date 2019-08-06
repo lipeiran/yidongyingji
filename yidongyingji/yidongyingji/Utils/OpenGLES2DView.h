@@ -18,7 +18,6 @@ NS_ASSUME_NONNULL_BEGIN
 @interface OpenGLES2DView : UIView
 {
     GPUImageFilter filter;
-    float scale;
 }
 
 //@property (nonatomic, strong) CAEAGLLayer *eaglLayer;
