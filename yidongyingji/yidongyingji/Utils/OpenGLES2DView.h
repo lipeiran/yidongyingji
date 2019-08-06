@@ -20,8 +20,8 @@ NS_ASSUME_NONNULL_BEGIN
     float scale;
 }
 
-@property (nonatomic, strong) CAEAGLLayer *eaglLayer;
-@property (nonatomic, strong) EAGLContext *context;
+//@property (nonatomic, strong) CAEAGLLayer *eaglLayer;
+//@property (nonatomic, strong) EAGLContext *context;
 
 @end
 

@@ -11,9 +11,29 @@
 
 @interface OpenGLES2DView ()
 {
-    CADisplayLink *_displayLink;
-    NSTimer *_theTimer;
+//    CADisplayLink *_displayLink;
+//    NSTimer *_theTimer;
+    
+    GLuint _program;
+    GLuint _frameBuffer;
+    GLuint _renderBuffer;
+    GLuint _position;
+    GLuint _textCoordinate;
+    GLuint _modelViewMartix_S;
 }
+@property(atomic, assign) BOOL playFlag;
+@property(atomic, assign) BOOL isInitContext;
+@property(nonatomic, strong) EAGLContext *context;
+@property(atomic, assign) BOOL isSurfaceChanged;
+
+
+@property(atomic, assign) GLuint framebuffer;
+@property(atomic, assign) GLuint colorRenderbuffer;
+@property(atomic, assign) GLuint depthRenderbuffer;
+
+@property(nonatomic, strong) NSThread *renderLoopThread;
+@property(nonatomic, strong) CAEAGLLayer *layerPtr;
+@property(nonatomic, strong) NSTimer *renderTimer;
 
 @end
 
@@ -21,6 +41,101 @@
 
 #pragma mark -
 #pragma LifeCycle
+
+- (void)layoutSubviews {
+    @synchronized (self) {
+        _isSurfaceChanged = TRUE;
+    }
+}
+
+- (id)initWithFrame:(CGRect)frame {
+    if ((self = [super initWithFrame:frame])) {
+        self.layer.opaque = YES;
+        _playFlag = TRUE;
+        _isInitContext = FALSE;
+        _layerPtr = (CAEAGLLayer *) self.layer;
+        self.layer.opaque = YES;
+        self.layer.contentsScale = [[UIScreen mainScreen] scale];
+        ((CAEAGLLayer *) self.layer).drawableProperties = @{kEAGLDrawablePropertyRetainedBacking: [NSNumber numberWithBool:YES],};
+    }
+    _renderLoopThread = [[NSThread alloc] initWithTarget:self selector:@selector(renderThreadFunc) object:nil];
+    [_renderLoopThread start];
+    return self;
+}
+
+- (void)renderThreadFunc
+{
+    if (!_isInitContext) {
+        _context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
+        _isInitContext = TRUE;
+        [EAGLContext setCurrentContext:_context];
+    }
+    @autoreleasepool {
+        _renderTimer = [NSTimer scheduledTimerWithTimeInterval:0.0333 target:self selector:@selector(renderLoop) userInfo:nil repeats:YES];
+        [[NSRunLoop currentRunLoop] run];
+    }
+    [EAGLContext setCurrentContext:nil];
+    self.context = nil;
+    NSLog(@"this is the render thread destroy!");
+}
+
+- (void)renderLoop
+{
+    if (_isInitContext && _isSurfaceChanged)
+    {
+        @synchronized (self) {
+            [self createFrameBuffer];
+            _isSurfaceChanged = FALSE;
+            [self.context renderbufferStorage:GL_RENDERBUFFER fromDrawable:self.layerPtr];
+        }
+    }
+    [self presentFrameBuffer];
+}
+
+- (void)createFrameBuffer
+{
+    scale = [UIScreen mainScreen].scale;
+    filter.initWithProgram(self.frame.origin.x * scale, self.frame.origin.y * scale, self.frame.size.width * scale, self.frame.size.height * scale);
+    int w1,h1,w2,h2,w3,h3,w4,h4;
+    GLubyte * byte1 = NULL,*byte2 = NULL,*byte3 = NULL,*byte4 = NULL;
+    
+    byte1 = [OpenGLES2DTools getImageDataWithName:@"img_0.png" width:&w1 height:&h1];
+    byte2 = [OpenGLES2DTools getImageDataWithName:@"img_1.png" width:&w2 height:&h2];
+    byte3 = [OpenGLES2DTools getImageDataWithName:@"img_2.png" width:&w3 height:&h3];
+    byte4 = [OpenGLES2DTools getImageDataWithName:@"img_3.png" width:&w4 height:&h4];
+    
+    GPUImage image1;
+    image1.byte = byte1;
+    image1.w = w1;
+    image1.h = h1;
+    filter.addImageAsset(image1);
+    GPUImage image2;
+    image2.byte = byte2;
+    image2.w = w2;
+    image2.h = h2;
+    filter.addImageAsset(image2);
+    GPUImage image3;
+    image3.byte = byte3;
+    image3.w = w3;
+    image3.h = h3;
+    filter.addImageAsset(image3);
+    GPUImage image4;
+    image4.byte = byte4;
+    image4.w = w4;
+    image4.h = h4;
+    filter.addImageAsset(image4);
+    
+    char *configPath = (char *)[[[NSBundle mainBundle]pathForResource:@"tp" ofType:@"json"] UTF8String];
+    filter.addConfigure(configPath);
+    
+}
+
+- (void)presentFrameBuffer {
+    NSLog(@"%s---%@\n",__func__,[NSThread currentThread]);
+    filter.draw();
+    [self.context presentRenderbuffer:GL_RENDERBUFFER];
+}
+// =================================================================
 
 + (Class)layerClass
 {
@@ -38,7 +153,7 @@
     [super drawRect:rect];
     NSLog(@"%s",__func__);
 }
-
+/*
 - (id)initWithFrame:(CGRect)frame
 {
     if (!(self = [super initWithFrame:frame]))
@@ -163,6 +278,6 @@
 {
 //    byte1 = [OpenGLES2DTools getImageDataWithName:@"10_480_480.jpeg" width:&w1 height:&h1];
 //    byte2 = [OpenGLES2DTools getImageDataWithName:@"11_320_480.jpeg" width:&w2 height:&h2];
-}
+}*/
 
 @end
