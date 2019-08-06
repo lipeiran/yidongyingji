@@ -11,9 +11,6 @@
 
 @interface OpenGLES2DView ()
 {
-//    CADisplayLink *_displayLink;
-//    NSTimer *_theTimer;
-    
     GLuint _program;
     GLuint _frameBuffer;
     GLuint _renderBuffer;
@@ -42,22 +39,49 @@
 #pragma mark -
 #pragma LifeCycle
 
-- (void)layoutSubviews {
-    @synchronized (self) {
++ (Class)layerClass
+{
+    return [CAEAGLLayer class];
+}
+
+- (void)dealloc
+{
+    // Filter销毁
+    filter.destropDisplayFrameBuffer();
+}
+
+- (void)drawRect:(CGRect)rect
+{
+    [super drawRect:rect];
+    NSLog(@"%s",__func__);
+}
+
+- (void)layoutSubviews
+{
+    @synchronized (self)
+    {
         _isSurfaceChanged = TRUE;
     }
 }
 
-- (id)initWithFrame:(CGRect)frame {
-    if ((self = [super initWithFrame:frame])) {
-        self.layer.opaque = YES;
-        _playFlag = TRUE;
-        _isInitContext = FALSE;
-        _layerPtr = (CAEAGLLayer *) self.layer;
-        self.layer.opaque = YES;
-        self.layer.contentsScale = [[UIScreen mainScreen] scale];
-        ((CAEAGLLayer *) self.layer).drawableProperties = @{kEAGLDrawablePropertyRetainedBacking: [NSNumber numberWithBool:YES],};
+- (id)initWithFrame:(CGRect)frame
+{
+    if (!(self = [super initWithFrame:frame]))
+    {
+        return nil;
     }
+    self.layer.opaque = YES;
+    _layerPtr = (CAEAGLLayer *) self.layer;
+    self.layer.opaque = YES;
+    self.layer.contentsScale = [[UIScreen mainScreen] scale];
+    ((CAEAGLLayer *) self.layer).drawableProperties = @{kEAGLDrawablePropertyRetainedBacking: [NSNumber numberWithBool:YES],kEAGLDrawablePropertyColorFormat:kEAGLColorFormatRGBA8};
+    
+    runAsynchronouslyOnVideoProcessingQueue(^{
+        runSynchronouslyOnVideoProcessingQueue(^{
+            NSLog(@"lipeiran\n");
+        });
+    });
+    
     _renderLoopThread = [[NSThread alloc] initWithTarget:self selector:@selector(renderThreadFunc) object:nil];
     [_renderLoopThread start];
     return self;
@@ -65,11 +89,8 @@
 
 - (void)renderThreadFunc
 {
-    if (!_isInitContext) {
-        _context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
-        _isInitContext = TRUE;
-        [EAGLContext setCurrentContext:_context];
-    }
+    [GPUImageContext useImageProcessingContext];
+
     @autoreleasepool {
         _renderTimer = [NSTimer scheduledTimerWithTimeInterval:0.0333 target:self selector:@selector(renderLoop) userInfo:nil repeats:YES];
         [[NSRunLoop currentRunLoop] run];
@@ -81,15 +102,17 @@
 
 - (void)renderLoop
 {
-    if (_isInitContext && _isSurfaceChanged)
+    if (_isSurfaceChanged)
     {
-        @synchronized (self) {
+        @synchronized (self)
+        {
             [self createFrameBuffer];
             _isSurfaceChanged = FALSE;
-            [self.context renderbufferStorage:GL_RENDERBUFFER fromDrawable:self.layerPtr];
+            [[[GPUImageContext sharedImageProcessingContext] context] renderbufferStorage:GL_RENDERBUFFER fromDrawable:self.layerPtr];
         }
     }
-    [self presentFrameBuffer];
+    filter.draw();
+    [[[GPUImageContext sharedImageProcessingContext] context] presentRenderbuffer:GL_RENDERBUFFER];
 }
 
 - (void)createFrameBuffer
@@ -97,7 +120,7 @@
     scale = [UIScreen mainScreen].scale;
     filter.initWithProgram(self.frame.origin.x * scale, self.frame.origin.y * scale, self.frame.size.width * scale, self.frame.size.height * scale);
     int w1,h1,w2,h2,w3,h3,w4,h4;
-    GLubyte * byte1 = NULL,*byte2 = NULL,*byte3 = NULL,*byte4 = NULL;
+    GLubyte *byte1 = NULL,*byte2 = NULL,*byte3 = NULL,*byte4 = NULL;
     
     byte1 = [OpenGLES2DTools getImageDataWithName:@"img_0.png" width:&w1 height:&h1];
     byte2 = [OpenGLES2DTools getImageDataWithName:@"img_1.png" width:&w2 height:&h2];
@@ -124,35 +147,12 @@
     image4.w = w4;
     image4.h = h4;
     filter.addImageAsset(image4);
-    
     char *configPath = (char *)[[[NSBundle mainBundle]pathForResource:@"tp" ofType:@"json"] UTF8String];
     filter.addConfigure(configPath);
-    
 }
 
-- (void)presentFrameBuffer {
-    NSLog(@"%s---%@\n",__func__,[NSThread currentThread]);
-    filter.draw();
-    [self.context presentRenderbuffer:GL_RENDERBUFFER];
-}
 // =================================================================
 
-+ (Class)layerClass
-{
-    return [CAEAGLLayer class];
-}
-
-- (void)dealloc
-{
-    // Filter销毁
-    filter.destropDisplayFrameBuffer();
-}
-
-- (void)drawRect:(CGRect)rect
-{
-    [super drawRect:rect];
-    NSLog(@"%s",__func__);
-}
 /*
 - (id)initWithFrame:(CGRect)frame
 {

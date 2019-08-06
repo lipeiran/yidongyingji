@@ -172,6 +172,10 @@ void GPUImageFilter::draw(int fr)
 
 void GPUImageFilter::draw()
 {
+    if (_imageAsset_num == 0)
+    {
+        return;
+    }
     static int i = 0;
     draw(i);
     i++;

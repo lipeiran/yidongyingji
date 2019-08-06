@@ -50,6 +50,7 @@
 		FEE27B0522EFE4D700FF5511 /* GPUImage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FEE27B0322EFE4D700FF5511 /* GPUImage.cpp */; };
 		FEE27B0822EFEE4500FF5511 /* GPUAnimateAttr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FEE27B0622EFEE4500FF5511 /* GPUAnimateAttr.cpp */; };
 		FEE27B1E22F1958800FF5511 /* TimeWheel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FEE27B1C22F1958800FF5511 /* TimeWheel.cpp */; };
+		FEF840F622F9270100C04CA3 /* GPUImageContext.m in Sources */ = {isa = PBXBuildFile; fileRef = FEF840F522F9270100C04CA3 /* GPUImageContext.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -110,7 +111,7 @@
 		FEE27AF422EF094800FF5511 /* BasicTools.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BasicTools.cpp; sourceTree = "<group>"; };
 		FEE27AF622EF09AA00FF5511 /* cJSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cJSON.h; sourceTree = "<group>"; };
 		FEE27AF722EF09AA00FF5511 /* cJSON.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = cJSON.c; sourceTree = "<group>"; };
-		FEE27AF922EF0A5800FF5511 /* OpenGLES2DTools.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OpenGLES2DTools.h; sourceTree = "<group>"; };
+		FEE27AF922EF0A5800FF5511 /* OpenGLES2DTools.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.objc; path = OpenGLES2DTools.h; sourceTree = "<group>"; };
 		FEE27AFA22EF0A5800FF5511 /* OpenGLES2DTools.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OpenGLES2DTools.m; sourceTree = "<group>"; };
 		FEE27AFC22EF0AFC00FF5511 /* GLESUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLESUtils.m; sourceTree = "<group>"; };
 		FEE27AFD22EF0AFC00FF5511 /* GLESUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLESUtils.h; sourceTree = "<group>"; };
@@ -121,6 +122,8 @@
 		FEE27B1C22F1958800FF5511 /* TimeWheel.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = TimeWheel.cpp; sourceTree = "<group>"; };
 		FEE27B1D22F1958800FF5511 /* TimeWheel.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = TimeWheel.hpp; sourceTree = "<group>"; };
 		FEE27B1F22F195F100FF5511 /* time_wheel.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = time_wheel.cpp; sourceTree = "<group>"; };
+		FEF840F422F9270100C04CA3 /* GPUImageContext.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GPUImageContext.h; sourceTree = "<group>"; };
+		FEF840F522F9270100C04CA3 /* GPUImageContext.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GPUImageContext.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -227,6 +230,8 @@
 				FEE27AFA22EF0A5800FF5511 /* OpenGLES2DTools.m */,
 				FE0AC5B022F2E9EF002A81CD /* GCDCountDown.h */,
 				FE0AC5B122F2E9EF002A81CD /* GCDCountDown.m */,
+				FEF840F422F9270100C04CA3 /* GPUImageContext.h */,
+				FEF840F522F9270100C04CA3 /* GPUImageContext.m */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -423,6 +428,7 @@
 				FEE27AFE22EF0AFC00FF5511 /* GLESUtils.m in Sources */,
 				FE56E89322EEE489001BD700 /* GPUImageFilter.cpp in Sources */,
 				FEE27B1E22F1958800FF5511 /* TimeWheel.cpp in Sources */,
+				FEF840F622F9270100C04CA3 /* GPUImageContext.m in Sources */,
 				FE6119B922E6F6F700DD0741 /* AppDelegate.m in Sources */,
 				FEE27AF222EF091900FF5511 /* Parse_AE.cpp in Sources */,
 				FEE27AF522EF094800FF5511 /* BasicTools.cpp in Sources */,
@@ -490,6 +496,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_BITCODE = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -550,6 +557,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_BITCODE = NO;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;

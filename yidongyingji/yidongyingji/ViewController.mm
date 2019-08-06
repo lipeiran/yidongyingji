@@ -25,7 +25,7 @@
 //    self.glesView = [[OpenGLESView alloc]initWithFrame:self.view.bounds];
 //    self.view = self.glesView;
     self.view.backgroundColor = [UIColor redColor];
-    self.gles2DView = [[OpenGLES2DView alloc]initWithFrame:CGRectMake(self.view.bounds.origin.x, self.view.bounds.origin.y, 480/[UIScreen mainScreen].scale, 640/[UIScreen mainScreen].scale)];
+    self.gles2DView = [[OpenGLES2DView alloc]initWithFrame:CGRectMake(self.view.bounds.origin.x/[UIScreen mainScreen].scale, self.view.bounds.origin.y/[UIScreen mainScreen].scale, 480/[UIScreen mainScreen].scale, 640/[UIScreen mainScreen].scale)];
     [self.view addSubview:self.gles2DView];
     
 //    self.guideView = [[GuideView alloc]initWithFrame:self.view.bounds];

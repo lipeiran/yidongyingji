@@ -8,6 +8,36 @@
 
 #import "OpenGLES2DTools.h"
 
+void runSynchronouslyOnVideoProcessingQueue(void (^block)(void))
+{
+    dispatch_queue_t videoProcessingQueue = [GPUImageContext sharedContextQueue];
+    if (dispatch_get_specific([GPUImageContext contextKey]))
+    {
+        block();
+    }else
+    {
+        dispatch_sync(videoProcessingQueue, block);
+    }
+}
+
+void runAsynchronouslyOnVideoProcessingQueue(void (^block)(void))
+{
+    dispatch_queue_t videoProcessingQueue = [GPUImageContext sharedContextQueue];
+
+    if (dispatch_get_specific([GPUImageContext contextKey]))
+    {
+        block();
+    }else
+    {
+        dispatch_async(videoProcessingQueue, block);
+    }
+}
+
+void aaa(int a)
+{
+    NSLog(@"a is:%d\n",a);
+}
+
 @implementation OpenGLES2DTools
 
 + (GLubyte *)getImageDataWithName:(NSString *)imageName width:(int*)width height:(int*)height

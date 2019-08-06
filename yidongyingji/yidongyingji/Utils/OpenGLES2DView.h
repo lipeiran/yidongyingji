@@ -11,6 +11,7 @@
 #import "utils.hpp"
 #import "GPUImageFilter.hpp"
 #import "OpenGLES2DTools.h"
+#import "GPUImageContext.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
