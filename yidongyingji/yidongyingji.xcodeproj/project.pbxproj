@@ -40,6 +40,9 @@
 		FE6AC4AE22F5993400E65725 /* tp.json in Resources */ = {isa = PBXBuildFile; fileRef = FE6AC4A622F5993300E65725 /* tp.json */; };
 		FE6AC4AF22F5993400E65725 /* tp_mask.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = FE6AC4A722F5993300E65725 /* tp_mask.mp4 */; };
 		FE6AC4B022F5993400E65725 /* tp.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = FE6AC4A822F5993300E65725 /* tp.mp4 */; };
+		FE9CF8F422FAA608006BCE2B /* GPUImageMovie.m in Sources */ = {isa = PBXBuildFile; fileRef = FE9CF8F322FAA608006BCE2B /* GPUImageMovie.m */; };
+		FE9CF8F722FAAFC3006BCE2B /* GPUImageColorConversion.m in Sources */ = {isa = PBXBuildFile; fileRef = FE9CF8F622FAAFC3006BCE2B /* GPUImageColorConversion.m */; };
+		FE9CF8FA22FAC6B5006BCE2B /* GPUImageThreeInputFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = FE9CF8F922FAC6B5006BCE2B /* GPUImageThreeInputFilter.m */; };
 		FEE27AE922EEFB3100FF5511 /* GLESMath.c in Sources */ = {isa = PBXBuildFile; fileRef = FEE27AE822EEFB3100FF5511 /* GLESMath.c */; };
 		FEE27AEE22EF041700FF5511 /* OpenGLES2DView.mm in Sources */ = {isa = PBXBuildFile; fileRef = FEE27AED22EF041700FF5511 /* OpenGLES2DView.mm */; };
 		FEE27AF222EF091900FF5511 /* Parse_AE.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FEE27AF122EF091900FF5511 /* Parse_AE.cpp */; };
@@ -51,6 +54,13 @@
 		FEE27B0822EFEE4500FF5511 /* GPUAnimateAttr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FEE27B0622EFEE4500FF5511 /* GPUAnimateAttr.cpp */; };
 		FEE27B1E22F1958800FF5511 /* TimeWheel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FEE27B1C22F1958800FF5511 /* TimeWheel.cpp */; };
 		FEF840F622F9270100C04CA3 /* GPUImageContext.m in Sources */ = {isa = PBXBuildFile; fileRef = FEF840F522F9270100C04CA3 /* GPUImageContext.m */; };
+		FEF845F922F991E300C04CA3 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = FEF845F822F991E300C04CA3 /* libz.tbd */; };
+		FEF845FB22F991EA00C04CA3 /* libbz2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = FEF845FA22F991EA00C04CA3 /* libbz2.tbd */; };
+		FEF845FD22F991F000C04CA3 /* libiconv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = FEF845FC22F991F000C04CA3 /* libiconv.tbd */; };
+		FEF845FF22F991F900C04CA3 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FEF845FE22F991F900C04CA3 /* AudioToolbox.framework */; };
+		FEF8460122F9920000C04CA3 /* VideoToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FEF8460022F9920000C04CA3 /* VideoToolbox.framework */; };
+		FEF8460322F9921300C04CA3 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FEF8460222F9921300C04CA3 /* CoreMedia.framework */; };
+		FEF8460522F9927600C04CA3 /* huaxuyin.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FEF8460422F9927600C04CA3 /* huaxuyin.mp3 */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -98,6 +108,12 @@
 		FE6AC4A622F5993300E65725 /* tp.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = tp.json; sourceTree = "<group>"; };
 		FE6AC4A722F5993300E65725 /* tp_mask.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = tp_mask.mp4; sourceTree = "<group>"; };
 		FE6AC4A822F5993300E65725 /* tp.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = tp.mp4; sourceTree = "<group>"; };
+		FE9CF8F222FAA608006BCE2B /* GPUImageMovie.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GPUImageMovie.h; sourceTree = "<group>"; };
+		FE9CF8F322FAA608006BCE2B /* GPUImageMovie.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GPUImageMovie.m; sourceTree = "<group>"; };
+		FE9CF8F522FAAFC3006BCE2B /* GPUImageColorConversion.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GPUImageColorConversion.h; sourceTree = "<group>"; };
+		FE9CF8F622FAAFC3006BCE2B /* GPUImageColorConversion.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GPUImageColorConversion.m; sourceTree = "<group>"; };
+		FE9CF8F822FAC6B5006BCE2B /* GPUImageThreeInputFilter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GPUImageThreeInputFilter.h; sourceTree = "<group>"; };
+		FE9CF8F922FAC6B5006BCE2B /* GPUImageThreeInputFilter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GPUImageThreeInputFilter.m; sourceTree = "<group>"; };
 		FEE27AE722EEFB3100FF5511 /* GLESMath.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLESMath.h; sourceTree = "<group>"; };
 		FEE27AE822EEFB3100FF5511 /* GLESMath.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = GLESMath.c; sourceTree = "<group>"; };
 		FEE27AEA22EEFBBA00FF5511 /* Vector.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Vector.h; sourceTree = "<group>"; };
@@ -124,6 +140,13 @@
 		FEE27B1F22F195F100FF5511 /* time_wheel.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = time_wheel.cpp; sourceTree = "<group>"; };
 		FEF840F422F9270100C04CA3 /* GPUImageContext.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GPUImageContext.h; sourceTree = "<group>"; };
 		FEF840F522F9270100C04CA3 /* GPUImageContext.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GPUImageContext.m; sourceTree = "<group>"; };
+		FEF845F822F991E300C04CA3 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
+		FEF845FA22F991EA00C04CA3 /* libbz2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libbz2.tbd; path = usr/lib/libbz2.tbd; sourceTree = SDKROOT; };
+		FEF845FC22F991F000C04CA3 /* libiconv.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libiconv.tbd; path = usr/lib/libiconv.tbd; sourceTree = SDKROOT; };
+		FEF845FE22F991F900C04CA3 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
+		FEF8460022F9920000C04CA3 /* VideoToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = VideoToolbox.framework; path = System/Library/Frameworks/VideoToolbox.framework; sourceTree = SDKROOT; };
+		FEF8460222F9921300C04CA3 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
+		FEF8460422F9927600C04CA3 /* huaxuyin.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = huaxuyin.mp3; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -131,6 +154,12 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FEF8460322F9921300C04CA3 /* CoreMedia.framework in Frameworks */,
+				FEF8460122F9920000C04CA3 /* VideoToolbox.framework in Frameworks */,
+				FEF845FF22F991F900C04CA3 /* AudioToolbox.framework in Frameworks */,
+				FEF845FD22F991F000C04CA3 /* libiconv.tbd in Frameworks */,
+				FEF845FB22F991EA00C04CA3 /* libbz2.tbd in Frameworks */,
+				FEF845F922F991E300C04CA3 /* libz.tbd in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -142,6 +171,7 @@
 			children = (
 				FE6119B622E6F6F700DD0741 /* yidongyingji */,
 				FE6119B522E6F6F700DD0741 /* Products */,
+				FEF845F722F991E300C04CA3 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -232,6 +262,12 @@
 				FE0AC5B122F2E9EF002A81CD /* GCDCountDown.m */,
 				FEF840F422F9270100C04CA3 /* GPUImageContext.h */,
 				FEF840F522F9270100C04CA3 /* GPUImageContext.m */,
+				FE9CF8F222FAA608006BCE2B /* GPUImageMovie.h */,
+				FE9CF8F322FAA608006BCE2B /* GPUImageMovie.m */,
+				FE9CF8F522FAAFC3006BCE2B /* GPUImageColorConversion.h */,
+				FE9CF8F622FAAFC3006BCE2B /* GPUImageColorConversion.m */,
+				FE9CF8F822FAC6B5006BCE2B /* GPUImageThreeInputFilter.h */,
+				FE9CF8F922FAC6B5006BCE2B /* GPUImageThreeInputFilter.m */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -241,6 +277,7 @@
 			children = (
 				FE6119FA22E980A500DD0741 /* 1.jpeg */,
 				FE6119FE22E980A500DD0741 /* 2.jpg */,
+				FEF8460422F9927600C04CA3 /* huaxuyin.mp3 */,
 				FE6119FB22E980A500DD0741 /* 3.jpg */,
 				FE6119FC22E980A500DD0741 /* 4.jpeg */,
 				FE6119FD22E980A500DD0741 /* 5.jpeg */,
@@ -325,6 +362,19 @@
 			path = clock;
 			sourceTree = "<group>";
 		};
+		FEF845F722F991E300C04CA3 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				FEF8460222F9921300C04CA3 /* CoreMedia.framework */,
+				FEF8460022F9920000C04CA3 /* VideoToolbox.framework */,
+				FEF845FE22F991F900C04CA3 /* AudioToolbox.framework */,
+				FEF845FC22F991F000C04CA3 /* libiconv.tbd */,
+				FEF845FA22F991EA00C04CA3 /* libbz2.tbd */,
+				FEF845F822F991E300C04CA3 /* libz.tbd */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -400,6 +450,7 @@
 				FE6AC4AB22F5993400E65725 /* img_2.png in Resources */,
 				FE6119F322E9589800DD0741 /* guide.fsh in Resources */,
 				FE6AC4AE22F5993400E65725 /* tp.json in Resources */,
+				FEF8460522F9927600C04CA3 /* huaxuyin.mp3 in Resources */,
 				FE611A0222E980A500DD0741 /* 4.jpeg in Resources */,
 				FE6119BF22E6F6F700DD0741 /* Main.storyboard in Resources */,
 				FE6AC4AD22F5993400E65725 /* tp_fg.mp4 in Resources */,
@@ -421,7 +472,9 @@
 				FEE27AFB22EF0A5800FF5511 /* OpenGLES2DTools.m in Sources */,
 				FE6119EF22E9582F00DD0741 /* GuideView.mm in Sources */,
 				FE0AC5B222F2E9EF002A81CD /* GCDCountDown.m in Sources */,
+				FE9CF8FA22FAC6B5006BCE2B /* GPUImageThreeInputFilter.m in Sources */,
 				FEE27AE922EEFB3100FF5511 /* GLESMath.c in Sources */,
+				FE9CF8F722FAAFC3006BCE2B /* GPUImageColorConversion.m in Sources */,
 				FE6119BC22E6F6F700DD0741 /* ViewController.mm in Sources */,
 				FE6119D122E6F89300DD0741 /* OpenGLESView.mm in Sources */,
 				FE6119C722E6F6F900DD0741 /* main.m in Sources */,
@@ -431,6 +484,7 @@
 				FEF840F622F9270100C04CA3 /* GPUImageContext.m in Sources */,
 				FE6119B922E6F6F700DD0741 /* AppDelegate.m in Sources */,
 				FEE27AF222EF091900FF5511 /* Parse_AE.cpp in Sources */,
+				FE9CF8F422FAA608006BCE2B /* GPUImageMovie.m in Sources */,
 				FEE27AF522EF094800FF5511 /* BasicTools.cpp in Sources */,
 				FEE27B0522EFE4D700FF5511 /* GPUImage.cpp in Sources */,
 				FEE27AF822EF09AA00FF5511 /* cJSON.c in Sources */,
@@ -583,11 +637,19 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 4VTSBHHTZX;
+				HEADER_SEARCH_PATHS = (
+					"$(PROJECT_DIR)/yidongyingji",
+					"$(PROJECT_DIR)/yidongyingji/ffmpeg/include",
+				);
 				INFOPLIST_FILE = yidongyingji/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/yidongyingji/ffmpeg/lib",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.maibo.yidongyingji;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -601,11 +663,19 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 4VTSBHHTZX;
+				HEADER_SEARCH_PATHS = (
+					"$(PROJECT_DIR)/yidongyingji",
+					"$(PROJECT_DIR)/yidongyingji/ffmpeg/include",
+				);
 				INFOPLIST_FILE = yidongyingji/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/yidongyingji/ffmpeg/lib",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.maibo.yidongyingji;
 				PRODUCT_NAME = "$(TARGET_NAME)";

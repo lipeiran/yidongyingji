@@ -9,6 +9,19 @@
 #import "OpenGLES2DView.h"
 #include "GLESMath.h"
 
+//#ifdef __cplusplus
+//extern "C" {
+//#endif
+//#include <libavcodec/avcodec.h>
+//#include <libavformat/avformat.h>
+//#include <libavutil/opt.h>
+//#include <libswscale/swscale.h>
+//#include <libavutil/imgutils.h>
+//
+//#ifdef __cplusplus
+//}
+//#endif
+
 @interface OpenGLES2DView ()
 {
     GLuint _program;
@@ -68,6 +81,7 @@
     {
         return nil;
     }
+    
     self.layer.opaque = YES;
     _layerPtr = (CAEAGLLayer *) self.layer;
     self.layer.opaque = YES;

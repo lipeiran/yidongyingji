@@ -33,11 +33,6 @@ void runAsynchronouslyOnVideoProcessingQueue(void (^block)(void))
     }
 }
 
-void aaa(int a)
-{
-    NSLog(@"a is:%d\n",a);
-}
-
 @implementation OpenGLES2DTools
 
 + (GLubyte *)getImageDataWithName:(NSString *)imageName width:(int*)width height:(int*)height

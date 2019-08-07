@@ -12,17 +12,6 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-    
-    void runSynchronouslyOnVideoProcessingQueue(void (^block)(void));
-    void runAsynchronouslyOnVideoProcessingQueue(void (^block)(void));
-
-#ifdef __cplusplus
-}
-#endif
-
 @interface OpenGLES2DTools : NSObject
 
 + (GLubyte *)getImageDataWithName:(NSString *)imageName width:(int*)width height:(int*)height;

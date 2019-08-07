@@ -135,10 +135,10 @@ void GPUImageFilter::draw(int fr)
             continue;
         }
       
-        int tmpAsset_index = parseAE.asset_index_refId(tmpEntity.refId, configEntity);
-        AEAssetEntity tmpAsset = configEntity.assets[tmpAsset_index];
-        float ae_w = tmpAsset.w;
-        float ae_h = tmpAsset.h;
+//        int tmpAsset_index = parseAE.asset_index_refId(tmpEntity.refId, configEntity);
+//        AEAssetEntity tmpAsset = configEntity.assets[tmpAsset_index];
+        float ae_w = tmpEntity.layer_w;
+        float ae_h = tmpEntity.layer_h;
         float ae_a_x = 0.0f;
         float ae_a_y = 0.0f;
         float ae_p_x = 0.0f;
@@ -202,7 +202,11 @@ void GPUImageFilter::addConfigure(char *configFilePath)
     parseAE.dofile(configFilePath, configEntity);
     for (int i = 0; i < configEntity.layers_num; i++)
     {
-        
+        AELayerEntity &tmpEntity = configEntity.layers[i];
+        int tmpAsset_index = parseAE.asset_index_refId(tmpEntity.refId, configEntity);
+        AEAssetEntity tmpAsset = configEntity.assets[tmpAsset_index];
+        tmpEntity.layer_w = tmpAsset.w;
+        tmpEntity.layer_h = tmpAsset.h;
     }
     
     upImageTexture();
