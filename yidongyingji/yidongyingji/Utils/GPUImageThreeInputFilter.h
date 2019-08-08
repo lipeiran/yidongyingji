@@ -7,13 +7,22 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "GPUImageFrameBuffer.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface GPUImageThreeInputFilter : NSObject
+{
+    GPUImageFrameBuffer *firstInputFramebuffer;
+    GPUImageFrameBuffer *secondInputFramebuffer;
+    GPUImageFrameBuffer *thirdInputFramebuffer;
+    
+    GPUImageFrameBuffer *outputFrameBuffer;
+}
 
+- (void)startDraw;
 
-
+- (void)endDraw;
 
 @end
 
