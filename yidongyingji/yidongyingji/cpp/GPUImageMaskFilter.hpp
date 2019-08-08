@@ -1,13 +1,13 @@
 //
-//  GPUImageFilter.hpp
+//  GPUImageMaskFilter.hpp
 //  yidongyingji
 //
-//  Created by 李沛然 on 2019/7/29.
+//  Created by 李沛然 on 2019/8/8.
 //  Copyright © 2019 李沛然. All rights reserved.
 //
 
-#ifndef GPUImageFilter_hpp
-#define GPUImageFilter_hpp
+#ifndef GPUImageMaskFilter_hpp
+#define GPUImageMaskFilter_hpp
 
 #include <stdio.h>
 #include "GLProgram.hpp"
@@ -17,26 +17,23 @@
 #include "TimeWheel.hpp"
 #include <pthread.h>
 
-typedef void (*CPPCallback)(void *param);
-
-class GPUImageFilter {
+class GPUImageMaskFilter {
 public:
     GLuint _program;
     GLuint _frameBuffer;
     GLuint _renderBuffer;
     GLuint _position;
     GLuint _textCoordinate;
+    GLuint _textCoordinate2;
+    GLuint _textCoordinate3;
     GLuint _modelViewMartix_S;
     
     AEConfigEntity configEntity;
     
-    GLuint _aBufferID[512];
+    GLuint _aBufferID[3];
     GLuint _aBufferID_num;
-    GLuint _texture[512];
+    GLuint _texture[3];
     GLuint _texture_num;
-    
-    GPUImage *_imageAsset[512];
-    GLuint _imageAsset_num;
 
     float _screenWidth;
     float _screenHeight;
@@ -56,24 +53,18 @@ public:
     float _viewPort_h;
     
     void setLocalData(GLuint screenX, GLuint screenY, GLuint screenW, GLuint screenH);
-    
     void initWithProgram(GLuint screenX, GLuint screenY, GLuint screenW, GLuint screenH);
-    
     void draw(int fr);
-    
     void draw();
     
     void setDisplayFrameBuffer();
     void destropDisplayFrameBuffer();
-    
-    void addImageTexture(GPUImage &image);
-    
-    void addConfigure(char *configFilePath);
-    
-    void upImageTexture();
 
-    void addImageAsset(GPUImage &image);
-
+    void addMaskTexture(GLuint mask_texture_id);
+    void addFiltTexture(GLuint filt_texture_id);
+    void upVideoTexture();
+    
+    
 protected:
     
 private:
@@ -81,4 +72,5 @@ private:
     
 };
 
-#endif /* GPUImageFilter_hpp */
+
+#endif /* GPUImageMaskFilter_hpp */

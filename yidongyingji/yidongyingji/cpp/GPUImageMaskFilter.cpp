@@ -1,12 +1,12 @@
 //
-//  GPUImageFilter.cpp
+//  GPUImageMaskFilter.cpp
 //  yidongyingji
 //
-//  Created by 李沛然 on 2019/7/29.
+//  Created by 李沛然 on 2019/8/8.
 //  Copyright © 2019 李沛然. All rights reserved.
 //
 
-#include "GPUImageFilter.hpp"
+#include "GPUImageMaskFilter.hpp"
 #include <iostream>
 #include <cstdlib>
 #include <pthread.h>
@@ -15,7 +15,7 @@
 using namespace std;
 
 //编辑顶点坐标源数组
-GLfloat vertexData_src[30] = {
+GLfloat vertexData_mask_src[30] = {
     
     1.0, -1.0, 0.0f,    1.0f, 0.0f, //右下
     1.0, 1.0, -0.0f,    1.0f, 1.0f, //右上
@@ -27,7 +27,7 @@ GLfloat vertexData_src[30] = {
 };
 
 //编辑顶点坐标目标数组
-GLfloat vertexData_dst[30] = {
+GLfloat vertexData_mask_dst[30] = {
     
     1.0, -1.0, 0.0f,    1.0f, 0.0f, //右下
     1.0, 1.0, -0.0f,    1.0f, 1.0f, //右上
@@ -38,11 +38,11 @@ GLfloat vertexData_dst[30] = {
     -1.0, -1.0, 0.0f,   0.0f, 0.0f, //左下
 };
 
-char kSamplingVertexShaderC[] = "attribute vec4 position;attribute vec4 positionColor;attribute vec2 textCoordinate;uniform mat4 modelViewMatrix;varying lowp vec2 varyTextCoord;void main(){varyTextCoord = textCoordinate;gl_Position = modelViewMatrix * position;}";
+char kMaskSamplingVertexShaderC[] = "attribute vec4 position;attribute vec2 inputTextureCoordinate;attribute vec2 inputTextureCoordinate2;attribute vec2 inputTextureCoordinate3;varying vec2 textureCoordinate;varying vec2 textureCoordinate2;varying vec2 textureCoordinate3;void main(){gl_Position = position;textureCoordinate = inputTextureCoordinate;textureCoordinate2 = inputTextureCoordinate2;textureCoordinate3 = inputTextureCoordinate3;}";
 
-char kSamplingFragmentShaderC[] = "varying lowp vec2 varyTextCoord;uniform sampler2D colorMap;void main(){lowp vec4 tex = texture2D(colorMap, vec2(varyTextCoord.x,1.0-varyTextCoord.y));gl_FragColor = tex ;}";
+char kMaskSamplingFragmentShaderC[] = "varying highp vec2 textureCoordinate;varying highp vec2 textureCoordinate2;varying highp vec2 textureCoordinate3;uniform sampler2D inputImageTexture;uniform sampler2D inputImageTexture2;uniform sampler2D inputImageTexture3;void main(){lowp vec4 textureColor = texture2D(inputImageTexture, textureCoordinate);lowp vec4 textureColor2 = texture2D(inputImageTexture2, textureCoordinate2);lowp vec4 textureColor3 = texture2D(inputImageTexture3, textureCoordinate3);gl_FragColor = textureColor * (1.0 - textureColor2.r) + textureColor3;}";
 
-void GPUImageFilter::setLocalData(GLuint screenX, GLuint screenY, GLuint screenW, GLuint screenH)
+void GPUImageMaskFilter::setLocalData(GLuint screenX, GLuint screenY, GLuint screenW, GLuint screenH)
 {
     _screenWidth = screenW;
     _screenHeight = screenH;
@@ -59,19 +59,17 @@ void GPUImageFilter::setLocalData(GLuint screenX, GLuint screenY, GLuint screenW
     _viewPort_h = screenH;
     _aBufferID_num = 0;
     _texture_num = 0;
-    _imageAsset_num = 0;
-    memset(_aBufferID, 0, 512);
-    memset(_texture, 0, 512);
-    memset(_imageAsset, NULL, 512);
+    memset(_aBufferID, 0, 3);
+    memset(_texture, 0, 3);
 }
 
-void GPUImageFilter::setDisplayFrameBuffer()
+void GPUImageMaskFilter::setDisplayFrameBuffer()
 {
     glBindFramebuffer(GL_FRAMEBUFFER, _frameBuffer);
     glViewport(_viewPort_x, _viewPort_y, _viewPort_w, _viewPort_h);
 }
 
-void GPUImageFilter::destropDisplayFrameBuffer()
+void GPUImageMaskFilter::destropDisplayFrameBuffer()
 {
     if (_frameBuffer)
     {
@@ -85,20 +83,24 @@ void GPUImageFilter::destropDisplayFrameBuffer()
     }
 }
 
-void GPUImageFilter::initWithProgram(GLuint screenX, GLuint screenY, GLuint screenW, GLuint screenH)
+void GPUImageMaskFilter::initWithProgram(GLuint screenX, GLuint screenY, GLuint screenW, GLuint screenH)
 {
     setLocalData(screenX, screenY, screenW, screenH);
     
     GLProgram glProgram1;
     //编译program
-    _program = cpp_compileProgramWithContent(glProgram1, kSamplingVertexShaderC, kSamplingFragmentShaderC);
+    _program = cpp_compileProgramWithContent(glProgram1, kMaskSamplingVertexShaderC, kMaskSamplingFragmentShaderC);
     //从program中获取position 顶点属性
     _position = glGetAttribLocation(_program, "position");
     //从program中获取textCoordinate 纹理属性
-    _textCoordinate = glGetAttribLocation(_program, "textCoordinate");
-    _modelViewMartix_S = glGetUniformLocation(_program, "modelViewMatrix");
-    glUniform1i(glGetUniformLocation(_program, "colorMap"), 0);
-    
+    _textCoordinate = glGetAttribLocation(_program, "inputTextureCoordinate");
+    _textCoordinate2 = glGetAttribLocation(_program, "inputTextureCoordinate2");
+    _textCoordinate3 = glGetAttribLocation(_program, "inputTextureCoordinate3");
+
+    glUniform1i(glGetUniformLocation(_program, "inputImageTexture"), 0);
+    glUniform1i(glGetUniformLocation(_program, "inputImageTexture2"), 1);
+    glUniform1i(glGetUniformLocation(_program, "inputImageTexture3"), 2);
+
     //设置渲染缓冲区
     _renderBuffer = cpp_setupRenderBuffer();
     //设置帧缓冲区
@@ -107,7 +109,7 @@ void GPUImageFilter::initWithProgram(GLuint screenX, GLuint screenY, GLuint scre
     glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, _renderBuffer);
 }
 
-void GPUImageFilter::draw(int fr)
+void GPUImageMaskFilter::draw(int fr)
 {
     ParseAE parseAE;
     glUseProgram(_program);
@@ -131,8 +133,8 @@ void GPUImageFilter::draw(int fr)
         float ae_r = 0.0f;
         int ae_blur = 0;
         float ae_alpha = 0;
-
-        parseAE.get_ae_params(fr, tmpEntity, &ae_r, &ae_s_x, &ae_s_y, &ae_p_x, &ae_p_y, &ae_a_x, &ae_a_y, &ae_alpha, &ae_blur);        
+        
+        parseAE.get_ae_params(fr, tmpEntity, &ae_r, &ae_s_x, &ae_s_y, &ae_p_x, &ae_p_y, &ae_a_x, &ae_a_y, &ae_alpha, &ae_blur);
         
         float ae_a_x_result = (ae_a_x-ae_w/2.0)/_viewPort_w*2.0;
         float ae_a_y_result = (ae_h/2.0-ae_a_y)/_viewPort_w*2.0;
@@ -144,7 +146,7 @@ void GPUImageFilter::draw(int fr)
         animateAttr.rotateAngleZ = ae_r;
         animateAttr.scaleX = ae_s_x;
         animateAttr.scaleY = ae_s_y;
-
+        
         float end_deltaX = (ae_w/2.0-_viewPort_w/2.0) + ae_p_x;
         float end_deltaY = (_viewPort_h/2.0-ae_h/2.0) - ae_p_y;
         
@@ -159,59 +161,28 @@ void GPUImageFilter::draw(int fr)
     glBindVertexArray(0);
 }
 
-void GPUImageFilter::draw()
+void GPUImageMaskFilter::draw()
 {
-    if (_imageAsset_num == 0)
-    {
-        return;
-    }
-    static int i = 0;
-    draw(i);
-    i++;
+    draw(0);
 }
 
-void GPUImageFilter::addImageTexture(GPUImage &image)
+// 添加mask视频纹理
+void GPUImageMaskFilter::addMaskTexture(GLuint mask_texture_id)
 {
-    memcpy(vertexData_dst, vertexData_src, 30*sizeof(GLfloat));
-    _texture[_texture_num] = cpp_createImageTexture(image.byte, image.w, image.h, _screenWidth, vertexData_dst);
-    _aBufferID[_aBufferID_num] = cpp_createVAO(sizeof(vertexData_dst), vertexData_dst, _position, _textCoordinate);
+    
+}
+
+// 添加前景视频纹理
+void GPUImageMaskFilter::addFiltTexture(GLuint filt_texture_id)
+{
+    
+}
+
+void GPUImageMaskFilter::upVideoTexture()
+{
+    memcpy(vertexData_mask_dst, vertexData_mask_src, 30*sizeof(GLfloat));
+//    _texture[_texture_num] = cpp_createImageTexture(image.byte, image.w, image.h, _screenWidth, vertexData_mask_dst);
+    _aBufferID[_aBufferID_num] = cpp_createVAO(sizeof(vertexData_mask_dst), vertexData_mask_dst, _position, _textCoordinate);
     _texture_num++;
     _aBufferID_num++;
 }
-
-void GPUImageFilter::addConfigure(char *configFilePath)
-{
-    ParseAE parseAE;
-    parseAE.dofile(configFilePath, configEntity);
-    for (int i = 0; i < configEntity.layers_num; i++)
-    {
-        AELayerEntity &tmpEntity = configEntity.layers[i];
-        int tmpAsset_index = parseAE.asset_index_refId(tmpEntity.refId, configEntity);
-        AEAssetEntity tmpAsset = configEntity.assets[tmpAsset_index];
-        tmpEntity.layer_w = tmpAsset.w;
-        tmpEntity.layer_h = tmpAsset.h;
-    }
-    
-    upImageTexture();
-}
-
-void GPUImageFilter::upImageTexture()
-{
-    ParseAE parseAE;
-    for (int i = 0; i < configEntity.layers_num; i++)
-    {
-        AELayerEntity &layer = configEntity.layers[i];
-        int asset_index = parseAE.asset_index_refId(layer.refId, configEntity);
-        GPUImage *tmpImage = _imageAsset[asset_index];
-        addImageTexture(*tmpImage);
-    }
-}
-
-void GPUImageFilter::addImageAsset(GPUImage &image)
-{
-    GPUImage *tmpImage = &image;
-    tmpImage->index = _imageAsset_num;
-    _imageAsset[_imageAsset_num] = tmpImage;
-    _imageAsset_num++;
-}
-
