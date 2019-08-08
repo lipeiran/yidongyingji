@@ -10,11 +10,13 @@
 #import "OpenGLESView.h"
 #import "OpenGLES2DView.h"
 #import "GuideView.h"
+#import "LPRGPUImageView.h"
 
 @interface ViewController ()
 @property (nonatomic, strong) OpenGLESView *glesView;
 @property (nonatomic, strong) OpenGLES2DView *gles2DView;
 @property (nonatomic, strong) GuideView *guideView;
+@property (nonatomic, strong) LPRGPUImageView *lprGPUView;
 @end
 
 @implementation ViewController
@@ -22,14 +24,16 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-//    self.glesView = [[OpenGLESView alloc]initWithFrame:self.view.bounds];
-//    self.view = self.glesView;
+
     self.view.backgroundColor = [UIColor redColor];
     self.gles2DView = [[OpenGLES2DView alloc]initWithFrame:CGRectMake(self.view.bounds.origin.x/[UIScreen mainScreen].scale, self.view.bounds.origin.y/[UIScreen mainScreen].scale, 480/[UIScreen mainScreen].scale, 640/[UIScreen mainScreen].scale)];
     [self.view addSubview:self.gles2DView];
     
-//    self.guideView = [[GuideView alloc]initWithFrame:self.view.bounds];
-//    self.view = self.guideView;
+    
+//    self.view.backgroundColor = [UIColor redColor];
+//    self.lprGPUView = [[LPRGPUImageView alloc]initWithFrame:CGRectMake(self.view.bounds.origin.x/[UIScreen mainScreen].scale, self.view.bounds.origin.y/[UIScreen mainScreen].scale, 480/[UIScreen mainScreen].scale, 640/[UIScreen mainScreen].scale)];
+//    [self.view addSubview:self.lprGPUView];
+
 }
 
 
