@@ -13,11 +13,14 @@
 #import <AVFoundation/AVFoundation.h>
 #import "GLProgram.hpp"
 #import "utils.hpp"
+#import "LPRGPUImageFilter.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface LPRGPUImageView : UIView
 {
+    LPRGPUImageFilter *imageFilter;
+    LPRGPUImageFilter *imageFilter2;
 }
 
 @property(readonly, nonatomic) CGSize sizeInPixels;

@@ -20,9 +20,6 @@ NS_ASSUME_NONNULL_BEGIN
     GPUImageFilter filter;
 }
 
-//@property (nonatomic, strong) CAEAGLLayer *eaglLayer;
-//@property (nonatomic, strong) EAGLContext *context;
-
 @end
 
 NS_ASSUME_NONNULL_END

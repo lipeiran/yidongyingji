@@ -33,10 +33,13 @@ NSString *const kSamplingFragmentShaderC_lpr = SHADER_STRING
  varying highp vec2 textureCoordinate;
  
  uniform sampler2D inputImageTexture;
- 
+ uniform sampler2D inputImageTexture2;
+
  void main()
  {
-     gl_FragColor = texture2D(inputImageTexture, textureCoordinate);
+     lowp vec4 textureColor = texture2D(inputImageTexture, textureCoordinate);
+     lowp vec4 textureColor2 = texture2D(inputImageTexture2, textureCoordinate);
+     gl_FragColor = textureColor * 0.5 + textureColor2;
  }
  );
 
@@ -60,7 +63,8 @@ static const GLfloat textureCoordinates_lpr[] = {
     
     GLint displayPositionAttribute, displayTextureCoordinateAttribute;
     GLint displayInputTextureUniform;
-    
+    GLint displayInputTextureUniform2;
+
     CGSize boundsSizeAtFrameBufferEpoch;
     
     GLuint _program;
@@ -70,6 +74,7 @@ static const GLfloat textureCoordinates_lpr[] = {
     GLuint _textCoordinate;
     
     GLuint _texture_test;
+    GLuint _texture_test2;
 }
 @end
 
@@ -119,6 +124,7 @@ static const GLfloat textureCoordinates_lpr[] = {
     eaglLayer.drawableProperties = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:NO], kEAGLDrawablePropertyRetainedBacking, kEAGLColorFormatRGBA8, kEAGLDrawablePropertyColorFormat, nil];
     
     runSynchronouslyOnVideoProcessingQueue(^{
+        
         [GPUImageContext useImageProcessingContext];
         GLProgram glProgram1;
         //编译program
@@ -130,25 +136,23 @@ static const GLfloat textureCoordinates_lpr[] = {
         //从program中获取textCoordinate 纹理属性
         self->displayTextureCoordinateAttribute = glGetAttribLocation(self->_program, "inputTextureCoordinate");
         self->displayInputTextureUniform = glGetUniformLocation(self->_program, "inputImageTexture");
+        self->displayInputTextureUniform2 = glGetUniformLocation(self->_program, "inputImageTexture2");
         [GPUImageContext useImageProcessingContext];
         glUseProgram(self->_program);
         glEnableVertexAttribArray(self->displayPositionAttribute);
         glEnableVertexAttribArray(self->displayTextureCoordinateAttribute);
         [self createDisplayFramebuffer];
         
-        GLubyte *byte = NULL;
-        int w;
-        int h;
-        byte = [OpenGLES2DTools getImageDataWithName:@"img_01.png" width:&w height:&h];
-        
-        self->_texture_test = cpp_setupTexture(GL_TEXTURE4);
-        cpp_upGPUTexture(w, h, byte);
+        self->imageFilter = [[LPRGPUImageFilter alloc]initSize:@"img_01.png"];
+        self->imageFilter2 = [[LPRGPUImageFilter alloc]initSize:@"img_02.png"];
+        self->_texture_test = self->imageFilter.outputFramebuffer.texture;
+        self->_texture_test2 = self->imageFilter2.outputFramebuffer.texture;
     });
 }
 
-- (void)layoutSubviews {
+- (void)layoutSubviews
+{
     [super layoutSubviews];
-    
     // The frame buffer needs to be trashed and re-created when the view size changes.
     if (!CGSizeEqualToSize(self.bounds.size, boundsSizeAtFrameBufferEpoch) &&
         !CGSizeEqualToSize(self.bounds.size, CGSizeZero)) {
@@ -254,6 +258,10 @@ static const GLfloat textureCoordinates_lpr[] = {
         glActiveTexture(GL_TEXTURE4);
         glBindTexture(GL_TEXTURE_2D,self->_texture_test);
         glUniform1i(self->displayInputTextureUniform, 4);
+        
+        glActiveTexture(GL_TEXTURE5);
+        glBindTexture(GL_TEXTURE_2D,self->_texture_test2);
+        glUniform1i(self->displayInputTextureUniform2, 5);
         
         glVertexAttribPointer(self->displayPositionAttribute, 2, GL_FLOAT, 0, 0, imageVertices_lpr);
         glVertexAttribPointer(self->displayTextureCoordinateAttribute, 2, GL_FLOAT, 0, 0, textureCoordinates_lpr);

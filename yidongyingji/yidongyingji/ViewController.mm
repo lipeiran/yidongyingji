@@ -25,14 +25,13 @@
 {
     [super viewDidLoad];
 
-    self.view.backgroundColor = [UIColor redColor];
-    self.gles2DView = [[OpenGLES2DView alloc]initWithFrame:CGRectMake(self.view.bounds.origin.x/[UIScreen mainScreen].scale, self.view.bounds.origin.y/[UIScreen mainScreen].scale, 480/[UIScreen mainScreen].scale, 640/[UIScreen mainScreen].scale)];
-    [self.view addSubview:self.gles2DView];
-    
-    
 //    self.view.backgroundColor = [UIColor redColor];
-//    self.lprGPUView = [[LPRGPUImageView alloc]initWithFrame:CGRectMake(self.view.bounds.origin.x/[UIScreen mainScreen].scale, self.view.bounds.origin.y/[UIScreen mainScreen].scale, 480/[UIScreen mainScreen].scale, 640/[UIScreen mainScreen].scale)];
-//    [self.view addSubview:self.lprGPUView];
+//    self.gles2DView = [[OpenGLES2DView alloc]initWithFrame:CGRectMake(self.view.bounds.origin.x/[UIScreen mainScreen].scale, self.view.bounds.origin.y/[UIScreen mainScreen].scale, 480/[UIScreen mainScreen].scale, 640/[UIScreen mainScreen].scale)];
+//    [self.view addSubview:self.gles2DView];
+    
+    self.view.backgroundColor = [UIColor redColor];
+    self.lprGPUView = [[LPRGPUImageView alloc]initWithFrame:CGRectMake(self.view.bounds.origin.x/[UIScreen mainScreen].scale, self.view.bounds.origin.y/[UIScreen mainScreen].scale, 480/[UIScreen mainScreen].scale, 640/[UIScreen mainScreen].scale)];
+    [self.view addSubview:self.lprGPUView];
 
 }
 
