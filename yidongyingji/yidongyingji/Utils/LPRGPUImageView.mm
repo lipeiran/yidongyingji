@@ -39,7 +39,7 @@ NSString *const kSamplingFragmentShaderC_lpr = SHADER_STRING
  {
      lowp vec4 textureColor = texture2D(inputImageTexture, textureCoordinate);
      lowp vec4 textureColor2 = texture2D(inputImageTexture2, textureCoordinate);
-     gl_FragColor = textureColor * 0.5 + textureColor2;
+     gl_FragColor = textureColor * 0.4 + textureColor2;
  }
  );
 
@@ -116,7 +116,6 @@ static const GLfloat textureCoordinates_lpr[] = {
     {
         self.contentScaleFactor = [[UIScreen mainScreen] scale];
     }
-    
     self.opaque = YES;
     self.hidden = NO;
     CAEAGLLayer *eaglLayer = (CAEAGLLayer *)self.layer;
@@ -124,7 +123,6 @@ static const GLfloat textureCoordinates_lpr[] = {
     eaglLayer.drawableProperties = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:NO], kEAGLDrawablePropertyRetainedBacking, kEAGLColorFormatRGBA8, kEAGLDrawablePropertyColorFormat, nil];
     
     runSynchronouslyOnVideoProcessingQueue(^{
-        
         [GPUImageContext useImageProcessingContext];
         GLProgram glProgram1;
         //编译program
@@ -143,8 +141,11 @@ static const GLfloat textureCoordinates_lpr[] = {
         glEnableVertexAttribArray(self->displayTextureCoordinateAttribute);
         [self createDisplayFramebuffer];
         
-        self->imageFilter = [[LPRGPUImageFilter alloc]initSize:@"img_01.png"];
-        self->imageFilter2 = [[LPRGPUImageFilter alloc]initSize:@"img_02.png"];
+        float scale = [UIScreen mainScreen].scale;
+        CGSize screenSize = CGSizeMake(self.frame.size.width * scale, self.frame.size.height * scale);
+
+        self->imageFilter = [[LPRGPUImageFilter alloc]initSize:screenSize imageName:nil];
+        self->imageFilter2 = [[LPRGPUImageFilter alloc]initSize:screenSize imageName:@"img_02.png"];
         self->_texture_test = self->imageFilter.outputFramebuffer.texture;
         self->_texture_test2 = self->imageFilter2.outputFramebuffer.texture;
     });

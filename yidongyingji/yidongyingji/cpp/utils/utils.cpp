@@ -240,7 +240,8 @@ GLuint cpp_createImageTexture(GLubyte *byte, GLuint w, GLuint h, GLuint screenWi
     return texture;
 }
 
-void cpp_glDraw_header(GLint x, GLint y, GLsizei width, GLsizei height)
+// 绘制前准备
+void cpp_glDraw_pre(void)
 {
     //设置背景色
     glClearColor(1.0, 1.0, 1.0, 1);
@@ -251,6 +252,11 @@ void cpp_glDraw_header(GLint x, GLint y, GLsizei width, GLsizei height)
     //开启颜色混合
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+}
+
+void cpp_glDraw_header(GLint x, GLint y, GLsizei width, GLsizei height)
+{
+    cpp_glDraw_pre();
     //设置视口
     glViewport(x, y, width, height);
 }

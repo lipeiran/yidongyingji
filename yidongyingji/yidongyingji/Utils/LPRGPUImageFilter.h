@@ -14,6 +14,8 @@
 #include "GLProgram.hpp"
 #include "GLProgram.hpp"
 #import "OpenGLES2DTools.h"
+#import "GPUImage.hpp"
+#import "GPUAnimateAttr.hpp"
 
 #define STRINGIZE(x) #x
 #define STRINGIZE2(x) STRINGIZE(x)
@@ -29,12 +31,21 @@ NS_ASSUME_NONNULL_BEGIN
     GLuint program;
     GLint filterPositionAttribute, filterTextureCoordinateAttribute;
     GLint filterInputTextureUniform;
+    GLint _modelViewMartix_S;
+    
+    GLuint _texture[512];
+    GLuint _texture_num;
+    GPUImage *_imageAsset[512];
+    GLuint _imageAsset_num;
+    
+    BOOL _ae_b;
 }
 
 @property (readonly) GLuint texture_test;
 @property (retain) LPRGPUImageFrameBuffer *outputFramebuffer;
+@property (nonatomic) CGSize texture_size;
 
-- (id)initSize:(NSString *)imageName;
+- (id)initSize:(CGSize)size imageName:(nullable NSString *)imageName;
 
 @end
 

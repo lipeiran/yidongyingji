@@ -70,4 +70,7 @@ void cpp_glScale(float anchorX,float anchorY, float xScale, float yScale, float 
 // 绘制前准备
 void cpp_glDraw_header(GLint x, GLint y, GLsizei width, GLsizei height);
 
+// 绘制前准备
+void cpp_glDraw_pre(void);
+
 #endif /* utils_hpp */
