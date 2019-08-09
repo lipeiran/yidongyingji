@@ -39,6 +39,12 @@ NSString *const kGPUImageVertexShaderString_movie = SHADER_STRING
 
 @end
 
+@interface GPUImageMovie ()
+{
+    CVPixelBufferRef pixelBuffer;
+}
+@end
+
 @implementation GPUImageMovie
 
 - (id)initWithPlayerItem:(AVPlayerItem *)playerItem
@@ -104,28 +110,34 @@ NSString *const kGPUImageVertexShaderString_movie = SHADER_STRING
 
 - (void)processPixelBufferAtTime:(CMTime)outputItemTime
 {
-//    if ([playerItemOutput hasNewPixelBufferForItemTime:outputItemTime])
-//    {
+    if ([playerItemOutput hasNewPixelBufferForItemTime:outputItemTime])
+    {
+        if (pixelBuffer)
+        {
+            CFRelease(pixelBuffer);
+        }
+
         NSLog(@"self pts is3:%d.\n",self.pts);
         __unsafe_unretained GPUImageMovie *weakSelf = self;
-        CVPixelBufferRef pixelBuffer = [playerItemOutput copyPixelBufferForItemTime:outputItemTime itemTimeForDisplay:NULL];
+        pixelBuffer = [playerItemOutput copyPixelBufferForItemTime:outputItemTime itemTimeForDisplay:NULL];
         if( pixelBuffer )
         {
             runSynchronouslyOnVideoProcessingQueue(^{
-                NSLog(@"self pts is4:%d.\n",self.pts);
-
-                [weakSelf processMovieFrame:pixelBuffer withSampleTime:outputItemTime];
-                CFRelease(pixelBuffer);
+                [weakSelf processMovieFrame:weakSelf->pixelBuffer withSampleTime:outputItemTime];
             });
         }
-        else{
-            NSLog(@"herehere这里没有数据这里没有数据!!!\n");
+    }
+    else
+    {
+        NSLog(@"self pts 这里没有数据!!!!!:%d.\n",self.pts);
+        __unsafe_unretained GPUImageMovie *weakSelf = self;
+        if( pixelBuffer )
+        {
+            runSynchronouslyOnVideoProcessingQueue(^{
+                [weakSelf processMovieFrame:weakSelf->pixelBuffer withSampleTime:outputItemTime];
+            });
         }
-//    }
-//    else
-//    {
-//        NSLog(@"self pts 这里没有数据!!!!!:%d.\n",self.pts);
-//    }
+    }
 }
 
 - (void)processMovieFrame:(CVPixelBufferRef)movieFrame withSampleTime:(CMTime)currentSampleTime
