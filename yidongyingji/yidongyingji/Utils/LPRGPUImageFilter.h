@@ -47,6 +47,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (id)initSize:(CGSize)size imageName:(nullable NSString *)imageName;
 
+- (void)renderToTexture:(int)fr;
+
 @end
 
 NS_ASSUME_NONNULL_END

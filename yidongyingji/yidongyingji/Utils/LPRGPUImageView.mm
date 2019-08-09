@@ -75,7 +75,13 @@ static const GLfloat textureCoordinates_lpr[] = {
     
     GLuint _texture_test;
     GLuint _texture_test2;
+    
+    BOOL _layer_exist;
+    int _fr_pts;
 }
+
+@property(nonatomic, strong) NSTimer *renderTimer;
+
 @end
 
 @implementation LPRGPUImageView
@@ -93,7 +99,7 @@ static const GLfloat textureCoordinates_lpr[] = {
     }
     
     [self commonInit];
-    
+    [self setTimer];
     return self;
 }
 
@@ -105,8 +111,30 @@ static const GLfloat textureCoordinates_lpr[] = {
     }
     
     [self commonInit];
-    
+    [self setTimer];
     return self;
+}
+
+- (void)setTimer
+{
+    self->_renderTimer = [NSTimer scheduledTimerWithTimeInterval:1.0/25 target:self selector:@selector(startQueue) userInfo:nil repeats:YES];
+}
+
+- (void)startQueue
+{
+    if (_layer_exist)
+    {
+        runAsynchronouslyOnVideoProcessingQueue(^{
+            runSynchronouslyOnVideoProcessingQueue(^{
+                [self->imageFilter renderToTexture:self->_fr_pts];
+                [self->imageFilter2 renderToTexture:self->_fr_pts];
+                self->_texture_test = self->imageFilter.outputFramebuffer.texture;
+                self->_texture_test2 = self->imageFilter2.outputFramebuffer.texture;
+                [self draw];
+            });
+        });
+        _fr_pts++;
+    }
 }
 
 - (void)commonInit;
@@ -121,39 +149,40 @@ static const GLfloat textureCoordinates_lpr[] = {
     CAEAGLLayer *eaglLayer = (CAEAGLLayer *)self.layer;
     eaglLayer.opaque = YES;
     eaglLayer.drawableProperties = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:NO], kEAGLDrawablePropertyRetainedBacking, kEAGLColorFormatRGBA8, kEAGLDrawablePropertyColorFormat, nil];
-    
-    runSynchronouslyOnVideoProcessingQueue(^{
-        [GPUImageContext useImageProcessingContext];
-        GLProgram glProgram1;
-        //编译program
-        char *tmpV = (char *)[kSamplingVertexShaderC_lpr UTF8String];
-        char *tmpF = (char *)[kSamplingFragmentShaderC_lpr UTF8String];
-        self->_program = cpp_compileProgramWithContent(glProgram1, tmpV, tmpF);
-        //从program中获取position 顶点属性
-        self->displayPositionAttribute = glGetAttribLocation(self->_program, "position");
-        //从program中获取textCoordinate 纹理属性
-        self->displayTextureCoordinateAttribute = glGetAttribLocation(self->_program, "inputTextureCoordinate");
-        self->displayInputTextureUniform = glGetUniformLocation(self->_program, "inputImageTexture");
-        self->displayInputTextureUniform2 = glGetUniformLocation(self->_program, "inputImageTexture2");
-        [GPUImageContext useImageProcessingContext];
-        glUseProgram(self->_program);
-        glEnableVertexAttribArray(self->displayPositionAttribute);
-        glEnableVertexAttribArray(self->displayTextureCoordinateAttribute);
-        [self createDisplayFramebuffer];
-        
-        float scale = [UIScreen mainScreen].scale;
-        CGSize screenSize = CGSizeMake(self.frame.size.width * scale, self.frame.size.height * scale);
+    float scale = [UIScreen mainScreen].scale;
+    CGSize screenSize = CGSizeMake(self.frame.size.width * scale, self.frame.size.height * scale);
 
-        self->imageFilter = [[LPRGPUImageFilter alloc]initSize:screenSize imageName:nil];
-        self->imageFilter2 = [[LPRGPUImageFilter alloc]initSize:screenSize imageName:@"img_02.png"];
-        self->_texture_test = self->imageFilter.outputFramebuffer.texture;
-        self->_texture_test2 = self->imageFilter2.outputFramebuffer.texture;
+    runAsynchronouslyOnVideoProcessingQueue(^{
+        runSynchronouslyOnVideoProcessingQueue(^{
+
+            [GPUImageContext useImageProcessingContext];
+            GLProgram glProgram1;
+            //编译program
+            char *tmpV = (char *)[kSamplingVertexShaderC_lpr UTF8String];
+            char *tmpF = (char *)[kSamplingFragmentShaderC_lpr UTF8String];
+            self->_program = cpp_compileProgramWithContent(glProgram1, tmpV, tmpF);
+            //从program中获取position 顶点属性
+            self->displayPositionAttribute = glGetAttribLocation(self->_program, "position");
+            //从program中获取textCoordinate 纹理属性
+            self->displayTextureCoordinateAttribute = glGetAttribLocation(self->_program, "inputTextureCoordinate");
+            self->displayInputTextureUniform = glGetUniformLocation(self->_program, "inputImageTexture");
+            self->displayInputTextureUniform2 = glGetUniformLocation(self->_program, "inputImageTexture2");
+            [GPUImageContext useImageProcessingContext];
+            glUseProgram(self->_program);
+            glEnableVertexAttribArray(self->displayPositionAttribute);
+            glEnableVertexAttribArray(self->displayTextureCoordinateAttribute);
+            [self createDisplayFramebuffer];
+            
+            self->imageFilter = [[LPRGPUImageFilter alloc]initSize:screenSize imageName:nil];
+            self->imageFilter2 = [[LPRGPUImageFilter alloc]initSize:screenSize imageName:@"img_02.png"];
+        });
     });
 }
 
 - (void)layoutSubviews
 {
     [super layoutSubviews];
+    _layer_exist = true;
     // The frame buffer needs to be trashed and re-created when the view size changes.
     if (!CGSizeEqualToSize(self.bounds.size, boundsSizeAtFrameBufferEpoch) &&
         !CGSizeEqualToSize(self.bounds.size, CGSizeZero)) {
@@ -162,7 +191,8 @@ static const GLfloat textureCoordinates_lpr[] = {
             [self createDisplayFramebuffer];
         });
     }
-    [self draw];
+    
+    _fr_pts = 0;
 }
 
 - (void)dealloc
@@ -200,15 +230,12 @@ static const GLfloat textureCoordinates_lpr[] = {
     
     _sizeInPixels.width = (CGFloat)backingWidth;
     _sizeInPixels.height = (CGFloat)backingHeight;
-    
-    //    NSLog(@"Backing width: %d, height: %d", backingWidth, backingHeight);
-    
+
     glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, displayRenderbuffer);
     
     __unused GLuint framebufferCreationStatus = glCheckFramebufferStatus(GL_FRAMEBUFFER);
     NSAssert(framebufferCreationStatus == GL_FRAMEBUFFER_COMPLETE, @"Failure with display framebuffer generation for display of size: %f, %f", self.bounds.size.width, self.bounds.size.height);
     boundsSizeAtFrameBufferEpoch = self.bounds.size;
-    
 }
 
 - (void)destroyDisplayFramebuffer;
@@ -248,28 +275,30 @@ static const GLfloat textureCoordinates_lpr[] = {
 
 - (void)draw
 {
-    runSynchronouslyOnVideoProcessingQueue(^{
-        [GPUImageContext useImageProcessingContext];
-        glUseProgram(self->_program);
-        [self setDisplayFramebuffer];
-        
-        glClearColor(1.0, 1.0, 1.0, 1.0);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        
-        glActiveTexture(GL_TEXTURE4);
-        glBindTexture(GL_TEXTURE_2D,self->_texture_test);
-        glUniform1i(self->displayInputTextureUniform, 4);
-        
-        glActiveTexture(GL_TEXTURE5);
-        glBindTexture(GL_TEXTURE_2D,self->_texture_test2);
-        glUniform1i(self->displayInputTextureUniform2, 5);
-        
-        glVertexAttribPointer(self->displayPositionAttribute, 2, GL_FLOAT, 0, 0, imageVertices_lpr);
-        glVertexAttribPointer(self->displayTextureCoordinateAttribute, 2, GL_FLOAT, 0, 0, textureCoordinates_lpr);
-        
-        glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-        
-        [self presentFramebuffer];
+    runAsynchronouslyOnVideoProcessingQueue(^{
+        runSynchronouslyOnVideoProcessingQueue(^{
+            [GPUImageContext useImageProcessingContext];
+            glUseProgram(self->_program);
+            [self setDisplayFramebuffer];
+            
+            glClearColor(1.0, 1.0, 1.0, 1.0);
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+            
+            glActiveTexture(GL_TEXTURE4);
+            glBindTexture(GL_TEXTURE_2D,self->_texture_test);
+            glUniform1i(self->displayInputTextureUniform, 4);
+            
+            glActiveTexture(GL_TEXTURE5);
+            glBindTexture(GL_TEXTURE_2D,self->_texture_test2);
+            glUniform1i(self->displayInputTextureUniform2, 5);
+            
+            glVertexAttribPointer(self->displayPositionAttribute, 2, GL_FLOAT, 0, 0, imageVertices_lpr);
+            glVertexAttribPointer(self->displayTextureCoordinateAttribute, 2, GL_FLOAT, 0, 0, textureCoordinates_lpr);
+            
+            glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+            
+            [self presentFramebuffer];
+        });
     });
 }
 

@@ -260,8 +260,6 @@ NSString *const kPicGPUImagePassthroughFragmentShaderString = SHADER_STRING
             self->_texture_test = cpp_setupTexture(GL_TEXTURE4);
             cpp_upGPUTexture(w, h, byte);
         }
-        
-        [self renderToTexture];
     });
     
     return self;
@@ -270,7 +268,7 @@ NSString *const kPicGPUImagePassthroughFragmentShaderString = SHADER_STRING
 #pragma mark -
 #pragma mark Managing the display FBOs
 
-- (void)renderToTexture
+- (void)renderToTexture:(int)fr
 {
     runSynchronouslyOnVideoProcessingQueue(^{
         [GPUImageContext useImageProcessingContext];
@@ -283,7 +281,6 @@ NSString *const kPicGPUImagePassthroughFragmentShaderString = SHADER_STRING
         if (self->_ae_b)
         {
             ParseAE parseAE;
-            int fr = 500;
             int layer_num = self->configEntity.layers_num;
             for (int i = 0; i < layer_num; ++i)
             {
