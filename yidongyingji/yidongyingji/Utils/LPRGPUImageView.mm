@@ -8,6 +8,7 @@
 
 #import "LPRGPUImageView.h"
 #import "OpenGLES2DTools.h"
+#import "GPUImageMovie.h"
 
 
 #define STRINGIZE(x) #x
@@ -38,7 +39,7 @@ NSString *const kSamplingFragmentShaderC_lpr = SHADER_STRING
  void main()
  {
      lowp vec4 textureColor = texture2D(inputImageTexture, textureCoordinate);
-     lowp vec4 textureColor2 = texture2D(inputImageTexture2, textureCoordinate);
+     lowp vec4 textureColor2 = texture2D(inputImageTexture2, vec2(textureCoordinate.x,1.0-textureCoordinate.y));
      gl_FragColor = textureColor * 0.4 + textureColor2;
  }
  );
@@ -81,6 +82,8 @@ static const GLfloat textureCoordinates_lpr[] = {
 }
 
 @property(nonatomic, strong) NSTimer *renderTimer;
+@property (nonatomic, strong) AVPlayer *player;
+@property (nonatomic, strong) GPUImageMovie *preMovie;
 
 @end
 
@@ -97,19 +100,7 @@ static const GLfloat textureCoordinates_lpr[] = {
     {
         return nil;
     }
-    
-    [self commonInit];
-    [self setTimer];
-    return self;
-}
-
--(id)initWithCoder:(NSCoder *)coder
-{
-    if (!(self = [super initWithCoder:coder]))
-    {
-        return nil;
-    }
-    
+    [self setMaskMovieTexture];
     [self commonInit];
     [self setTimer];
     return self;
@@ -120,20 +111,38 @@ static const GLfloat textureCoordinates_lpr[] = {
     self->_renderTimer = [NSTimer scheduledTimerWithTimeInterval:1.0/25 target:self selector:@selector(startQueue) userInfo:nil repeats:YES];
 }
 
+- (void)setMaskMovieTexture
+{
+    NSURL *tmpUrl = [[NSBundle mainBundle]URLForResource:@"tp_fg" withExtension:@"mp4"];
+    AVAsset *tmpAsset = [AVAsset assetWithURL:tmpUrl];
+    AVPlayerItem *playerItem = [[AVPlayerItem alloc]initWithAsset:tmpAsset];
+    _player = [AVPlayer playerWithPlayerItem:playerItem];
+    _preMovie = [[GPUImageMovie alloc]initWithPlayerItem:playerItem];
+//    [_player addPeriodicTimeObserverForInterval:CMTimeMake(1.0, 25.0) queue:dispatch_get_main_queue() usingBlock:^(CMTime time) {
+//    }];
+    _player.rate = 1.0;
+    [_preMovie startProcessing];
+    [_player play];
+}
+
 - (void)startQueue
 {
     if (_layer_exist)
     {
-        runAsynchronouslyOnVideoProcessingQueue(^{
-            runSynchronouslyOnVideoProcessingQueue(^{
-                [self->imageFilter renderToTexture:self->_fr_pts];
-                [self->imageFilter2 renderToTexture:self->_fr_pts];
-                self->_texture_test = self->imageFilter.outputFramebuffer.texture;
-                self->_texture_test2 = self->imageFilter2.outputFramebuffer.texture;
-                [self draw];
+        if (self->_preMovie.data_ready)
+        {
+            runAsynchronouslyOnVideoProcessingQueue(^{
+                runSynchronouslyOnVideoProcessingQueue(^{
+                    [self->imageFilter renderToTexture:self->_fr_pts];
+                    self->_preMovie.pts = self->_fr_pts;
+                    [self->_preMovie processPtsFrameBuffer];
+                    self->_texture_test = self->imageFilter.outputFramebuffer.texture;
+                    self->_texture_test2 = self->_preMovie.outputFramebuffer.texture;
+                    [self draw];
+                    self->_fr_pts++;
+                });
             });
-        });
-        _fr_pts++;
+        }
     }
 }
 

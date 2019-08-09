@@ -96,6 +96,8 @@ static void *openGLESContextQueueKey;
 
 - (EAGLContext *)createContext
 {
+    CFStringCompare(kCVImageBufferYCbCrMatrix_ITU_R_601_4, kCVImageBufferYCbCrMatrix_ITU_R_601_4, 0);
+
     EAGLContext *context = [[EAGLContext alloc]initWithAPI:kEAGLRenderingAPIOpenGLES3];
     return context;
 }
