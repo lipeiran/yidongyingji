@@ -80,6 +80,7 @@ static const GLfloat textureCoordinates_lpr[] = {
     BOOL _layer_exist;
     int _fr;
     int _fr_pts;
+    BOOL _slider_bool;
 }
 
 @property(nonatomic, strong) NSTimer *renderTimer;
@@ -135,11 +136,22 @@ static const GLfloat textureCoordinates_lpr[] = {
                 runSynchronouslyOnVideoProcessingQueue(^{
                     [self->imageFilter renderToTexture:self->_fr_pts];
                     self->_preMovie.pts = self->_fr_pts;
-                    [self->_preMovie processPtsFrameBuffer:self->_fr];
+                    if (self->_slider_bool)
+                    {
+                        [self->_preMovie processPtsFrameBufferWithTime:self.player.currentTime];
+                    }
+                    else
+                    {
+                        [self->_preMovie processPtsFrameBuffer:self->_fr];
+                    }
+                    
                     self->_texture_test = self->imageFilter.outputFramebuffer.texture;
                     self->_texture_test2 = self->_preMovie.outputFramebuffer.texture;
                     [self draw];
-                    self->_fr_pts++;
+                    if (!self->_slider_bool)
+                    {
+                        self->_fr_pts++;
+                    }
                 });
             });
         }
@@ -214,6 +226,47 @@ static const GLfloat textureCoordinates_lpr[] = {
 #pragma mark -
 #pragma mark Managing the display FBOs
 
+- (void)play
+{
+    NSLog(@"%s",__func__);
+    self->_slider_bool = NO;
+    self.preMovie.not_check_new = NO;
+
+}
+
+- (void)pause
+{
+    NSLog(@"%s",__func__);
+    self->_slider_bool = YES;
+    self.preMovie.not_check_new = YES;
+    [self.player pause];
+}
+
+- (void)resume
+{
+    NSLog(@"%s",__func__);
+    self->_slider_bool = NO;
+    self.preMovie.not_check_new = NO;
+    [self.player play];
+}
+
+- (void)stop
+{
+    NSLog(@"%s",__func__);
+    self->_slider_bool = YES;
+    self.preMovie.not_check_new = YES;
+    self->_fr_pts = 0;
+}
+
+- (void)seekToPercent:(CGFloat)percent;
+{
+    NSLog(@"%s",__func__);
+    self->_slider_bool = YES;
+    self.preMovie.not_check_new = YES;
+    self->_fr_pts = (int)(623 * percent);
+    [self.player seekToTime:CMTimeMake(self->_fr_pts, 25)];
+}
+
 - (void)createDisplayFramebuffer;
 {
     [GPUImageContext useImageProcessingContext];
@@ -270,9 +323,7 @@ static const GLfloat textureCoordinates_lpr[] = {
     {
         [self createDisplayFramebuffer];
     }
-    
     glBindFramebuffer(GL_FRAMEBUFFER, displayFramebuffer);
-    
     glViewport(0, 0, (GLint)_sizeInPixels.width, (GLint)_sizeInPixels.height);
 }
 

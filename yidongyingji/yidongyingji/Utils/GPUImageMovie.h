@@ -27,6 +27,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, retain) LPRGPUImageFrameBuffer *outputFramebuffer;
 @property (nonatomic, assign) int pts;
 @property (nonatomic, assign) BOOL data_ready;
+@property (nonatomic, assign) BOOL not_check_new;
 
 - (id)initWithPlayerItem:(AVPlayerItem *)playerItem;
 
@@ -41,6 +42,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (BOOL)copyNextFrame;
 
 - (void)processPtsFrameBuffer:(int)fr;
+
+- (void)processPtsFrameBufferWithTime:(CMTime)time;
 
 @end
 

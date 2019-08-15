@@ -32,6 +32,12 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)createDisplayFramebuffer;
 - (void)destroyDisplayFramebuffer;
 
+- (void)play;
+- (void)pause;
+- (void)resume;
+- (void)stop;
+- (void)seekToPercent:(CGFloat)percent;
+
 @end
 
 NS_ASSUME_NONNULL_END

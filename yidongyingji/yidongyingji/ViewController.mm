@@ -40,17 +40,17 @@
 
 - (void)changeSliderValue:(UISlider *)slider
 {
-    
+    [self.lprGPUView seekToPercent:slider.value];
 }
 
 - (void)touchDownAction:(UISlider *)slider
 {
-    
+    [self.lprGPUView pause];
 }
 
 - (void)touchUpInsideAction:(UISlider *)slider
 {
-    
+    [self.lprGPUView resume];
 }
 
 

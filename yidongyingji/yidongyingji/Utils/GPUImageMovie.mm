@@ -111,12 +111,15 @@ NSString *const kGPUImageVertexShaderString_movie = SHADER_STRING
 
 - (void)processPixelBufferAtTime:(CMTime)outputItemTime
 {
-    if ([playerItemOutput hasNewPixelBufferForItemTime:outputItemTime])
+    if ([playerItemOutput hasNewPixelBufferForItemTime:outputItemTime] || self.not_check_new)
     {
+        
         __unsafe_unretained GPUImageMovie *weakSelf = self;
         CVPixelBufferRef pixelBuffer = [playerItemOutput copyPixelBufferForItemTime:outputItemTime itemTimeForDisplay:NULL];
+        NSLog(@"----------->>> process11111111");
         if(pixelBuffer)
         {
+            NSLog(@"----------->>> process data!!!!!!");
             runSynchronouslyOnVideoProcessingQueue(^{
                 [weakSelf processMovieFrame:pixelBuffer withSampleTime:outputItemTime];
                 CFRelease(pixelBuffer);
@@ -125,11 +128,13 @@ NSString *const kGPUImageVertexShaderString_movie = SHADER_STRING
     }
     else
     {
+        int fail_c = 0;
         CMTime delta_jump = CMTimeMake(1, 100);
         while (1)
         {
+            fail_c++;
             outputItemTime = CMTimeAdd(outputItemTime, delta_jump);
-            if ([playerItemOutput hasNewPixelBufferForItemTime:outputItemTime])
+            if ([playerItemOutput hasNewPixelBufferForItemTime:outputItemTime] || self.not_check_new)
             {
                 __unsafe_unretained GPUImageMovie *weakSelf = self;
                 CVPixelBufferRef pixelBuffer = [playerItemOutput copyPixelBufferForItemTime:outputItemTime itemTimeForDisplay:NULL];
@@ -140,6 +145,10 @@ NSString *const kGPUImageVertexShaderString_movie = SHADER_STRING
                         CFRelease(pixelBuffer);
                     });
                 }
+                break;
+            }
+            if (fail_c > 10)
+            {
                 break;
             }
         }
@@ -274,6 +283,30 @@ NSString *const kGPUImageVertexShaderString_movie = SHADER_STRING
     runSynchronouslyOnVideoProcessingQueue(^{
         [self processPixelBufferAtTime:outputItemTime];
     });
+}
+
+- (void)processPtsFrameBufferWithTime:(CMTime)time
+{
+    runSynchronouslyOnVideoProcessingQueue(^{
+        [self processPixelBufferAtTimeWithTime:time];
+    });
+}
+
+- (void)processPixelBufferAtTimeWithTime:(CMTime)time
+{
+    __unsafe_unretained GPUImageMovie *weakSelf = self;
+    CVPixelBufferRef pixelBuffer = [playerItemOutput copyPixelBufferForItemTime:time itemTimeForDisplay:NULL];
+    if(pixelBuffer)
+    {
+        runSynchronouslyOnVideoProcessingQueue(^{
+            [weakSelf processMovieFrame:pixelBuffer withSampleTime:time];
+            CFRelease(pixelBuffer);
+        });
+    }
+    else
+    {
+        NSLog(@"这里为什么没有数据这里为什么没有数据这里为什么没有数据这里为什么没有数据这里为什么没有数据\n");
+    }
 }
 
 #pragma mark -
