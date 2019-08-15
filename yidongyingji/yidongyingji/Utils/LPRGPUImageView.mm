@@ -78,6 +78,7 @@ static const GLfloat textureCoordinates_lpr[] = {
     GLuint _texture_test2;
     
     BOOL _layer_exist;
+    int _fr;
     int _fr_pts;
 }
 
@@ -108,18 +109,17 @@ static const GLfloat textureCoordinates_lpr[] = {
 
 - (void)setTimer
 {
-    self->_renderTimer = [NSTimer scheduledTimerWithTimeInterval:1.0/25 target:self selector:@selector(startQueue) userInfo:nil repeats:YES];
+    self->_renderTimer = [NSTimer scheduledTimerWithTimeInterval:1.0/_fr target:self selector:@selector(startQueue) userInfo:nil repeats:YES];
 }
 
 - (void)setMaskMovieTexture
 {
+    _fr = 25;
     NSURL *tmpUrl = [[NSBundle mainBundle]URLForResource:@"tp_fg" withExtension:@"mp4"];
     AVAsset *tmpAsset = [AVAsset assetWithURL:tmpUrl];
     AVPlayerItem *playerItem = [[AVPlayerItem alloc]initWithAsset:tmpAsset];
     _player = [AVPlayer playerWithPlayerItem:playerItem];
     _preMovie = [[GPUImageMovie alloc]initWithPlayerItem:playerItem];
-//    [_player addPeriodicTimeObserverForInterval:CMTimeMake(1.0, 25.0) queue:dispatch_get_main_queue() usingBlock:^(CMTime time) {
-//    }];
     _player.rate = 1.0;
     [_preMovie startProcessing];
     [_player play];
@@ -135,7 +135,7 @@ static const GLfloat textureCoordinates_lpr[] = {
                 runSynchronouslyOnVideoProcessingQueue(^{
                     [self->imageFilter renderToTexture:self->_fr_pts];
                     self->_preMovie.pts = self->_fr_pts;
-                    [self->_preMovie processPtsFrameBuffer];
+                    [self->_preMovie processPtsFrameBuffer:self->_fr];
                     self->_texture_test = self->imageFilter.outputFramebuffer.texture;
                     self->_texture_test2 = self->_preMovie.outputFramebuffer.texture;
                     [self draw];

@@ -41,7 +41,8 @@ NSString *const kGPUImageVertexShaderString_movie = SHADER_STRING
 
 @interface GPUImageMovie ()
 {
-    CVPixelBufferRef pixelBuffer;
+    CADisplayLink *displayLink;
+
 }
 @end
 
@@ -112,38 +113,41 @@ NSString *const kGPUImageVertexShaderString_movie = SHADER_STRING
 {
     if ([playerItemOutput hasNewPixelBufferForItemTime:outputItemTime])
     {
-        if (pixelBuffer)
-        {
-            CFRelease(pixelBuffer);
-        }
-
-        NSLog(@"self pts is3:%d.\n",self.pts);
         __unsafe_unretained GPUImageMovie *weakSelf = self;
-        pixelBuffer = [playerItemOutput copyPixelBufferForItemTime:outputItemTime itemTimeForDisplay:NULL];
-        if( pixelBuffer )
+        CVPixelBufferRef pixelBuffer = [playerItemOutput copyPixelBufferForItemTime:outputItemTime itemTimeForDisplay:NULL];
+        if(pixelBuffer)
         {
             runSynchronouslyOnVideoProcessingQueue(^{
-                [weakSelf processMovieFrame:weakSelf->pixelBuffer withSampleTime:outputItemTime];
+                [weakSelf processMovieFrame:pixelBuffer withSampleTime:outputItemTime];
+                CFRelease(pixelBuffer);
             });
         }
     }
     else
     {
-        NSLog(@"self pts 这里没有数据!!!!!:%d.\n",self.pts);
-        __unsafe_unretained GPUImageMovie *weakSelf = self;
-        if( pixelBuffer )
+        CMTime delta_jump = CMTimeMake(1, 100);
+        while (1)
         {
-            runSynchronouslyOnVideoProcessingQueue(^{
-                [weakSelf processMovieFrame:weakSelf->pixelBuffer withSampleTime:outputItemTime];
-            });
+            outputItemTime = CMTimeAdd(outputItemTime, delta_jump);
+            if ([playerItemOutput hasNewPixelBufferForItemTime:outputItemTime])
+            {
+                __unsafe_unretained GPUImageMovie *weakSelf = self;
+                CVPixelBufferRef pixelBuffer = [playerItemOutput copyPixelBufferForItemTime:outputItemTime itemTimeForDisplay:NULL];
+                if(pixelBuffer)
+                {
+                    runSynchronouslyOnVideoProcessingQueue(^{
+                        [weakSelf processMovieFrame:pixelBuffer withSampleTime:outputItemTime];
+                        CFRelease(pixelBuffer);
+                    });
+                }
+                break;
+            }
         }
     }
 }
 
 - (void)processMovieFrame:(CVPixelBufferRef)movieFrame withSampleTime:(CMTime)currentSampleTime
 {
-    NSLog(@"self pts is5:%d.\n",self.pts);
-
     int bufferHeight = (int) CVPixelBufferGetHeight(movieFrame);
     int bufferWidth = (int) CVPixelBufferGetWidth(movieFrame);
     
@@ -183,7 +187,6 @@ NSString *const kGPUImageVertexShaderString_movie = SHADER_STRING
     CVOpenGLESTextureRef chrominanceTextureRef = NULL;
     if (CVPixelBufferGetPlaneCount(movieFrame) > 0) // Check for YUV planar inputs to do RGB conversion
     {
-        NSLog(@"%s",__func__);
         // fix issue 2221
         CVPixelBufferLockBaseAddress(movieFrame,0);
         if ( (imageBufferWidth != bufferWidth) && (imageBufferHeight != bufferHeight) )
@@ -216,7 +219,6 @@ NSString *const kGPUImageVertexShaderString_movie = SHADER_STRING
         glBindTexture(GL_TEXTURE_2D, chrominanceTexture);
         glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
         glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-        NSLog(@"self pts is6:%d.\n",self.pts);
 
         [self convertYUVToRGBOutput];
 
@@ -228,7 +230,6 @@ NSString *const kGPUImageVertexShaderString_movie = SHADER_STRING
 
 - (void)convertYUVToRGBOutput
 {
-    NSLog(@"%s",__func__);
     [GPUImageContext useImageProcessingContext];
     glUseProgram(self->yuvConversionProgram);
     
@@ -267,17 +268,12 @@ NSString *const kGPUImageVertexShaderString_movie = SHADER_STRING
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 }
 
-- (void)processPtsFrameBuffer
+- (void)processPtsFrameBuffer:(int)fr
 {
-    CMTime outputItemTime = CMTimeMake(self.pts, 25);
-//    CMTime outputItemTime = CMTimeMake(252, 25);
-    NSLog(@"self pts is1:%d.\n",self.pts);
-//    runAsynchronouslyOnVideoProcessingQueue(^{
-        runSynchronouslyOnVideoProcessingQueue(^{
-            NSLog(@"self pts is2:%d.\n",self.pts);
-            [self processPixelBufferAtTime:outputItemTime];
-        });
-//    });
+    CMTime outputItemTime = CMTimeMake(self.pts, fr);
+    runSynchronouslyOnVideoProcessingQueue(^{
+        [self processPixelBufferAtTime:outputItemTime];
+    });
 }
 
 #pragma mark -
@@ -285,7 +281,6 @@ NSString *const kGPUImageVertexShaderString_movie = SHADER_STRING
 
 - (void)processPlayerItem
 {
-    NSLog(@"%s",__func__);
     dispatch_queue_t videoProcessingQueue = [GPUImageContext sharedContextQueue];
     NSMutableDictionary *pixBuffAttributes = [NSMutableDictionary dictionary];
     [pixBuffAttributes setObject:@(kCVPixelFormatType_420YpCbCr8BiPlanarFullRange) forKey:(id)kCVPixelBufferPixelFormatTypeKey];

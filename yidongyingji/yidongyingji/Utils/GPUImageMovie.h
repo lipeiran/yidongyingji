@@ -40,7 +40,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (BOOL)copyNextFrame;
 
-- (void)processPtsFrameBuffer;
+- (void)processPtsFrameBuffer:(int)fr;
 
 @end
 
