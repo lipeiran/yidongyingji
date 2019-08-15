@@ -277,14 +277,6 @@ NSString *const kGPUImageVertexShaderString_movie = SHADER_STRING
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 }
 
-- (void)processPtsFrameBuffer:(int)fr
-{
-    CMTime outputItemTime = CMTimeMake(self.pts, fr);
-    runSynchronouslyOnVideoProcessingQueue(^{
-        [self processPixelBufferAtTime:outputItemTime];
-    });
-}
-
 - (void)processPtsFrameBufferWithTime:(CMTime)time
 {
     runSynchronouslyOnVideoProcessingQueue(^{

@@ -21,6 +21,8 @@ NS_ASSUME_NONNULL_BEGIN
 {
     LPRGPUImageFilter *imageFilter;
     LPRGPUImageFilter *imageFilter2;
+    LPRGPUImageFilter *imageFilter3;
+
 }
 
 @property(readonly, nonatomic) CGSize sizeInPixels;
