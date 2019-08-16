@@ -37,7 +37,6 @@
 		FE9CF91022FC41B9006BCE2B /* LPRGPUImageView.mm in Sources */ = {isa = PBXBuildFile; fileRef = FE9CF90E22FC41B8006BCE2B /* LPRGPUImageView.mm */; };
 		FE9CF91522FC442B006BCE2B /* LPRGPUImageFilter.mm in Sources */ = {isa = PBXBuildFile; fileRef = FE9CF91422FC442B006BCE2B /* LPRGPUImageFilter.mm */; };
 		FE9CF91822FC4537006BCE2B /* LPRGPUImageFrameBuffer.m in Sources */ = {isa = PBXBuildFile; fileRef = FE9CF91722FC4537006BCE2B /* LPRGPUImageFrameBuffer.m */; };
-		FE9CF91B22FC4B3C006BCE2B /* LPRGLProgram.m in Sources */ = {isa = PBXBuildFile; fileRef = FE9CF91A22FC4B3C006BCE2B /* LPRGLProgram.m */; };
 		FE9CF91E22FC4CC3006BCE2B /* LPRGPUImageContext.m in Sources */ = {isa = PBXBuildFile; fileRef = FE9CF91D22FC4CC3006BCE2B /* LPRGPUImageContext.m */; };
 		FE9CF92222FD63BC006BCE2B /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FE9CF92122FD63BC006BCE2B /* CoreFoundation.framework */; };
 		FE9CF92522FD76A4006BCE2B /* AVPlayer+SeekSmoothly.m in Sources */ = {isa = PBXBuildFile; fileRef = FE9CF92422FD76A4006BCE2B /* AVPlayer+SeekSmoothly.m */; };
@@ -114,8 +113,6 @@
 		FE9CF91422FC442B006BCE2B /* LPRGPUImageFilter.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = LPRGPUImageFilter.mm; sourceTree = "<group>"; };
 		FE9CF91622FC4537006BCE2B /* LPRGPUImageFrameBuffer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LPRGPUImageFrameBuffer.h; sourceTree = "<group>"; };
 		FE9CF91722FC4537006BCE2B /* LPRGPUImageFrameBuffer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LPRGPUImageFrameBuffer.m; sourceTree = "<group>"; };
-		FE9CF91922FC4B3C006BCE2B /* LPRGLProgram.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LPRGLProgram.h; sourceTree = "<group>"; };
-		FE9CF91A22FC4B3C006BCE2B /* LPRGLProgram.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LPRGLProgram.m; sourceTree = "<group>"; };
 		FE9CF91C22FC4CC3006BCE2B /* LPRGPUImageContext.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LPRGPUImageContext.h; sourceTree = "<group>"; };
 		FE9CF91D22FC4CC3006BCE2B /* LPRGPUImageContext.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LPRGPUImageContext.m; sourceTree = "<group>"; };
 		FE9CF92122FD63BC006BCE2B /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
@@ -274,8 +271,6 @@
 				FE9CF92422FD76A4006BCE2B /* AVPlayer+SeekSmoothly.m */,
 				FE9CF91C22FC4CC3006BCE2B /* LPRGPUImageContext.h */,
 				FE9CF91D22FC4CC3006BCE2B /* LPRGPUImageContext.m */,
-				FE9CF91922FC4B3C006BCE2B /* LPRGLProgram.h */,
-				FE9CF91A22FC4B3C006BCE2B /* LPRGLProgram.m */,
 				FE9CF91622FC4537006BCE2B /* LPRGPUImageFrameBuffer.h */,
 				FE9CF91722FC4537006BCE2B /* LPRGPUImageFrameBuffer.m */,
 				FE9CF91322FC442B006BCE2B /* LPRGPUImageFilter.h */,
@@ -513,7 +508,6 @@
 				FEE27AF822EF09AA00FF5511 /* cJSON.c in Sources */,
 				FE6119E122E71DE400DD0741 /* utils.cpp in Sources */,
 				FE9CF91522FC442B006BCE2B /* LPRGPUImageFilter.mm in Sources */,
-				FE9CF91B22FC4B3C006BCE2B /* LPRGLProgram.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

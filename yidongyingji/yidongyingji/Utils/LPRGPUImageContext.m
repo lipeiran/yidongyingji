@@ -72,43 +72,9 @@ static void *openGLESContextQueueKey_lpr;
     }
 }
 
-+ (void)setActiveShaderProgram:(LPRGLProgram *)shaderProgram
-{
-    LPRGPUImageContext *sharedContext = [LPRGPUImageContext sharedImageProcessingContext];
-    [sharedContext setContextShaderProgram:shaderProgram];
-}
-
-- (void)setContextShaderProgram:(LPRGLProgram *)shaderProgram
-{
-    EAGLContext *imageProcessingContext = [self context];
-    if ([EAGLContext currentContext] != imageProcessingContext)
-    {
-        [EAGLContext setCurrentContext:imageProcessingContext];
-    }
-    
-    if (self.currentShaderProgram != shaderProgram)
-    {
-        self.currentShaderProgram = shaderProgram;
-        [shaderProgram use];
-    }
-}
-
 - (void)presentBufferForDisplay
 {
     [self.context presentRenderbuffer:GL_RENDERBUFFER];
-}
-
-- (LPRGLProgram *)programForVertexShaderString:(NSString *)vertexShaderString fragmentShaderString:(NSString *)fragmentShaderString;
-{
-    NSString *lookupKeyForShaderProgram = [NSString stringWithFormat:@"V: %@ - F: %@", vertexShaderString, fragmentShaderString];
-    LPRGLProgram *programFromCache = [shaderProgramCache objectForKey:lookupKeyForShaderProgram];
-    if (programFromCache == nil)
-    {
-        programFromCache = [[LPRGLProgram alloc] initWithVertexShaderString:vertexShaderString fragmentShaderString:fragmentShaderString];
-        [shaderProgramCache setObject:programFromCache forKey:lookupKeyForShaderProgram];
-    }
-    
-    return programFromCache;
 }
 
 @end

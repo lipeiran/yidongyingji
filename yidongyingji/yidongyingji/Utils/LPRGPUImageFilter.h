@@ -9,7 +9,6 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 #import "LPRGPUImageFrameBuffer.h"
-#import "LPRGLProgram.h"
 #import "LPRGPUImageContext.h"
 #include "GPUImageContext.h"
 #include "GLProgram.hpp"

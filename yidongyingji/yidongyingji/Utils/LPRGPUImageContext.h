@@ -7,7 +7,6 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "LPRGLProgram.h"
 #import "LPRGPUImageFrameBuffer.h"
 
 NS_ASSUME_NONNULL_BEGIN
@@ -15,7 +14,6 @@ NS_ASSUME_NONNULL_BEGIN
 @interface LPRGPUImageContext : NSObject
 
 @property(readonly, nonatomic) dispatch_queue_t contextQueue;
-@property(readwrite, retain, nonatomic) LPRGLProgram *currentShaderProgram;
 @property(readonly, retain, nonatomic) EAGLContext *context;
 
 + (void *)contextKey;
@@ -23,11 +21,8 @@ NS_ASSUME_NONNULL_BEGIN
 + (dispatch_queue_t)sharedContextQueue;
 + (void)useImageProcessingContext;
 - (void)useAsCurrentContext;
-+ (void)setActiveShaderProgram:(LPRGLProgram *)shaderProgram;
-- (void)setContextShaderProgram:(LPRGLProgram *)shaderProgram;
 
 - (void)presentBufferForDisplay;
-- (LPRGLProgram *)programForVertexShaderString:(NSString *)vertexShaderString fragmentShaderString:(NSString *)fragmentShaderString;
 
 @end
 
