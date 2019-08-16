@@ -16,6 +16,7 @@
 #import "OpenGLES2DTools.h"
 #import "GPUImage.hpp"
 #import "GPUAnimateAttr.hpp"
+#import "Parse_AE.h"
 
 #define STRINGIZE(x) #x
 #define STRINGIZE2(x) STRINGIZE(x)
@@ -45,7 +46,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (retain) LPRGPUImageFrameBuffer *outputFramebuffer;
 @property (nonatomic) CGSize texture_size;
 
-- (id)initSize:(CGSize)size imageName:(nullable NSString *)imageName;
+- (id)initSize:(CGSize)size imageName:(nullable NSString *)imageName ae:(AEConfigEntity &)aeConfig;
 
 - (void)renderToTexture:(int)fr;
 

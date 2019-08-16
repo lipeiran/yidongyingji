@@ -28,7 +28,6 @@ NSString *const kSamplingVertexShaderC_lpr = SHADER_STRING
  }
  );
 
-
 NSString *const kSamplingFragmentShaderC_lpr = SHADER_STRING
 (
  varying highp vec2 textureCoordinate;
@@ -39,10 +38,23 @@ NSString *const kSamplingFragmentShaderC_lpr = SHADER_STRING
  void main()
  {
      lowp vec4 textureColor = texture2D(inputImageTexture, textureCoordinate);
-     lowp vec4 textureColor2 = texture2D(inputImageTexture2, vec2(textureCoordinate.x,1.0-textureCoordinate.y));
-     gl_FragColor = textureColor * 0.4 + textureColor2;
+     lowp vec4 textureColor2 = texture2D(inputImageTexture2, vec2(textureCoordinate.x/2.0,1.0-textureCoordinate.y));
+     lowp vec4 textureColor3 = texture2D(inputImageTexture2, vec2(0.5+textureCoordinate.x/2.0,1.0-textureCoordinate.y));
+     gl_FragColor = textureColor * (1.0-textureColor3.r) + textureColor2;
  }
  );
+
+/*
+ lowp vec4 textureColor = texture2D(inputImageTexture, textureCoordinate);
+ lowp vec4 textureColor2 = texture2D(inputImageTexture2, vec2(textureCoordinate.x/2.0,1.0-textureCoordinate.y));
+ lowp vec4 textureColor3 = texture2D(inputImageTexture2, vec2(0.5+textureCoordinate.x/2.0,1.0-textureCoordinate.y));
+ gl_FragColor = textureColor * (1.0-textureColor3.r) + textureColor2;
+  */
+/*
+ lowp vec4 textureColor = texture2D(inputImageTexture, textureCoordinate);
+ lowp vec4 textureColor2 = texture2D(inputImageTexture2, vec2(textureCoordinate.x,1.0-textureCoordinate.y));
+ gl_FragColor = textureColor * (0.4) + textureColor2;
+ */
 
 static const GLfloat imageVertices_lpr[] = {
     -1.0f, -1.0f,
@@ -80,6 +92,8 @@ static const GLfloat textureCoordinates_lpr[] = {
     BOOL _layer_exist;
     int _fr;
     BOOL _slider_bool;
+    AEConfigEntity configEntity;
+
 }
 
 @property(nonatomic, strong) NSTimer *renderTimer;
@@ -101,7 +115,6 @@ static const GLfloat textureCoordinates_lpr[] = {
     {
         return nil;
     }
-    [self setMaskMovieTexture];
     [self commonInit];
     [self setTimer];
     return self;
@@ -114,7 +127,10 @@ static const GLfloat textureCoordinates_lpr[] = {
 
 - (void)setMaskMovieTexture
 {
-    _fr = 25;
+    char *configPath = (char *)[[[NSBundle mainBundle]pathForResource:@"tp" ofType:@"json"] UTF8String];
+    ParseAE parseAE;
+    parseAE.dofile(configPath, configEntity);
+    _fr = configEntity.fr;
     NSURL *tmpUrl = [[NSBundle mainBundle]URLForResource:@"tp_fg" withExtension:@"mp4"];
     AVAsset *tmpAsset = [AVAsset assetWithURL:tmpUrl];
     AVPlayerItem *playerItem = [[AVPlayerItem alloc]initWithAsset:tmpAsset];
@@ -148,6 +164,8 @@ static const GLfloat textureCoordinates_lpr[] = {
 - (void)commonInit;
 {
     // Set scaling to account for Retina display
+    [self setMaskMovieTexture];
+
     if ([self respondsToSelector:@selector(setContentScaleFactor:)])
     {
         self.contentScaleFactor = [[UIScreen mainScreen] scale];
@@ -181,8 +199,7 @@ static const GLfloat textureCoordinates_lpr[] = {
             glEnableVertexAttribArray(self->displayTextureCoordinateAttribute);
             [self createDisplayFramebuffer];
             
-            self->imageFilter = [[LPRGPUImageFilter alloc]initSize:screenSize imageName:nil];
-            self->imageFilter2 = [[LPRGPUImageFilter alloc]initSize:screenSize imageName:@"img_02.png"];
+            self->imageFilter = [[LPRGPUImageFilter alloc]initSize:screenSize imageName:nil ae:self->configEntity];
         });
     });
 }
@@ -199,7 +216,6 @@ static const GLfloat textureCoordinates_lpr[] = {
             [self createDisplayFramebuffer];
         });
     }
-
 }
 
 - (void)dealloc
@@ -247,7 +263,7 @@ static const GLfloat textureCoordinates_lpr[] = {
     NSLog(@"%s",__func__);
     self->_slider_bool = YES;
     self.preMovie.not_check_new = YES;
-    int fr_pts = (int)(623 * percent);
+    int fr_pts = (int)((configEntity.op+1) * percent);
     [self.player seekToTime:CMTimeMake(fr_pts, self->_fr)];
 }
 

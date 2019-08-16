@@ -7,7 +7,6 @@
 //
 
 #import "LPRGPUImageFilter.h"
-#import "Parse_AE.h"
 
 //编辑顶点坐标源数组
 GLfloat vertexData_src_lpr[30] = {
@@ -96,7 +95,7 @@ NSString *const kPicGPUImagePassthroughFragmentShaderString = SHADER_STRING
 
 @interface LPRGPUImageFilter ()
 {
-    AEConfigEntity configEntity;
+    AEConfigEntity *configEntity;
     float _aspectRatio;
     float _perspective_left;
     float _perspective_right;
@@ -111,7 +110,7 @@ NSString *const kPicGPUImagePassthroughFragmentShaderString = SHADER_STRING
 @implementation LPRGPUImageFilter
 @synthesize texture_test = _texture_test;
 
-- (void)addImageAsset:(GPUImage &)image
+- (void)addImageAsset:(GPUImage&)image
 {
     GPUImage *tmpImage = &image;
     tmpImage->index = _imageAsset_num;
@@ -121,40 +120,39 @@ NSString *const kPicGPUImagePassthroughFragmentShaderString = SHADER_STRING
 
 - (void)addImageTexture:(GPUImage &)image
 {
-    memcpy(vertexData_dst_lpr, vertexData_src_lpr, 30*sizeof(GLfloat));
-    _texture[_texture_num] = cpp_createImageTexture(image.byte, image.w, image.h, self.texture_size.width, vertexData_dst_lpr);
+    memcpy(image.vertexData_dst_lpr, vertexData_src_lpr, 30*sizeof(GLfloat));
+    _texture[_texture_num] = cpp_createImageTexture(image.byte, image.w, image.h, self.texture_size.width, image.vertexData_dst_lpr);
     _texture_num++;
 }
 
-- (void)addConfigure:(char *)configFilePath
+- (void)addConfigure
 {
     ParseAE parseAE;
-    parseAE.dofile(configFilePath, configEntity);
-    for (int i = 0; i < configEntity.layers_num; i++)
+    for (int i = 0; i < configEntity->layers_num; i++)
     {
-        AELayerEntity &tmpEntity = configEntity.layers[i];
-        int tmpAsset_index = parseAE.asset_index_refId(tmpEntity.refId, configEntity);
-        AEAssetEntity tmpAsset = configEntity.assets[tmpAsset_index];
+        AELayerEntity &tmpEntity = configEntity->layers[i];
+        int tmpAsset_index = parseAE.asset_index_refId(tmpEntity.refId, *configEntity);
+        AEAssetEntity tmpAsset = configEntity->assets[tmpAsset_index];
         tmpEntity.layer_w = tmpAsset.w;
         tmpEntity.layer_h = tmpAsset.h;
+        tmpEntity.asset_index = tmpAsset_index;
     }
-    
     [self upImageTexture];
 }
 
 - (void)upImageTexture
 {
     ParseAE parseAE;
-    for (int i = 0; i < configEntity.layers_num; i++)
+    for (int i = 0; i < configEntity->layers_num; i++)
     {
-        AELayerEntity &layer = configEntity.layers[i];
-        int asset_index = parseAE.asset_index_refId(layer.refId, configEntity);
+        AELayerEntity &layer = configEntity->layers[i];
+        int asset_index = parseAE.asset_index_refId(layer.refId, *configEntity);
         GPUImage *tmpImage = _imageAsset[asset_index];
         [self addImageTexture:*tmpImage];
     }
 }
 
-- (id)initSize:(CGSize)size imageName:(nullable NSString *)imageName
+- (id)initSize:(CGSize)size imageName:(nullable NSString *)imageName ae:(AEConfigEntity &)aeConfig
 {
     if (!(self = [super init]))
     {
@@ -163,7 +161,9 @@ NSString *const kPicGPUImagePassthroughFragmentShaderString = SHADER_STRING
     if (imageName == NULL)
     {
         _ae_b = YES;
+        configEntity = &aeConfig;
     }
+
     self.texture_size = size;
     _aspectRatio = size.height/size.width;
     _perspective_left = -1;
@@ -220,35 +220,17 @@ NSString *const kPicGPUImagePassthroughFragmentShaderString = SHADER_STRING
         
         if (self->_ae_b)
         {
-            char *configPath = (char *)[[[NSBundle mainBundle]pathForResource:@"tp" ofType:@"json"] UTF8String];
-            int w1,h1,w2,h2,w3,h3,w4,h4;
-            GLubyte *byte1 = NULL,*byte2 = NULL,*byte3 = NULL,*byte4 = NULL;
-            byte1 = [OpenGLES2DTools getImageDataWithName:@"img_0.png" width:&w1 height:&h1];
-            byte2 = [OpenGLES2DTools getImageDataWithName:@"img_1.png" width:&w2 height:&h2];
-            byte3 = [OpenGLES2DTools getImageDataWithName:@"img_2.png" width:&w3 height:&h3];
-            byte4 = [OpenGLES2DTools getImageDataWithName:@"img_3.png" width:&w4 height:&h4];
-            GPUImage image1;
-            image1.byte = byte1;
-            image1.w = w1;
-            image1.h = h1;
-            GPUImage image2;
-            image2.byte = byte2;
-            image2.w = w2;
-            image2.h = h2;
-            GPUImage image3;
-            image3.byte = byte3;
-            image3.w = w3;
-            image3.h = h3;
-            GPUImage image4;
-            image4.byte = byte4;
-            image4.w = w4;
-            image4.h = h4;
-            
-            [self addImageAsset:image1];
-            [self addImageAsset:image2];
-            [self addImageAsset:image3];
-            [self addImageAsset:image4];
-            [self addConfigure:configPath];
+            for (int i = 0; i < self->configEntity->assets_num; i++)
+            {
+                int w1,h1;
+                GLubyte *byte1 = [OpenGLES2DTools getImageDataWithName:[NSString stringWithFormat:@"img_%d.png",i] width:&w1 height:&h1];
+                GPUImage *image1 = (GPUImage *)malloc(sizeof(*image1));
+                image1->byte = byte1;
+                image1->w = w1;
+                image1->h = h1;
+                [self addImageAsset:*image1];
+            }
+            [self addConfigure];
         }
         else
         {
@@ -281,10 +263,10 @@ NSString *const kPicGPUImagePassthroughFragmentShaderString = SHADER_STRING
         if (self->_ae_b)
         {
             ParseAE parseAE;
-            int layer_num = self->configEntity.layers_num;
+            int layer_num = self->configEntity->layers_num;
             for (int i = 0; i < layer_num; ++i)
             {
-                AELayerEntity tmpEntity = self->configEntity.layers[layer_num-i-1];
+                AELayerEntity tmpEntity = self->configEntity->layers[layer_num-i-1];
                 if (fr < tmpEntity.ip || fr > tmpEntity.op)
                 {
                     continue;
@@ -322,8 +304,9 @@ NSString *const kPicGPUImagePassthroughFragmentShaderString = SHADER_STRING
                 cpp_glBindTexture(GL_TEXTURE3, self->_texture[layer_num-i-1]);
                 glUniform1i(self->filterInputTextureUniform, 3);
                 
-                glVertexAttribPointer(self->filterPositionAttribute, 3, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 5, (GLfloat *)vertexData_dst_lpr + 0);
-                glVertexAttribPointer(self->filterTextureCoordinateAttribute, 2, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 5, (GLfloat *)vertexData_dst_lpr + 3);
+                GLfloat *tmpData = self->_imageAsset[tmpEntity.asset_index]->vertexData_dst_lpr;
+                glVertexAttribPointer(self->filterPositionAttribute, 3, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 5, (GLfloat *)tmpData + 0);
+                glVertexAttribPointer(self->filterTextureCoordinateAttribute, 2, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 5, (GLfloat *)tmpData + 3);
                 
                 cpp_generateAndUniform2DMatrix(self->_perspective_left, self->_perspective_right, self->_perspective_bottom, self->_perspective_top, self->_perspective_near, self->_perspective_far, animateAttr.deltaX, animateAttr.deltaY, animateAttr.deltaZ, animateAttr.rotateAngleX, animateAttr.rotateAngleY, animateAttr.rotateAngleZ, animateAttr.scaleX, animateAttr.scaleY, animateAttr.scaleZ, animateAttr.anchorPX, animateAttr.anchorPY, self->_modelViewMartix_S);
                 glDrawArrays(GL_TRIANGLES, 0, 6);

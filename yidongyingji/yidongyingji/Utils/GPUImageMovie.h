@@ -41,8 +41,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (BOOL)copyNextFrame;
 
-- (void)processPtsFrameBuffer:(int)fr;
-
 - (void)processPtsFrameBufferWithTime:(CMTime)time;
 
 @end

@@ -20,8 +20,6 @@ NS_ASSUME_NONNULL_BEGIN
 @interface LPRGPUImageView : UIView
 {
     LPRGPUImageFilter *imageFilter;
-    LPRGPUImageFilter *imageFilter2;
-    LPRGPUImageFilter *imageFilter3;
 
 }
 

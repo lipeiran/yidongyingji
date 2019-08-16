@@ -20,7 +20,7 @@ public:
     int index;
     int w;
     int h;
-    
+    GLfloat vertexData_dst_lpr[30];
 private:
     
 };

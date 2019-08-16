@@ -119,6 +119,7 @@ typedef struct{
     int bm;
     int layer_w = 0;
     int layer_h = 0;
+    int asset_index = -1;
     // extension------------------------------end//
 }AELayerEntity;
 

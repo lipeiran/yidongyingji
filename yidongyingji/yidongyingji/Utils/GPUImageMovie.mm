@@ -295,10 +295,6 @@ NSString *const kGPUImageVertexShaderString_movie = SHADER_STRING
             CFRelease(pixelBuffer);
         });
     }
-    else
-    {
-        NSLog(@"这里为什么没有数据这里为什么没有数据这里为什么没有数据这里为什么没有数据这里为什么没有数据\n");
-    }
 }
 
 #pragma mark -
@@ -325,9 +321,5 @@ NSString *const kGPUImageVertexShaderString_movie = SHADER_STRING
     NSLog(@"%s",__func__);
     self.data_ready = true;
 }
-
-
-
-
 
 @end
