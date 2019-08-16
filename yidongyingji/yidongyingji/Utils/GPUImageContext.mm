@@ -8,6 +8,31 @@
 
 #import "GPUImageContext.h"
 
+void runSynchronouslyOnVideoProcessingQueue(void (^block)(void))
+{
+    dispatch_queue_t videoProcessingQueue = [GPUImageContext sharedContextQueue];
+    if (dispatch_get_specific([GPUImageContext contextKey]))
+    {
+        block();
+    }else
+    {
+        dispatch_sync(videoProcessingQueue, block);
+    }
+}
+
+void runAsynchronouslyOnVideoProcessingQueue(void (^block)(void))
+{
+    dispatch_queue_t videoProcessingQueue = [GPUImageContext sharedContextQueue];
+    
+    if (dispatch_get_specific([GPUImageContext contextKey]))
+    {
+        block();
+    }else
+    {
+        dispatch_async(videoProcessingQueue, block);
+    }
+}
+
 @implementation GPUImageContext
 @synthesize context = _context;
 @synthesize coreVideoTextureCache = _coreVideoTextureCache;

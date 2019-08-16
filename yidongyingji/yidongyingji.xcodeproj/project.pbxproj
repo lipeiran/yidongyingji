@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		FE0AC5B222F2E9EF002A81CD /* GCDCountDown.m in Sources */ = {isa = PBXBuildFile; fileRef = FE0AC5B122F2E9EF002A81CD /* GCDCountDown.m */; };
 		FE56E88D22EE96A5001BD700 /* 11_320_480.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = FE56E88B22EE96A5001BD700 /* 11_320_480.jpeg */; };
 		FE56E88E22EE96A5001BD700 /* 10_480_480.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = FE56E88C22EE96A5001BD700 /* 10_480_480.jpeg */; };
 		FE56E89322EEE489001BD700 /* GPUImageFilter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FE56E89122EEE489001BD700 /* GPUImageFilter.cpp */; };
@@ -34,8 +33,6 @@
 		FE611A0422E980A500DD0741 /* 2.jpg in Resources */ = {isa = PBXBuildFile; fileRef = FE6119FE22E980A500DD0741 /* 2.jpg */; };
 		FE9CF8F422FAA608006BCE2B /* GPUImageMovie.mm in Sources */ = {isa = PBXBuildFile; fileRef = FE9CF8F322FAA608006BCE2B /* GPUImageMovie.mm */; };
 		FE9CF8F722FAAFC3006BCE2B /* GPUImageColorConversion.m in Sources */ = {isa = PBXBuildFile; fileRef = FE9CF8F622FAAFC3006BCE2B /* GPUImageColorConversion.m */; };
-		FE9CF8FA22FAC6B5006BCE2B /* GPUImageThreeInputFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = FE9CF8F922FAC6B5006BCE2B /* GPUImageThreeInputFilter.m */; };
-		FE9CF8FD22FAE305006BCE2B /* GPUImageFrameBuffer.m in Sources */ = {isa = PBXBuildFile; fileRef = FE9CF8FC22FAE305006BCE2B /* GPUImageFrameBuffer.m */; };
 		FE9CF90022FBC56A006BCE2B /* GPUImageMaskFilter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FE9CF8FE22FBC56A006BCE2B /* GPUImageMaskFilter.cpp */; };
 		FE9CF91022FC41B9006BCE2B /* LPRGPUImageView.mm in Sources */ = {isa = PBXBuildFile; fileRef = FE9CF90E22FC41B8006BCE2B /* LPRGPUImageView.mm */; };
 		FE9CF91522FC442B006BCE2B /* LPRGPUImageFilter.mm in Sources */ = {isa = PBXBuildFile; fileRef = FE9CF91422FC442B006BCE2B /* LPRGPUImageFilter.mm */; };
@@ -48,7 +45,6 @@
 		FEE27AF222EF091900FF5511 /* Parse_AE.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FEE27AF122EF091900FF5511 /* Parse_AE.cpp */; };
 		FEE27AF522EF094800FF5511 /* BasicTools.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FEE27AF422EF094800FF5511 /* BasicTools.cpp */; };
 		FEE27AF822EF09AA00FF5511 /* cJSON.c in Sources */ = {isa = PBXBuildFile; fileRef = FEE27AF722EF09AA00FF5511 /* cJSON.c */; };
-		FEE27AFB22EF0A5800FF5511 /* OpenGLES2DTools.m in Sources */ = {isa = PBXBuildFile; fileRef = FEE27AFA22EF0A5800FF5511 /* OpenGLES2DTools.m */; };
 		FEE27AFE22EF0AFC00FF5511 /* GLESUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = FEE27AFC22EF0AFC00FF5511 /* GLESUtils.m */; };
 		FEE27B0522EFE4D700FF5511 /* GPUImage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FEE27B0322EFE4D700FF5511 /* GPUImage.cpp */; };
 		FEE27B0822EFEE4500FF5511 /* GPUAnimateAttr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FEE27B0622EFEE4500FF5511 /* GPUAnimateAttr.cpp */; };
@@ -72,8 +68,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		FE0AC5B022F2E9EF002A81CD /* GCDCountDown.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GCDCountDown.h; sourceTree = "<group>"; };
-		FE0AC5B122F2E9EF002A81CD /* GCDCountDown.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GCDCountDown.m; sourceTree = "<group>"; };
 		FE56E88B22EE96A5001BD700 /* 11_320_480.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 11_320_480.jpeg; sourceTree = "<group>"; };
 		FE56E88C22EE96A5001BD700 /* 10_480_480.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 10_480_480.jpeg; sourceTree = "<group>"; };
 		FE56E89122EEE489001BD700 /* GPUImageFilter.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = GPUImageFilter.cpp; sourceTree = "<group>"; };
@@ -112,10 +106,6 @@
 		FE9CF8F322FAA608006BCE2B /* GPUImageMovie.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = GPUImageMovie.mm; sourceTree = "<group>"; };
 		FE9CF8F522FAAFC3006BCE2B /* GPUImageColorConversion.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GPUImageColorConversion.h; sourceTree = "<group>"; };
 		FE9CF8F622FAAFC3006BCE2B /* GPUImageColorConversion.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GPUImageColorConversion.m; sourceTree = "<group>"; };
-		FE9CF8F822FAC6B5006BCE2B /* GPUImageThreeInputFilter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GPUImageThreeInputFilter.h; sourceTree = "<group>"; };
-		FE9CF8F922FAC6B5006BCE2B /* GPUImageThreeInputFilter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GPUImageThreeInputFilter.m; sourceTree = "<group>"; };
-		FE9CF8FB22FAE305006BCE2B /* GPUImageFrameBuffer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GPUImageFrameBuffer.h; sourceTree = "<group>"; };
-		FE9CF8FC22FAE305006BCE2B /* GPUImageFrameBuffer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GPUImageFrameBuffer.m; sourceTree = "<group>"; };
 		FE9CF8FE22FBC56A006BCE2B /* GPUImageMaskFilter.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = GPUImageMaskFilter.cpp; sourceTree = "<group>"; };
 		FE9CF8FF22FBC56A006BCE2B /* GPUImageMaskFilter.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = GPUImageMaskFilter.hpp; sourceTree = "<group>"; };
 		FE9CF90E22FC41B8006BCE2B /* LPRGPUImageView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = LPRGPUImageView.mm; sourceTree = "<group>"; };
@@ -142,8 +132,6 @@
 		FEE27AF422EF094800FF5511 /* BasicTools.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BasicTools.cpp; sourceTree = "<group>"; };
 		FEE27AF622EF09AA00FF5511 /* cJSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cJSON.h; sourceTree = "<group>"; };
 		FEE27AF722EF09AA00FF5511 /* cJSON.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = cJSON.c; sourceTree = "<group>"; };
-		FEE27AF922EF0A5800FF5511 /* OpenGLES2DTools.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.objc; path = OpenGLES2DTools.h; sourceTree = "<group>"; };
-		FEE27AFA22EF0A5800FF5511 /* OpenGLES2DTools.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OpenGLES2DTools.m; sourceTree = "<group>"; };
 		FEE27AFC22EF0AFC00FF5511 /* GLESUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLESUtils.m; sourceTree = "<group>"; };
 		FEE27AFD22EF0AFC00FF5511 /* GLESUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLESUtils.h; sourceTree = "<group>"; };
 		FEE27B0322EFE4D700FF5511 /* GPUImage.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = GPUImage.cpp; sourceTree = "<group>"; };
@@ -294,20 +282,12 @@
 				FE9CF91422FC442B006BCE2B /* LPRGPUImageFilter.mm */,
 				FE9CF90F22FC41B8006BCE2B /* LPRGPUImageView.h */,
 				FE9CF90E22FC41B8006BCE2B /* LPRGPUImageView.mm */,
-				FEE27AF922EF0A5800FF5511 /* OpenGLES2DTools.h */,
-				FEE27AFA22EF0A5800FF5511 /* OpenGLES2DTools.m */,
-				FE0AC5B022F2E9EF002A81CD /* GCDCountDown.h */,
-				FE0AC5B122F2E9EF002A81CD /* GCDCountDown.m */,
 				FEF840F422F9270100C04CA3 /* GPUImageContext.h */,
 				FEF840F522F9270100C04CA3 /* GPUImageContext.mm */,
 				FE9CF8F222FAA608006BCE2B /* GPUImageMovie.h */,
 				FE9CF8F322FAA608006BCE2B /* GPUImageMovie.mm */,
 				FE9CF8F522FAAFC3006BCE2B /* GPUImageColorConversion.h */,
 				FE9CF8F622FAAFC3006BCE2B /* GPUImageColorConversion.m */,
-				FE9CF8F822FAC6B5006BCE2B /* GPUImageThreeInputFilter.h */,
-				FE9CF8F922FAC6B5006BCE2B /* GPUImageThreeInputFilter.m */,
-				FE9CF8FB22FAE305006BCE2B /* GPUImageFrameBuffer.h */,
-				FE9CF8FC22FAE305006BCE2B /* GPUImageFrameBuffer.m */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -513,12 +493,8 @@
 				FE9CF91822FC4537006BCE2B /* LPRGPUImageFrameBuffer.m in Sources */,
 				FE6119D522E6FD5A00DD0741 /* GLProgram.cpp in Sources */,
 				FE9CF91E22FC4CC3006BCE2B /* LPRGPUImageContext.m in Sources */,
-				FEE27AFB22EF0A5800FF5511 /* OpenGLES2DTools.m in Sources */,
 				FE6119EF22E9582F00DD0741 /* GuideView.mm in Sources */,
-				FE9CF8FD22FAE305006BCE2B /* GPUImageFrameBuffer.m in Sources */,
-				FE0AC5B222F2E9EF002A81CD /* GCDCountDown.m in Sources */,
 				FE9CF90022FBC56A006BCE2B /* GPUImageMaskFilter.cpp in Sources */,
-				FE9CF8FA22FAC6B5006BCE2B /* GPUImageThreeInputFilter.m in Sources */,
 				FEE27AE922EEFB3100FF5511 /* GLESMath.c in Sources */,
 				FE9CF8F722FAAFC3006BCE2B /* GPUImageColorConversion.m in Sources */,
 				FE6119BC22E6F6F700DD0741 /* ViewController.mm in Sources */,

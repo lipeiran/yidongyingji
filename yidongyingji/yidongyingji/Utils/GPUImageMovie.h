@@ -12,7 +12,6 @@
 #import <CoreVideo/CoreVideo.h>
 
 #include "GPUImageContext.h"
-#import "OpenGLES2DTools.h"
 #include "GLProgram.hpp"
 #import "LPRGPUImageFrameBuffer.h"
 #import "Header.h"

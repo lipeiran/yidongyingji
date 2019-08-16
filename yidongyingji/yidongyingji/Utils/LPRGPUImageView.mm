@@ -7,7 +7,6 @@
 //
 
 #import "LPRGPUImageView.h"
-#import "OpenGLES2DTools.h"
 #import "GPUImageMovie.h"
 
 

@@ -7,13 +7,13 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 #import "LPRGPUImageFrameBuffer.h"
 #import "LPRGLProgram.h"
 #import "LPRGPUImageContext.h"
 #include "GPUImageContext.h"
 #include "GLProgram.hpp"
 #include "GLProgram.hpp"
-#import "OpenGLES2DTools.h"
 #import "GPUImage.hpp"
 #import "GPUAnimateAttr.hpp"
 #import "Parse_AE.h"
