@@ -13,6 +13,7 @@
 #include <stdlib.h>
 #include "GL_Header.h"
 #include "GLESMath.h"
+#include "Header.h"
 
 class GLProgram;
 

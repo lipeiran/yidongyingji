@@ -15,6 +15,7 @@
 #import "OpenGLES2DTools.h"
 #include "GLProgram.hpp"
 #import "LPRGPUImageFrameBuffer.h"
+#import "Header.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

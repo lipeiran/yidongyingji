@@ -8,13 +8,11 @@
 
 #import "ViewController.h"
 #import "OpenGLESView.h"
-#import "OpenGLES2DView.h"
 #import "GuideView.h"
 #import "LPRGPUImageView.h"
 
 @interface ViewController ()
 @property (nonatomic, strong) OpenGLESView *glesView;
-@property (nonatomic, strong) OpenGLES2DView *gles2DView;
 @property (nonatomic, strong) GuideView *guideView;
 @property (nonatomic, strong) LPRGPUImageView *lprGPUView;
 @property (nonatomic, strong) UISlider *progress_slider;
@@ -27,7 +25,7 @@
     [super viewDidLoad];
     
     self.view.backgroundColor = [UIColor lightGrayColor];
-    self.lprGPUView = [[LPRGPUImageView alloc]initWithFrame:CGRectMake(100/[UIScreen mainScreen].scale, 100/[UIScreen mainScreen].scale, 480/[UIScreen mainScreen].scale, 640/[UIScreen mainScreen].scale)];
+    self.lprGPUView = [[LPRGPUImageView alloc]initWithFrame:CGRectMake(Draw_x/[UIScreen mainScreen].scale, Draw_y/[UIScreen mainScreen].scale, Draw_w/[UIScreen mainScreen].scale, Draw_h/[UIScreen mainScreen].scale)];
     [self.view addSubview:self.lprGPUView];
     
     self.progress_slider = [[UISlider alloc]initWithFrame:CGRectMake(100, 400, 200, 30)];

@@ -45,7 +45,6 @@
 		FE9CF92222FD63BC006BCE2B /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FE9CF92122FD63BC006BCE2B /* CoreFoundation.framework */; };
 		FE9CF92522FD76A4006BCE2B /* AVPlayer+SeekSmoothly.m in Sources */ = {isa = PBXBuildFile; fileRef = FE9CF92422FD76A4006BCE2B /* AVPlayer+SeekSmoothly.m */; };
 		FEE27AE922EEFB3100FF5511 /* GLESMath.c in Sources */ = {isa = PBXBuildFile; fileRef = FEE27AE822EEFB3100FF5511 /* GLESMath.c */; };
-		FEE27AEE22EF041700FF5511 /* OpenGLES2DView.mm in Sources */ = {isa = PBXBuildFile; fileRef = FEE27AED22EF041700FF5511 /* OpenGLES2DView.mm */; };
 		FEE27AF222EF091900FF5511 /* Parse_AE.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FEE27AF122EF091900FF5511 /* Parse_AE.cpp */; };
 		FEE27AF522EF094800FF5511 /* BasicTools.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FEE27AF422EF094800FF5511 /* BasicTools.cpp */; };
 		FEE27AF822EF09AA00FF5511 /* cJSON.c in Sources */ = {isa = PBXBuildFile; fileRef = FEE27AF722EF09AA00FF5511 /* cJSON.c */; };
@@ -54,13 +53,14 @@
 		FEE27B0522EFE4D700FF5511 /* GPUImage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FEE27B0322EFE4D700FF5511 /* GPUImage.cpp */; };
 		FEE27B0822EFEE4500FF5511 /* GPUAnimateAttr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FEE27B0622EFEE4500FF5511 /* GPUAnimateAttr.cpp */; };
 		FEE27B1E22F1958800FF5511 /* TimeWheel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FEE27B1C22F1958800FF5511 /* TimeWheel.cpp */; };
-		FEEA474C230657AA00B327C1 /* img_1.png in Resources */ = {isa = PBXBuildFile; fileRef = FEEA4744230657AA00B327C1 /* img_1.png */; };
-		FEEA474D230657AA00B327C1 /* img_0.png in Resources */ = {isa = PBXBuildFile; fileRef = FEEA4745230657AA00B327C1 /* img_0.png */; };
-		FEEA474E230657AA00B327C1 /* img_2.png in Resources */ = {isa = PBXBuildFile; fileRef = FEEA4746230657AA00B327C1 /* img_2.png */; };
-		FEEA474F230657AA00B327C1 /* img_3.png in Resources */ = {isa = PBXBuildFile; fileRef = FEEA4747230657AA00B327C1 /* img_3.png */; };
-		FEEA4750230657AA00B327C1 /* music.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FEEA4748230657AA00B327C1 /* music.mp3 */; };
-		FEEA4752230657AA00B327C1 /* tp_fg.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = FEEA474A230657AA00B327C1 /* tp_fg.mp4 */; };
-		FEEA4753230657AA00B327C1 /* tp.json in Resources */ = {isa = PBXBuildFile; fileRef = FEEA474B230657AA00B327C1 /* tp.json */; };
+		FEEA476F2306895300B327C1 /* img_1.png in Resources */ = {isa = PBXBuildFile; fileRef = FEEA47672306895300B327C1 /* img_1.png */; };
+		FEEA47702306895300B327C1 /* img_0.png in Resources */ = {isa = PBXBuildFile; fileRef = FEEA47682306895300B327C1 /* img_0.png */; };
+		FEEA47712306895300B327C1 /* 封面.png in Resources */ = {isa = PBXBuildFile; fileRef = FEEA47692306895300B327C1 /* 封面.png */; };
+		FEEA47722306895300B327C1 /* img_2.png in Resources */ = {isa = PBXBuildFile; fileRef = FEEA476A2306895300B327C1 /* img_2.png */; };
+		FEEA47732306895300B327C1 /* img_3.png in Resources */ = {isa = PBXBuildFile; fileRef = FEEA476B2306895300B327C1 /* img_3.png */; };
+		FEEA47742306895300B327C1 /* music.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FEEA476C2306895300B327C1 /* music.mp3 */; };
+		FEEA47752306895300B327C1 /* tp_fg.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = FEEA476D2306895300B327C1 /* tp_fg.mp4 */; };
+		FEEA47762306895300B327C1 /* tp.json in Resources */ = {isa = PBXBuildFile; fileRef = FEEA476E2306895300B327C1 /* tp.json */; };
 		FEF840F622F9270100C04CA3 /* GPUImageContext.mm in Sources */ = {isa = PBXBuildFile; fileRef = FEF840F522F9270100C04CA3 /* GPUImageContext.mm */; };
 		FEF845F922F991E300C04CA3 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = FEF845F822F991E300C04CA3 /* libz.tbd */; };
 		FEF845FB22F991EA00C04CA3 /* libbz2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = FEF845FA22F991EA00C04CA3 /* libbz2.tbd */; };
@@ -135,8 +135,6 @@
 		FEE27AE822EEFB3100FF5511 /* GLESMath.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = GLESMath.c; sourceTree = "<group>"; };
 		FEE27AEA22EEFBBA00FF5511 /* Vector.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Vector.h; sourceTree = "<group>"; };
 		FEE27AEB22EEFC5400FF5511 /* Quaternion.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Quaternion.h; sourceTree = "<group>"; };
-		FEE27AEC22EF041700FF5511 /* OpenGLES2DView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OpenGLES2DView.h; sourceTree = "<group>"; };
-		FEE27AED22EF041700FF5511 /* OpenGLES2DView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = OpenGLES2DView.mm; sourceTree = "<group>"; };
 		FEE27AEF22EF091900FF5511 /* Parse_AE.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Parse_AE.h; sourceTree = "<group>"; };
 		FEE27AF022EF091900FF5511 /* AE_struct.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AE_struct.h; sourceTree = "<group>"; };
 		FEE27AF122EF091900FF5511 /* Parse_AE.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Parse_AE.cpp; sourceTree = "<group>"; };
@@ -155,13 +153,15 @@
 		FEE27B1C22F1958800FF5511 /* TimeWheel.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = TimeWheel.cpp; sourceTree = "<group>"; };
 		FEE27B1D22F1958800FF5511 /* TimeWheel.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = TimeWheel.hpp; sourceTree = "<group>"; };
 		FEE27B1F22F195F100FF5511 /* time_wheel.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = time_wheel.cpp; sourceTree = "<group>"; };
-		FEEA4744230657AA00B327C1 /* img_1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = img_1.png; sourceTree = "<group>"; };
-		FEEA4745230657AA00B327C1 /* img_0.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = img_0.png; sourceTree = "<group>"; };
-		FEEA4746230657AA00B327C1 /* img_2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = img_2.png; sourceTree = "<group>"; };
-		FEEA4747230657AA00B327C1 /* img_3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = img_3.png; sourceTree = "<group>"; };
-		FEEA4748230657AA00B327C1 /* music.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = music.mp3; sourceTree = "<group>"; };
-		FEEA474A230657AA00B327C1 /* tp_fg.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = tp_fg.mp4; sourceTree = "<group>"; };
-		FEEA474B230657AA00B327C1 /* tp.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = tp.json; sourceTree = "<group>"; };
+		FEEA47542306807500B327C1 /* Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Header.h; sourceTree = "<group>"; };
+		FEEA47672306895300B327C1 /* img_1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = img_1.png; sourceTree = "<group>"; };
+		FEEA47682306895300B327C1 /* img_0.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = img_0.png; sourceTree = "<group>"; };
+		FEEA47692306895300B327C1 /* 封面.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "封面.png"; sourceTree = "<group>"; };
+		FEEA476A2306895300B327C1 /* img_2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = img_2.png; sourceTree = "<group>"; };
+		FEEA476B2306895300B327C1 /* img_3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = img_3.png; sourceTree = "<group>"; };
+		FEEA476C2306895300B327C1 /* music.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = music.mp3; sourceTree = "<group>"; };
+		FEEA476D2306895300B327C1 /* tp_fg.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = tp_fg.mp4; sourceTree = "<group>"; };
+		FEEA476E2306895300B327C1 /* tp.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = tp.json; sourceTree = "<group>"; };
 		FEF840F422F9270100C04CA3 /* GPUImageContext.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GPUImageContext.h; sourceTree = "<group>"; };
 		FEF840F522F9270100C04CA3 /* GPUImageContext.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = GPUImageContext.mm; sourceTree = "<group>"; };
 		FEF845F822F991E300C04CA3 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
@@ -211,7 +211,7 @@
 		FE6119B622E6F6F700DD0741 /* yidongyingji */ = {
 			isa = PBXGroup;
 			children = (
-				FEEA4742230657AA00B327C1 /* texiaohehua */,
+				FEEA47652306895300B327C1 /* lizihudie */,
 				FE6119F822E9808A00DD0741 /* res */,
 				FE6119E222E948CF00DD0741 /* Glm */,
 				FE6119D722E718FD00DD0741 /* glsl */,
@@ -281,6 +281,7 @@
 		FE6119E422E9531A00DD0741 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				FEEA47542306807500B327C1 /* Header.h */,
 				FE9CF92322FD76A4006BCE2B /* AVPlayer+SeekSmoothly.h */,
 				FE9CF92422FD76A4006BCE2B /* AVPlayer+SeekSmoothly.m */,
 				FE9CF91C22FC4CC3006BCE2B /* LPRGPUImageContext.h */,
@@ -293,8 +294,6 @@
 				FE9CF91422FC442B006BCE2B /* LPRGPUImageFilter.mm */,
 				FE9CF90F22FC41B8006BCE2B /* LPRGPUImageView.h */,
 				FE9CF90E22FC41B8006BCE2B /* LPRGPUImageView.mm */,
-				FEE27AEC22EF041700FF5511 /* OpenGLES2DView.h */,
-				FEE27AED22EF041700FF5511 /* OpenGLES2DView.mm */,
 				FEE27AF922EF0A5800FF5511 /* OpenGLES2DTools.h */,
 				FEE27AFA22EF0A5800FF5511 /* OpenGLES2DTools.m */,
 				FE0AC5B022F2E9EF002A81CD /* GCDCountDown.h */,
@@ -380,24 +379,25 @@
 			path = clock;
 			sourceTree = "<group>";
 		};
-		FEEA4742230657AA00B327C1 /* texiaohehua */ = {
+		FEEA47652306895300B327C1 /* lizihudie */ = {
 			isa = PBXGroup;
 			children = (
-				FEEA4743230657AA00B327C1 /* images */,
-				FEEA4748230657AA00B327C1 /* music.mp3 */,
-				FEEA474A230657AA00B327C1 /* tp_fg.mp4 */,
-				FEEA474B230657AA00B327C1 /* tp.json */,
+				FEEA47662306895300B327C1 /* images */,
+				FEEA476C2306895300B327C1 /* music.mp3 */,
+				FEEA476D2306895300B327C1 /* tp_fg.mp4 */,
+				FEEA476E2306895300B327C1 /* tp.json */,
 			);
-			path = texiaohehua;
+			path = lizihudie;
 			sourceTree = "<group>";
 		};
-		FEEA4743230657AA00B327C1 /* images */ = {
+		FEEA47662306895300B327C1 /* images */ = {
 			isa = PBXGroup;
 			children = (
-				FEEA4744230657AA00B327C1 /* img_1.png */,
-				FEEA4745230657AA00B327C1 /* img_0.png */,
-				FEEA4746230657AA00B327C1 /* img_2.png */,
-				FEEA4747230657AA00B327C1 /* img_3.png */,
+				FEEA47672306895300B327C1 /* img_1.png */,
+				FEEA47682306895300B327C1 /* img_0.png */,
+				FEEA47692306895300B327C1 /* 封面.png */,
+				FEEA476A2306895300B327C1 /* img_2.png */,
+				FEEA476B2306895300B327C1 /* img_3.png */,
 			);
 			path = images;
 			sourceTree = "<group>";
@@ -473,30 +473,31 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FEEA47712306895300B327C1 /* 封面.png in Resources */,
 				FE611A0322E980A500DD0741 /* 5.jpeg in Resources */,
 				FE611A0122E980A500DD0741 /* 3.jpg in Resources */,
 				FE611A0422E980A500DD0741 /* 2.jpg in Resources */,
 				FE6119DB22E7191E00DD0741 /* shaderf.fsh in Resources */,
 				FE56E88D22EE96A5001BD700 /* 11_320_480.jpeg in Resources */,
 				FE6119D922E7191200DD0741 /* shaderv.vsh in Resources */,
-				FEEA474E230657AA00B327C1 /* img_2.png in Resources */,
 				FE6119C422E6F6F900DD0741 /* LaunchScreen.storyboard in Resources */,
-				FEEA4752230657AA00B327C1 /* tp_fg.mp4 in Resources */,
-				FEEA474F230657AA00B327C1 /* img_3.png in Resources */,
+				FEEA47752306895300B327C1 /* tp_fg.mp4 in Resources */,
 				FE6119E322E948CF00DD0741 /* Glm in Resources */,
-				FEEA4750230657AA00B327C1 /* music.mp3 in Resources */,
 				FE6119F122E9588B00DD0741 /* guide.vsh in Resources */,
 				FE611A0022E980A500DD0741 /* 1.jpeg in Resources */,
+				FEEA47722306895300B327C1 /* img_2.png in Resources */,
 				FE6119C122E6F6F900DD0741 /* Assets.xcassets in Resources */,
 				FE6119FF22E980A500DD0741 /* 6.jpeg in Resources */,
+				FEEA47742306895300B327C1 /* music.mp3 in Resources */,
 				FE6119F322E9589800DD0741 /* guide.fsh in Resources */,
-				FEEA474D230657AA00B327C1 /* img_0.png in Resources */,
+				FEEA47702306895300B327C1 /* img_0.png in Resources */,
 				FEF8460522F9927600C04CA3 /* huaxuyin.mp3 in Resources */,
 				FE611A0222E980A500DD0741 /* 4.jpeg in Resources */,
-				FEEA4753230657AA00B327C1 /* tp.json in Resources */,
 				FE6119BF22E6F6F700DD0741 /* Main.storyboard in Resources */,
+				FEEA47762306895300B327C1 /* tp.json in Resources */,
 				FE56E88E22EE96A5001BD700 /* 10_480_480.jpeg in Resources */,
-				FEEA474C230657AA00B327C1 /* img_1.png in Resources */,
+				FEEA476F2306895300B327C1 /* img_1.png in Resources */,
+				FEEA47732306895300B327C1 /* img_3.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -536,7 +537,6 @@
 				FEE27AF822EF09AA00FF5511 /* cJSON.c in Sources */,
 				FE6119E122E71DE400DD0741 /* utils.cpp in Sources */,
 				FE9CF91522FC442B006BCE2B /* LPRGPUImageFilter.mm in Sources */,
-				FEE27AEE22EF041700FF5511 /* OpenGLES2DView.mm in Sources */,
 				FE9CF91B22FC4B3C006BCE2B /* LPRGLProgram.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

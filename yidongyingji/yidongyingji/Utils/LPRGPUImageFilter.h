@@ -17,6 +17,7 @@
 #import "GPUImage.hpp"
 #import "GPUAnimateAttr.hpp"
 #import "Parse_AE.h"
+#import "Header.h"
 
 #define STRINGIZE(x) #x
 #define STRINGIZE2(x) STRINGIZE(x)

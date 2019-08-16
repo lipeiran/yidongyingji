@@ -82,7 +82,7 @@ NSString *const kGPUImageVertexShaderString_movie = SHADER_STRING
 
         glEnableVertexAttribArray(self->yuvConversionPositionAttribute);
         glEnableVertexAttribArray(self->yuvConversionTextureCoordinateAttribute);
-        self.outputFramebuffer = [[LPRGPUImageFrameBuffer alloc]initWithSize:CGSizeMake(480, 640)];
+        self.outputFramebuffer = [[LPRGPUImageFrameBuffer alloc]initWithSize:CGSizeMake(Draw_w, Draw_h)];
     });
 }
 

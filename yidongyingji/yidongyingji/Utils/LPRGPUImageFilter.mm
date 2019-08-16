@@ -20,18 +20,6 @@ GLfloat vertexData_src_lpr[30] = {
     -1.0, -1.0, 0.0f,   0.0f, 0.0f, //左下
 };
 
-//编辑顶点坐标目标数组
-GLfloat vertexData_dst_lpr[30] = {
-    
-    1.0, -1.0, 0.0f,    1.0f, 0.0f, //右下
-    1.0, 1.0, -0.0f,    1.0f, 1.0f, //右上
-    -1.0, 1.0, 0.0f,    0.0f, 1.0f, //左上
-    
-    1.0, -1.0, 0.0f,    1.0f, 0.0f, //右下
-    -1.0, 1.0, 0.0f,    0.0f, 1.0f, //左上
-    -1.0, -1.0, 0.0f,   0.0f, 0.0f, //左下
-};
-
 static const GLfloat imageVerticesaa[] = {
     -1.0f, -1.0f,
     1.0f, -1.0f,
@@ -103,6 +91,8 @@ NSString *const kPicGPUImagePassthroughFragmentShaderString = SHADER_STRING
     float _perspective_top;
     float _perspective_near;
     float _perspective_far;
+    
+    float _screen_ratio;
 }
 
 @end
@@ -163,7 +153,7 @@ NSString *const kPicGPUImagePassthroughFragmentShaderString = SHADER_STRING
         _ae_b = YES;
         configEntity = &aeConfig;
     }
-
+    
     self.texture_size = size;
     _aspectRatio = size.height/size.width;
     _perspective_left = -1;
@@ -172,6 +162,7 @@ NSString *const kPicGPUImagePassthroughFragmentShaderString = SHADER_STRING
     _perspective_top = _aspectRatio;
     _perspective_near = 0.1f;
     _perspective_far = 100.0f;
+    _screen_ratio = Draw_w/Base_Draw_w;
     runSynchronouslyOnVideoProcessingQueue(^{
         [GPUImageContext useImageProcessingContext];
         GLProgram glProgram1;
@@ -216,7 +207,7 @@ NSString *const kPicGPUImagePassthroughFragmentShaderString = SHADER_STRING
         glEnableVertexAttribArray(self->filterPositionAttribute);
         glEnableVertexAttribArray(self->filterTextureCoordinateAttribute);
         
-        self.outputFramebuffer = [[LPRGPUImageFrameBuffer alloc]initWithSize:CGSizeMake(480, 640)];
+        self.outputFramebuffer = [[LPRGPUImageFrameBuffer alloc]initWithSize:CGSizeMake(Draw_w, Draw_h)];
         
         if (self->_ae_b)
         {
@@ -284,7 +275,13 @@ NSString *const kPicGPUImagePassthroughFragmentShaderString = SHADER_STRING
                 float ae_alpha = 0;
                 
                 parseAE.get_ae_params(fr, tmpEntity, &ae_r, &ae_s_x, &ae_s_y, &ae_p_x, &ae_p_y, &ae_a_x, &ae_a_y, &ae_alpha, &ae_blur);
-                
+                ae_w *= self->_screen_ratio;
+                ae_h *= self->_screen_ratio;
+                ae_a_x *= self->_screen_ratio;
+                ae_a_y *= self->_screen_ratio;
+                ae_p_x *= self->_screen_ratio;
+                ae_p_y *= self->_screen_ratio;
+
                 float ae_a_x_result = (ae_a_x-ae_w/2.0)/self->_texture_size.width*2.0;
                 float ae_a_y_result = (ae_h/2.0-ae_a_y)/self->_texture_size.width*2.0;
                 

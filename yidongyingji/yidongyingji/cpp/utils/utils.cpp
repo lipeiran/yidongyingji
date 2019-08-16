@@ -229,8 +229,8 @@ GLuint cpp_createImageTexture(GLubyte *byte, GLuint w, GLuint h, GLuint screenWi
     cpp_upGPUTexture(w, h, byte);
     //释放byte
     free(byte);
-    
-    float w_ratio = w*1.0/screenWidthPixel;
+    float screen_ratio = screenWidthPixel/Base_Draw_w;
+    float w_ratio = w*1.0/screenWidthPixel * screen_ratio;
     float h_w_ratio = h*1.0/w*w_ratio;
     for (int i = 0; i < 6; i++)
     {
