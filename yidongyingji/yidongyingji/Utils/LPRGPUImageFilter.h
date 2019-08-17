@@ -12,7 +12,6 @@
 #import "LPRGPUImageContext.h"
 #include "GPUImageContext.h"
 #include "GLProgram.hpp"
-#include "GLProgram.hpp"
 #import "GPUImage.hpp"
 #import "GPUAnimateAttr.hpp"
 #import "Parse_AE.h"

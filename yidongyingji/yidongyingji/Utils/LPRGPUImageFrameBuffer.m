@@ -11,7 +11,6 @@
 @interface LPRGPUImageFrameBuffer ()
 {
     GLuint framebuffer;
-
 }
 
 @end

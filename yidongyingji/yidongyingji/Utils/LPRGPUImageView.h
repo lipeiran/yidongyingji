@@ -20,7 +20,6 @@ NS_ASSUME_NONNULL_BEGIN
 @interface LPRGPUImageView : UIView
 {
     LPRGPUImageFilter *imageFilter;
-
 }
 
 @property(readonly, nonatomic) CGSize sizeInPixels;
