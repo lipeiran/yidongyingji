@@ -99,6 +99,20 @@ static void *openGLESContextQueueKey;
     [[GPUImageContext sharedImageProcessingContext] useAsCurrentContext];
 }
 
++ (BOOL)supportsFastTextureUpload;
+{
+#if TARGET_IPHONE_SIMULATOR
+    return NO;
+#else
+    
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wtautological-pointer-compare"
+    return (CVOpenGLESTextureCacheCreate != NULL);
+#pragma clang diagnostic pop
+    
+#endif
+}
+
 - (void)useAsCurrentContext
 {
     EAGLContext *imageProcessingContext = [self context];

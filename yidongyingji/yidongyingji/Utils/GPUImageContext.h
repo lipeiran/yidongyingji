@@ -45,6 +45,9 @@ extern "C" {
 
 + (void)useImageProcessingContext;
 
+// 为了后续和安卓统一C++代码标记
++ (BOOL)supportsFastTextureUpload;
+
 - (void)useAsCurrentContext;
 
 @end

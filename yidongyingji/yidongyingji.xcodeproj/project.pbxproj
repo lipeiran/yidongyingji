@@ -37,7 +37,6 @@
 		FE9CF91022FC41B9006BCE2B /* LPRGPUImageView.mm in Sources */ = {isa = PBXBuildFile; fileRef = FE9CF90E22FC41B8006BCE2B /* LPRGPUImageView.mm */; };
 		FE9CF91522FC442B006BCE2B /* LPRGPUImageFilter.mm in Sources */ = {isa = PBXBuildFile; fileRef = FE9CF91422FC442B006BCE2B /* LPRGPUImageFilter.mm */; };
 		FE9CF91822FC4537006BCE2B /* LPRGPUImageFrameBuffer.m in Sources */ = {isa = PBXBuildFile; fileRef = FE9CF91722FC4537006BCE2B /* LPRGPUImageFrameBuffer.m */; };
-		FE9CF91E22FC4CC3006BCE2B /* LPRGPUImageContext.m in Sources */ = {isa = PBXBuildFile; fileRef = FE9CF91D22FC4CC3006BCE2B /* LPRGPUImageContext.m */; };
 		FE9CF92222FD63BC006BCE2B /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FE9CF92122FD63BC006BCE2B /* CoreFoundation.framework */; };
 		FE9CF92522FD76A4006BCE2B /* AVPlayer+SeekSmoothly.m in Sources */ = {isa = PBXBuildFile; fileRef = FE9CF92422FD76A4006BCE2B /* AVPlayer+SeekSmoothly.m */; };
 		FEE27AE922EEFB3100FF5511 /* GLESMath.c in Sources */ = {isa = PBXBuildFile; fileRef = FEE27AE822EEFB3100FF5511 /* GLESMath.c */; };
@@ -56,6 +55,7 @@
 		FEEA47742306895300B327C1 /* music.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FEEA476C2306895300B327C1 /* music.mp3 */; };
 		FEEA47752306895300B327C1 /* tp_fg.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = FEEA476D2306895300B327C1 /* tp_fg.mp4 */; };
 		FEEA47762306895300B327C1 /* tp.json in Resources */ = {isa = PBXBuildFile; fileRef = FEEA476E2306895300B327C1 /* tp.json */; };
+		FEEA477C2307A64C00B327C1 /* LPRGPUImageMovieWriter.mm in Sources */ = {isa = PBXBuildFile; fileRef = FEEA477B2307A64C00B327C1 /* LPRGPUImageMovieWriter.mm */; };
 		FEF840F622F9270100C04CA3 /* GPUImageContext.mm in Sources */ = {isa = PBXBuildFile; fileRef = FEF840F522F9270100C04CA3 /* GPUImageContext.mm */; };
 		FEF845F922F991E300C04CA3 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = FEF845F822F991E300C04CA3 /* libz.tbd */; };
 		FEF845FB22F991EA00C04CA3 /* libbz2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = FEF845FA22F991EA00C04CA3 /* libbz2.tbd */; };
@@ -113,8 +113,6 @@
 		FE9CF91422FC442B006BCE2B /* LPRGPUImageFilter.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = LPRGPUImageFilter.mm; sourceTree = "<group>"; };
 		FE9CF91622FC4537006BCE2B /* LPRGPUImageFrameBuffer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LPRGPUImageFrameBuffer.h; sourceTree = "<group>"; };
 		FE9CF91722FC4537006BCE2B /* LPRGPUImageFrameBuffer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LPRGPUImageFrameBuffer.m; sourceTree = "<group>"; };
-		FE9CF91C22FC4CC3006BCE2B /* LPRGPUImageContext.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LPRGPUImageContext.h; sourceTree = "<group>"; };
-		FE9CF91D22FC4CC3006BCE2B /* LPRGPUImageContext.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LPRGPUImageContext.m; sourceTree = "<group>"; };
 		FE9CF92122FD63BC006BCE2B /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
 		FE9CF92322FD76A4006BCE2B /* AVPlayer+SeekSmoothly.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "AVPlayer+SeekSmoothly.h"; sourceTree = "<group>"; };
 		FE9CF92422FD76A4006BCE2B /* AVPlayer+SeekSmoothly.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "AVPlayer+SeekSmoothly.m"; sourceTree = "<group>"; };
@@ -147,6 +145,8 @@
 		FEEA476C2306895300B327C1 /* music.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = music.mp3; sourceTree = "<group>"; };
 		FEEA476D2306895300B327C1 /* tp_fg.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = tp_fg.mp4; sourceTree = "<group>"; };
 		FEEA476E2306895300B327C1 /* tp.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = tp.json; sourceTree = "<group>"; };
+		FEEA477A2307A64C00B327C1 /* LPRGPUImageMovieWriter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LPRGPUImageMovieWriter.h; sourceTree = "<group>"; };
+		FEEA477B2307A64C00B327C1 /* LPRGPUImageMovieWriter.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = LPRGPUImageMovieWriter.mm; sourceTree = "<group>"; };
 		FEF840F422F9270100C04CA3 /* GPUImageContext.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GPUImageContext.h; sourceTree = "<group>"; };
 		FEF840F522F9270100C04CA3 /* GPUImageContext.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = GPUImageContext.mm; sourceTree = "<group>"; };
 		FEF845F822F991E300C04CA3 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
@@ -269,14 +269,14 @@
 				FEEA47542306807500B327C1 /* Header.h */,
 				FE9CF92322FD76A4006BCE2B /* AVPlayer+SeekSmoothly.h */,
 				FE9CF92422FD76A4006BCE2B /* AVPlayer+SeekSmoothly.m */,
-				FE9CF91C22FC4CC3006BCE2B /* LPRGPUImageContext.h */,
-				FE9CF91D22FC4CC3006BCE2B /* LPRGPUImageContext.m */,
 				FE9CF91622FC4537006BCE2B /* LPRGPUImageFrameBuffer.h */,
 				FE9CF91722FC4537006BCE2B /* LPRGPUImageFrameBuffer.m */,
 				FE9CF91322FC442B006BCE2B /* LPRGPUImageFilter.h */,
 				FE9CF91422FC442B006BCE2B /* LPRGPUImageFilter.mm */,
 				FE9CF90F22FC41B8006BCE2B /* LPRGPUImageView.h */,
 				FE9CF90E22FC41B8006BCE2B /* LPRGPUImageView.mm */,
+				FEEA477A2307A64C00B327C1 /* LPRGPUImageMovieWriter.h */,
+				FEEA477B2307A64C00B327C1 /* LPRGPUImageMovieWriter.mm */,
 				FEF840F422F9270100C04CA3 /* GPUImageContext.h */,
 				FEF840F522F9270100C04CA3 /* GPUImageContext.mm */,
 				FE9CF8F222FAA608006BCE2B /* GPUImageMovie.h */,
@@ -487,7 +487,6 @@
 				FE9CF92522FD76A4006BCE2B /* AVPlayer+SeekSmoothly.m in Sources */,
 				FE9CF91822FC4537006BCE2B /* LPRGPUImageFrameBuffer.m in Sources */,
 				FE6119D522E6FD5A00DD0741 /* GLProgram.cpp in Sources */,
-				FE9CF91E22FC4CC3006BCE2B /* LPRGPUImageContext.m in Sources */,
 				FE6119EF22E9582F00DD0741 /* GuideView.mm in Sources */,
 				FE9CF90022FBC56A006BCE2B /* GPUImageMaskFilter.cpp in Sources */,
 				FEE27AE922EEFB3100FF5511 /* GLESMath.c in Sources */,
@@ -500,6 +499,7 @@
 				FEE27B1E22F1958800FF5511 /* TimeWheel.cpp in Sources */,
 				FEF840F622F9270100C04CA3 /* GPUImageContext.mm in Sources */,
 				FE6119B922E6F6F700DD0741 /* AppDelegate.m in Sources */,
+				FEEA477C2307A64C00B327C1 /* LPRGPUImageMovieWriter.mm in Sources */,
 				FE9CF91022FC41B9006BCE2B /* LPRGPUImageView.mm in Sources */,
 				FEE27AF222EF091900FF5511 /* Parse_AE.cpp in Sources */,
 				FE9CF8F422FAA608006BCE2B /* GPUImageMovie.mm in Sources */,
