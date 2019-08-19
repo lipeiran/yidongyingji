@@ -42,11 +42,25 @@ NSString *const kGPUImageVertexShaderString_movie = SHADER_STRING
 @interface GPUImageMovie ()
 {
     CADisplayLink *displayLink;
-
+    AVAssetReader *reader;
+    AVAssetReaderOutput *_readerVideoTrackOutput;
+    BOOL videoEncodingIsFinished;
+    CMTime processingFrameTime;
 }
 @end
 
 @implementation GPUImageMovie
+
+- (id)initWithAsset:(AVAsset *)asset;
+{
+    if (!(self = [super init]))
+    {
+        return nil;
+    }
+    [self yuvConversionSetup];
+    self.asset = asset;
+    return self;
+}
 
 - (id)initWithPlayerItem:(AVPlayerItem *)playerItem
 {
@@ -86,11 +100,20 @@ NSString *const kGPUImageVertexShaderString_movie = SHADER_STRING
     });
 }
 
+- (BOOL)videoEncodingIsFinished
+{
+    return videoEncodingIsFinished;
+}
+
 - (void)startProcessing;
 {
     if (self.playerItem)
     {
         [self processPlayerItem];
+    }
+    if (self.asset)
+    {
+        [self processAsset];
     }
 }
 
@@ -104,9 +127,60 @@ NSString *const kGPUImageVertexShaderString_movie = SHADER_STRING
     
 }
 
-- (BOOL)copyNextFrame;
+- (void)processMovieFrame:(CMSampleBufferRef)movieSampleBuffer;
 {
-    return YES;
+    CMTime currentSampleTime = CMSampleBufferGetOutputPresentationTimeStamp(movieSampleBuffer);
+    CVImageBufferRef movieFrame = CMSampleBufferGetImageBuffer(movieSampleBuffer);
+    
+    processingFrameTime = currentSampleTime;
+    [self processMovieFrame:movieFrame withSampleTime:currentSampleTime];
+}
+
+- (BOOL)readNextVideoFrameFromOutput:(AVAssetReaderOutput *)readerVideoTrackOutput;
+{
+    if (reader.status == AVAssetReaderStatusReading && ! videoEncodingIsFinished)
+    {
+        CMSampleBufferRef sampleBufferRef = [readerVideoTrackOutput copyNextSampleBuffer];
+        if (sampleBufferRef)
+        {
+            __unsafe_unretained GPUImageMovie *weakSelf = self;
+            runSynchronouslyOnVideoProcessingQueue(^{
+                [weakSelf processMovieFrame:sampleBufferRef];
+                CMSampleBufferInvalidate(sampleBufferRef);
+                CFRelease(sampleBufferRef);
+            });
+            
+            return YES;
+        }
+        else
+        {
+            videoEncodingIsFinished = YES;
+            [self endProcessing];
+        }
+    }
+    return NO;
+}
+
+- (BOOL)copyNextFrame
+{
+    BOOL success = NO;
+    if (_readerVideoTrackOutput)
+    {
+        success = [self readNextVideoFrameFromOutput:_readerVideoTrackOutput];
+        if (!success)
+        {
+            if (reader.status == AVAssetReaderStatusCompleted)
+            {
+                [reader cancelReading];
+                reader = nil;
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self startProcessing];
+                });
+                return YES;
+            }
+        }
+    }
+    return success;
 }
 
 - (void)processPixelBufferAtTime:(CMTime)outputItemTime
@@ -302,6 +376,7 @@ NSString *const kGPUImageVertexShaderString_movie = SHADER_STRING
 
 - (void)processPlayerItem
 {
+    NSLog(@"%s",__func__);
     dispatch_queue_t videoProcessingQueue = [GPUImageContext sharedContextQueue];
     NSMutableDictionary *pixBuffAttributes = [NSMutableDictionary dictionary];
     [pixBuffAttributes setObject:@(kCVPixelFormatType_420YpCbCr8BiPlanarFullRange) forKey:(id)kCVPixelBufferPixelFormatTypeKey];
@@ -311,6 +386,52 @@ NSString *const kGPUImageVertexShaderString_movie = SHADER_STRING
 
     [_playerItem addOutput:playerItemOutput];
     [playerItemOutput requestNotificationOfMediaDataChangeWithAdvanceInterval:0.1];
+}
+
+- (void)processAsset
+{
+    NSLog(@"%s",__func__);
+    reader = [self createAssetReader];
+
+    AVAssetReaderOutput *readerVideoTrackOutput = nil;
+    for( AVAssetReaderOutput *output in reader.outputs )
+    {
+        if( [output.mediaType isEqualToString:AVMediaTypeVideo] )
+        {
+            readerVideoTrackOutput = output;
+            _readerVideoTrackOutput = readerVideoTrackOutput;
+        }
+    }
+    if ([reader startReading] == NO)
+    {
+        return;
+    }
+    
+    [self readNextVideoFrameFromOutput:readerVideoTrackOutput];
+}
+
+- (AVAssetReader *)createAssetReader
+{
+    NSLog(@"%s",__func__);
+    NSError *error = nil;
+    AVAssetReader *assetReader = [AVAssetReader assetReaderWithAsset:self.asset error:&error];
+    
+    NSMutableDictionary *outputSettings = [NSMutableDictionary dictionary];
+    if ([GPUImageContext supportsFastTextureUpload]) {
+        [outputSettings setObject:@(kCVPixelFormatType_420YpCbCr8BiPlanarFullRange) forKey:(id)kCVPixelBufferPixelFormatTypeKey];
+        isFullYUVRange = YES;
+    }
+    else {
+        [outputSettings setObject:@(kCVPixelFormatType_32BGRA) forKey:(id)kCVPixelBufferPixelFormatTypeKey];
+        isFullYUVRange = NO;
+    }
+    
+    // Maybe set alwaysCopiesSampleData to NO on iOS 5.0 for faster video decoding
+    AVAssetReaderTrackOutput *readerVideoTrackOutput = [AVAssetReaderTrackOutput assetReaderTrackOutputWithTrack:[[self.asset tracksWithMediaType:AVMediaTypeVideo] objectAtIndex:0] outputSettings:outputSettings];
+    readerVideoTrackOutput.alwaysCopiesSampleData = NO;
+    [assetReader addOutput:readerVideoTrackOutput];
+    
+    return assetReader;
 }
 
 #pragma mark -

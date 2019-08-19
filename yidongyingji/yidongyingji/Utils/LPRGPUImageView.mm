@@ -31,6 +31,8 @@
     BOOL _layer_exist;
     int _fr;
     BOOL _slider_bool;
+    CGFloat _duration;
+    int32_t _timeScale;
     AEConfigEntity configEntity;
 
 }
@@ -74,6 +76,9 @@
     AVAsset *tmpAsset = [AVAsset assetWithURL:tmpUrl];
     AVPlayerItem *playerItem = [[AVPlayerItem alloc]initWithAsset:tmpAsset];
     _player = [AVPlayer playerWithPlayerItem:playerItem];
+    _timeScale = tmpAsset.duration.timescale;
+    _duration = tmpAsset.duration.value/tmpAsset.duration.timescale;
+    
     _preMovie = [[GPUImageMovie alloc]initWithPlayerItem:playerItem];
     _player.rate = 1.0;
     [_preMovie startProcessing];
@@ -90,7 +95,7 @@
                 runSynchronouslyOnVideoProcessingQueue(^{
                     int fr_pts = (int)(self.player.currentTime.value*1.0/self.player.currentTime.timescale*self->_fr);
                     [self->imageFilter renderToTexture:fr_pts];
-                    [self->_preMovie processPtsFrameBufferWithTime:self.player.currentTime];
+                    [self->_preMovie processPixelBufferAtTimeWithTime:self.player.currentTime];
                     self->_texture_test = self->imageFilter.outputFramebuffer.texture;
                     self->_texture_test2 = self->_preMovie.outputFramebuffer.texture;
                     [self draw];
@@ -202,8 +207,17 @@
     NSLog(@"%s",__func__);
     self->_slider_bool = YES;
     self.preMovie.not_check_new = YES;
-    int fr_pts = (int)((configEntity.op+1) * percent);
-    [self.player seekToTime:CMTimeMake(fr_pts, self->_fr)];
+//    int fr_pts = (int)((configEntity.op+1) * percent);
+//    [self.player seekToTime:CMTimeMake(fr_pts, self->_fr)];
+    
+    CGFloat tmpNowSecond = _duration * percent;
+    [self.player seekToTime:CMTimeMakeWithSeconds(tmpNowSecond, _timeScale)
+            toleranceBefore:kCMTimeZero
+             toleranceAfter:kCMTimeZero
+          completionHandler:^(BOOL finished)
+     {
+
+     }];
 }
 
 - (void)createDisplayFramebuffer;

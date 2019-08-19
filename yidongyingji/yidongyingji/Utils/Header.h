@@ -53,6 +53,31 @@ NSString *const kSamplingFragmentShaderC_lpr = SHADER_STRING
  }
  );
 
+NSString *const kPassThroughFragmentShaderC_lpr = SHADER_STRING
+(
+ varying highp vec2 textureCoordinate;
+ 
+ uniform sampler2D inputImageTexture;
+ 
+ void main()
+ {
+     gl_FragColor = texture2D(inputImageTexture, textureCoordinate);
+ }
+ );
+
+NSString *const kColorSwizzlingFragmentShaderC_lpr = SHADER_STRING
+(
+ varying highp vec2 textureCoordinate;
+ 
+ uniform sampler2D inputImageTexture;
+ 
+ void main()
+ {
+     gl_FragColor = texture2D(inputImageTexture, textureCoordinate).bgra;
+ }
+ );
+
+
 static const GLfloat imageVertices_lpr[] = {
     -1.0f, -1.0f,
     1.0f, -1.0f,

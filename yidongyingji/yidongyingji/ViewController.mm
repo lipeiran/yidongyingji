@@ -10,11 +10,13 @@
 #import "OpenGLESView.h"
 #import "GuideView.h"
 #import "LPRGPUImageView.h"
+#import "LPRGPUImageMovieWriter.h"
 
 @interface ViewController ()
 @property (nonatomic, strong) OpenGLESView *glesView;
 @property (nonatomic, strong) GuideView *guideView;
 @property (nonatomic, strong) LPRGPUImageView *lprGPUView;
+@property (nonatomic, strong) LPRGPUImageMovieWriter *movieWriter;
 @property (nonatomic, strong) UISlider *progress_slider;
 @end
 
@@ -24,6 +26,15 @@
 {
     [super viewDidLoad];
     
+    // 预览
+    [self preView];
+    
+    // 导出
+//    [self generateMP4];
+}
+
+- (void)preView
+{
     self.view.backgroundColor = [UIColor lightGrayColor];
     self.lprGPUView = [[LPRGPUImageView alloc]initWithFrame:CGRectMake(Draw_x/[UIScreen mainScreen].scale, Draw_y/[UIScreen mainScreen].scale, Draw_w/[UIScreen mainScreen].scale, Draw_h/[UIScreen mainScreen].scale)];
     [self.view addSubview:self.lprGPUView];
@@ -34,6 +45,16 @@
     [self.progress_slider addTarget:self action:@selector(touchUpInsideAction:) forControlEvents:UIControlEventTouchUpInside];
     self.progress_slider.value = 0.0;
     [self.view addSubview:self.progress_slider];
+}
+
+- (void)generateMP4
+{
+    self.view.backgroundColor = [UIColor lightGrayColor];
+    
+    NSString *configPath = @"/Users/lipeiran/Desktop/test_lpr_gpu.mp4";
+
+    self.movieWriter = [[LPRGPUImageMovieWriter alloc]initWithMovieURL:[NSURL URLWithString:configPath] size:CGSizeMake(Draw_w, Draw_h)];
+    
 }
 
 - (void)changeSliderValue:(UISlider *)slider

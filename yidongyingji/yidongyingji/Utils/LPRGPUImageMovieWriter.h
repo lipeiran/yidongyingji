@@ -35,7 +35,7 @@
 @property(nonatomic, retain) GPUImageContext *movieWriterContext;
 
 // Initialization and teardown
-- (void)commonInit:(NSDictionary *)settings;
+- (id)initWithMovieURL:(NSURL *)newMovieURL size:(CGSize)newSize;
 
 // Managing the data FBO
 - (void)createDataFBO;

@@ -23,11 +23,14 @@ NS_ASSUME_NONNULL_BEGIN
     
 }
 
+@property (readwrite, retain) AVAsset *asset;
 @property (readwrite, retain) AVPlayerItem *playerItem;
 @property (nonatomic, retain) LPRGPUImageFrameBuffer *outputFramebuffer;
 @property (nonatomic, assign) int pts;
 @property (nonatomic, assign) BOOL data_ready;
 @property (nonatomic, assign) BOOL not_check_new;
+
+- (id)initWithAsset:(AVAsset *)asset;
 
 - (id)initWithPlayerItem:(AVPlayerItem *)playerItem;
 
@@ -42,6 +45,9 @@ NS_ASSUME_NONNULL_BEGIN
 - (BOOL)copyNextFrame;
 
 - (void)processPtsFrameBufferWithTime:(CMTime)time;
+
+- (void)processPixelBufferAtTimeWithTime:(CMTime)time;
+
 
 @end
 
