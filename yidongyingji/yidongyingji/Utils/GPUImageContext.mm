@@ -33,6 +33,39 @@ void runAsynchronouslyOnVideoProcessingQueue(void (^block)(void))
     }
 }
 
+void runSynchronouslyOnContextQueue(GPUImageContext *context, void (^block)(void))
+{
+    dispatch_queue_t videoProcessingQueue = [context contextQueue];
+
+    if (dispatch_get_specific([GPUImageContext contextKey]))
+    {
+        block();
+    }else
+    {
+        dispatch_sync(videoProcessingQueue, block);
+    }
+}
+
+void runAsynchronouslyOnContextQueue(GPUImageContext *context, void (^block)(void))
+{
+    dispatch_queue_t videoProcessingQueue = [context contextQueue];
+   
+    if (dispatch_get_specific([GPUImageContext contextKey]))
+    {
+        block();
+    }else
+    {
+        dispatch_async(videoProcessingQueue, block);
+    }
+}
+
+@interface GPUImageContext ()
+{
+    EAGLSharegroup *_sharegroup;
+}
+
+@end
+
 @implementation GPUImageContext
 @synthesize context = _context;
 @synthesize coreVideoTextureCache = _coreVideoTextureCache;
@@ -120,6 +153,13 @@ static void *openGLESContextQueueKey;
     {
         [EAGLContext setCurrentContext:imageProcessingContext];
     }
+}
+
+- (void)useSharegroup:(EAGLSharegroup *)sharegroup;
+{
+    NSAssert(_context == nil, @"Unable to use a share group when the context has already been created. Call this method before you use the context for the first time.");
+    
+    _sharegroup = sharegroup;
 }
 
 - (EAGLContext *)context

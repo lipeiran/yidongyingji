@@ -15,12 +15,16 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@class GPUImageContext;
+
 #ifdef __cplusplus
 extern "C" {
 #endif
     void runSynchronouslyOnVideoProcessingQueue(void (^block)(void));
     void runAsynchronouslyOnVideoProcessingQueue(void (^block)(void));
-    
+    void runSynchronouslyOnContextQueue(GPUImageContext *context, void (^block)(void));
+    void runAsynchronouslyOnContextQueue(GPUImageContext *context, void (^block)(void));
+
 #ifdef __cplusplus
 }
 #endif
@@ -49,6 +53,8 @@ extern "C" {
 + (BOOL)supportsFastTextureUpload;
 
 - (void)useAsCurrentContext;
+
+- (void)useSharegroup:(EAGLSharegroup *)sharegroup;
 
 @end
 

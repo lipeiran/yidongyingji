@@ -7,22 +7,35 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <AVFoundation/AVFoundation.h>
 #import <OpenGLES/EAGLDrawable.h>
 #import <QuartzCore/QuartzCore.h>
 #import "GPUImageContext.h"
-#import <AVFoundation/AVFoundation.h>
 #import "GLProgram.hpp"
 #import "utils.hpp"
 #import "LPRGPUImageFilter.h"
 
 @interface LPRGPUImageMovieWriter : NSObject
 {
+    NSURL *movieURL;
+    NSString *fileType;
+    AVAssetWriter *assetWriter;
+    AVAssetWriterInput *assetWriterAudioInput;
+    AVAssetWriterInput *assetWriterVideoInput;
+    AVAssetWriterInputPixelBufferAdaptor *assetWriterPixelBufferInput;
+    
+    GPUImageContext *_movieWriterContext;
+    CVPixelBufferRef renderTarget;
+    CVOpenGLESTextureRef renderTexture;
+    CGSize videoSize;
+
     LPRGPUImageFilter *imageFilter;
 }
 @property(readonly, nonatomic) CGSize sizeInPixels;
+@property(nonatomic, retain) GPUImageContext *movieWriterContext;
 
 // Initialization and teardown
-- (void)commonInit;
+- (void)commonInit:(NSDictionary *)settings;
 
 // Managing the data FBO
 - (void)createDataFBO;

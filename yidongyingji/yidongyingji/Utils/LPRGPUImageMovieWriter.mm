@@ -12,9 +12,9 @@
 {
     GLuint movieRenderbuffer, movieFramebuffer;
     
-    GLint displayPositionAttribute, displayTextureCoordinateAttribute;
-    GLint displayInputTextureUniform;
-    GLint displayInputTextureUniform2;
+    GLint moviePositionAttribute, movieTextureCoordinateAttribute;
+    GLint movieInputTextureUniform;
+    GLint movieInputTextureUniform2;
     
     CGSize boundsSizeAtFrameBufferEpoch;
     
@@ -37,31 +37,64 @@
 
 @implementation LPRGPUImageMovieWriter
 
+@synthesize movieWriterContext = _movieWriterContext;
 
-- (id)init
+- (id)initWithMovieURL:(NSURL *)newMovieURL size:(CGSize)newSize;
+{
+    return [self initWithMovieURL:newMovieURL size:newSize fileType:AVFileTypeQuickTimeMovie outputSettings:nil];
+}
+
+- (id)initWithMovieURL:(NSURL *)newMovieURL size:(CGSize)newSize fileType:(NSString *)newFileType outputSettings:(NSMutableDictionary *)outputSettings;
 {
     if (!(self = [super init]))
     {
-        return NULL;
+        return nil;
     }
-    [self commonInit];
+    videoSize = newSize;
+    movieURL = newMovieURL;
+    fileType = newFileType;
+    
+    _movieWriterContext = [[GPUImageContext alloc] init];
+    [_movieWriterContext useSharegroup:[[[GPUImageContext sharedImageProcessingContext] context] sharegroup]];
+    
+    
+    
+    
+    
+    [self commonInit:outputSettings];
+
     return self;
 }
 
-- (void)commonInit
+- (void)commonInit:(NSDictionary *)settings;
 {
     NSLog(@"%s",__func__);
+
+    
+    
+    
 }
 
 - (void)createDataFBO
 {
     NSLog(@"%s",__func__);
+    glActiveTexture(GL_TEXTURE1);
+    glGenFramebuffers(1, &movieFramebuffer);
+    glBindFramebuffer(GL_FRAMEBUFFER, movieFramebuffer);
+    
+    
     
 }
 
 - (void)setFilterFBO
 {
+    if (!movieFramebuffer)
+    {
+        [self createDataFBO];
+    }
     
+    glBindFramebuffer(GL_FRAMEBUFFER, movieFramebuffer);
+    glViewport(0, 0, Draw_w, Draw_h);
 }
 
 - (void)destroyDataFBO
