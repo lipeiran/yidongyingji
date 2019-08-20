@@ -82,6 +82,7 @@
         glEnableVertexAttribArray(self->movieTextureCoordinateAttribute);
     });
     
+    [self setMaskMovieTexture];
     [self commonInit:outputSettings];
     
     return self;
@@ -201,7 +202,7 @@
     });
 }
 
-- (void)renderAtInternalSizeUsingTexture:(LPRGPUImageFrameBuffer *)textureId
+- (void)renderAtInternalSizeUsingTexture:(GLuint)textureId
 {
     [_movieWriterContext useAsCurrentContext];
     [self setFilterFBO];
@@ -225,7 +226,7 @@
     };
     
     glActiveTexture(GL_TEXTURE4);
-    glBindTexture(GL_TEXTURE_2D, [textureId texture]);
+    glBindTexture(GL_TEXTURE_2D, textureId);
     glUniform1i(movieInputTextureUniform, 4);
     
     glVertexAttribPointer(moviePositionAttribute, 2, GL_FLOAT, 0, 0, squareVertices);
@@ -262,92 +263,93 @@
 }
 
 - (void)startRecording
-{
-    self->imageFilter = [[LPRGPUImageFilter alloc]initSize:CGSizeMake(Draw_w, Draw_h) imageName:nil ae:self->configEntity];
-    [self->imageFilter renderToTexture:60];
-    myFrameBuffer = self->imageFilter.outputFramebuffer;
-    
-    [assetWriter startWriting];
-    [assetWriter startSessionAtSourceTime:CMTimeMake(0, 30)];
-    
-    LPRGPUImageFrameBuffer *inputFramebufferForBlock = myFrameBuffer;
-    glFinish();
-    
-    // Render the frame with swizzled colors, so that they can be uploaded quickly as BGRA frames
-    [_movieWriterContext useAsCurrentContext];
-    [self renderAtInternalSizeUsingTexture:inputFramebufferForBlock];
-    
-    GLubyte * rawImagePixels = (GLubyte *)malloc(videoSize.width * videoSize.height * 4);
-    glReadPixels(0, 0, videoSize.width, videoSize.height, GL_RGBA, GL_UNSIGNED_BYTE, rawImagePixels);
-    NSString *pathToMovie = [NSHomeDirectory() stringByAppendingPathComponent:@"Documents/abc2.rgb"];
-    unlink(pathToMovie.UTF8String);
-    FILE *dst_file = fopen(pathToMovie.UTF8String, "wb");
-    fwrite(rawImagePixels, 1, videoSize.width*4*videoSize.height, dst_file);
-    fclose(dst_file);
-    NSLog(@"end");
-    
-    return;
-}
-/*
  {
- NSLog(@"%s",__func__);
- 
- [self->assetWriter startWriting];
- [self->assetWriter startSessionAtSourceTime:CMTimeMake(0, 30)];
- 
- self->imageFilter = [[LPRGPUImageFilter alloc]initSize:CGSizeMake(Draw_w, Draw_h) imageName:@"img_0.png" ae:self->configEntity];
- [self->imageFilter renderToTexture:100];
- glFinish();
- self->myFrameBuffer = self->imageFilter.outputFramebuffer;
- 
- runSynchronouslyOnVideoProcessingQueue(^{
- 
- [self->_movieWriterContext useAsCurrentContext];
- glUseProgram(self->_program);
- 
- [self renderAtInternalSizeUsingTexture:self->myFrameBuffer.texture];
- 
- GLubyte * rawImagePixels = (GLubyte *)malloc(Draw_w * Draw_h * 4);
- glReadPixels(0, 0, Draw_w, Draw_h, GL_RGBA, GL_UNSIGNED_BYTE, rawImagePixels);
- NSString *pathToMovie = [NSHomeDirectory() stringByAppendingPathComponent:@"Documents/abc2.rgb"];
- unlink(pathToMovie.UTF8String);
- FILE *dst_file = fopen(pathToMovie.UTF8String, "wb");
- fwrite(rawImagePixels, 1, Draw_w*4*Draw_h, dst_file);
- fclose(dst_file);
- NSLog(@"end");
- 
- return;
- glFinish();
- 
- CVPixelBufferRef pixel_buffer = self->renderTarget;
- CVPixelBufferLockBaseAddress(pixel_buffer, 0);
- 
- while( ! self->assetWriterVideoInput.readyForMoreMediaData )
- {
- NSDate *maxDate = [NSDate dateWithTimeIntervalSinceNow:0.1];
- [[NSRunLoop currentRunLoop] runUntilDate:maxDate];
+     NSLog(@"%s",__func__);
+     
+     [self->assetWriter startWriting];
+     [self->assetWriter startSessionAtSourceTime:CMTimeMake(0, 30)];
+     
+     self->imageFilter = [[LPRGPUImageFilter alloc]initSize:CGSizeMake(Draw_w, Draw_h) imageName:nil ae:self->configEntity];
+     [self->imageFilter renderToTexture:100];
+     glFinish();
+     
+     for (int i = 0; i < 30; i++)
+     {
+         runSynchronouslyOnContextQueue(_movieWriterContext, ^{
+             [self->_movieWriterContext useAsCurrentContext];
+             glUseProgram(self->_program);
+             
+             [self renderAtInternalSizeUsingTexture:self->imageFilter.outputFramebuffer.texture];
+             glFinish();
+             
+             CVPixelBufferRef pixel_buffer = self->renderTarget;
+             CVPixelBufferLockBaseAddress(pixel_buffer, 0);
+             
+             while( ! self->assetWriterVideoInput.readyForMoreMediaData )
+             {
+                 NSDate *maxDate = [NSDate dateWithTimeIntervalSinceNow:0.1];
+                 [[NSRunLoop currentRunLoop] runUntilDate:maxDate];
+             }
+             if(self->assetWriter.status == AVAssetWriterStatusWriting)
+             {
+                 GLubyte *pixelBufferData = (GLubyte *)CVPixelBufferGetBaseAddress(pixel_buffer);
+                 NSString *pathToMovie = [NSHomeDirectory() stringByAppendingPathComponent:@"Documents/abc3.rgb"];
+                 unlink(pathToMovie.UTF8String);
+                 FILE *dst_file = fopen(pathToMovie.UTF8String, "wb");
+                 fwrite(pixelBufferData, 1, Draw_w*4*Draw_h, dst_file);
+                 fclose(dst_file);
+                 NSLog(@"end");
+                 if (![self->assetWriterPixelBufferInput appendPixelBuffer:pixel_buffer withPresentationTime:CMTimeMake(i, 30)])
+                 {
+                     NSLog(@"write failed！！！");
+                 }
+                 else
+                 {
+                     NSLog(@"write success ~~");
+                 }
+             }
+         });
+     }
+     [self stopRecording];
+     return;
  }
- if(self->assetWriter.status == AVAssetWriterStatusWriting)
- {
- GLubyte *pixelBufferData = (GLubyte *)CVPixelBufferGetBaseAddress(pixel_buffer);
- 
- NSString *pathToMovie = [NSHomeDirectory() stringByAppendingPathComponent:@"Documents/abc.rgb"];
- unlink(pathToMovie.UTF8String);
- 
- FILE *dst_file = fopen(pathToMovie.UTF8String, "wb");
- fwrite(pixelBufferData, 1, 480*4*640, dst_file);
- fclose(dst_file);
- NSLog(@"end\n");
- }
- });
- 
- return;
- }
- */
+
 - (void)stopRecording
 {
     NSLog(@"%s",__func__);
-    
+    [self finishRecording];
+}
+
+- (void)finishRecording;
+{
+    [self finishRecordingWithCompletionHandler:NULL];
+}
+
+- (void)finishRecordingWithCompletionHandler:(void (^)(void))handler;
+{
+    runSynchronouslyOnContextQueue(_movieWriterContext, ^{
+        [self->assetWriterVideoInput markAsFinished];
+        // iOS 6 SDK
+        if ([self->assetWriter respondsToSelector:@selector(finishWritingWithCompletionHandler:)])
+        {
+            // Running iOS 6
+            [self->assetWriter finishWritingWithCompletionHandler:(handler ?: ^{
+                NSLog(@"结束录制");
+            })];
+        }
+        else {
+            // Not running iOS 6
+            [self->assetWriter finishWriting];
+        }
+    });
+}
+
+- (void)setMaskMovieTexture
+{
+    char *configPath = (char *)[[[NSBundle mainBundle]pathForResource:@"tp" ofType:@"json"] UTF8String];
+    ParseAE parseAE;
+    parseAE.dofile(configPath, configEntity);
+    _fr = configEntity.fr;
 }
 
 @end

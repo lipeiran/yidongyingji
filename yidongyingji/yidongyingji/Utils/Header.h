@@ -61,7 +61,7 @@ NSString *const kPassThroughFragmentShaderC_lpr = SHADER_STRING
  
  void main()
  {
-     gl_FragColor = texture2D(inputImageTexture, textureCoordinate);
+     gl_FragColor = texture2D(inputImageTexture, vec2(textureCoordinate.x,1.0-textureCoordinate.y));
  }
  );
 

@@ -53,7 +53,7 @@
 {
     self.view.backgroundColor = [UIColor lightGrayColor];
     
-    NSString *pathToMovie = [NSHomeDirectory() stringByAppendingPathComponent:@"Documents/Movie9.mp4"];
+    NSString *pathToMovie = [NSHomeDirectory() stringByAppendingPathComponent:@"Documents/Movie10.mp4"];
     unlink(pathToMovie.UTF8String);
 
 //    self.movieWriter = [[LPRGPUImageMovieWriter alloc]initWithMovieURL:[NSURL fileURLWithPath:pathToMovie] size:CGSizeMake(Draw_w, Draw_h)];
