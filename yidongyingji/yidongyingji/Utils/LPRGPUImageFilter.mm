@@ -271,9 +271,9 @@ NSString *const kPicGPUImagePassthroughFragmentShaderString = SHADER_STRING
     runSynchronouslyOnVideoProcessingQueue(^{
         [GPUImageContext useImageProcessingContext];
         glUseProgram(self->program);
-        
+
         [self.outputFramebuffer activateFramebuffer];
-        
+
         cpp_glDraw_pre();
         
         if (self->_ae_b)
@@ -345,7 +345,7 @@ NSString *const kPicGPUImagePassthroughFragmentShaderString = SHADER_STRING
             
             glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
         }
-
+        glFinish();
     });
 }
 

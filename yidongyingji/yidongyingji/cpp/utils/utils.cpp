@@ -244,7 +244,7 @@ GLuint cpp_createImageTexture(GLubyte *byte, GLuint w, GLuint h, GLuint screenWi
 void cpp_glDraw_pre(void)
 {
     //设置背景色
-    glClearColor(1.0, 1.0, 1.0, 1);
+    glClearColor(0.0f, 1.0f, 0.0f, 1.0f);
     //清除颜色缓冲
     glClear(GL_COLOR_BUFFER_BIT);
     //开启正背面剔除

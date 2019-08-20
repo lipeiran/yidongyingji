@@ -26,7 +26,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "yidongyingji/cpp/GPUImageFilter.cpp"
-            timestampString = "587630203.688175"
+            timestampString = "587928490.568627"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "124"
@@ -36,19 +36,29 @@
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.ExceptionBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            scope = "0"
+            stopOnStyle = "0">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "yidongyingji/cpp/utils/utils.cpp"
-            timestampString = "587895992.785596"
+            filePath = "yidongyingji/Utils/LPRGPUImageView.mm"
+            timestampString = "587973914.48746"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "231"
-            endingLineNumber = "231"
-            landmarkName = "cpp_createImageTexture(GLubyte *byte, GLuint w, GLuint h, GLuint screenWidthPixel, GLfloat *dst_data)"
-            landmarkType = "9">
+            startingLineNumber = "142"
+            endingLineNumber = "142"
+            landmarkName = "-commonInit"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

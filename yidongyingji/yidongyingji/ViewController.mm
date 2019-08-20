@@ -11,12 +11,14 @@
 #import "GuideView.h"
 #import "LPRGPUImageView.h"
 #import "LPRGPUImageMovieWriter.h"
+#import "LPRGPUCopyWriter.h"
 
 @interface ViewController ()
 @property (nonatomic, strong) OpenGLESView *glesView;
 @property (nonatomic, strong) GuideView *guideView;
 @property (nonatomic, strong) LPRGPUImageView *lprGPUView;
 @property (nonatomic, strong) LPRGPUImageMovieWriter *movieWriter;
+@property (nonatomic, strong) LPRGPUCopyWriter *cpWriter;
 @property (nonatomic, strong) UISlider *progress_slider;
 @end
 
@@ -27,10 +29,10 @@
     [super viewDidLoad];
     
     // 预览
-    [self preView];
+//    [self preView];
     
     // 导出
-//    [self generateMP4];
+    [self generateMP4];
 }
 
 - (void)preView
@@ -51,10 +53,14 @@
 {
     self.view.backgroundColor = [UIColor lightGrayColor];
     
-    NSString *configPath = @"/Users/lipeiran/Desktop/test_lpr_gpu.mp4";
+    NSString *pathToMovie = [NSHomeDirectory() stringByAppendingPathComponent:@"Documents/Movie9.mp4"];
+    unlink(pathToMovie.UTF8String);
 
-    self.movieWriter = [[LPRGPUImageMovieWriter alloc]initWithMovieURL:[NSURL URLWithString:configPath] size:CGSizeMake(Draw_w, Draw_h)];
-    
+//    self.movieWriter = [[LPRGPUImageMovieWriter alloc]initWithMovieURL:[NSURL fileURLWithPath:pathToMovie] size:CGSizeMake(Draw_w, Draw_h)];
+//    [self.movieWriter startRecording];
+
+    self.cpWriter = [[LPRGPUCopyWriter alloc]initWithMovieURL:[NSURL fileURLWithPath:pathToMovie] size:CGSizeMake(Draw_w, Draw_h)];
+    [self.cpWriter startRecording];
 }
 
 - (void)changeSliderValue:(UISlider *)slider

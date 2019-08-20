@@ -6,9 +6,9 @@
 //  Copyright © 2019 李沛然. All rights reserved.
 //
 
-#import "LPRGPUImageMovieWriter.h"
+#import "LPRGPUImageNewMovieWriter.h"
 
-@interface LPRGPUImageMovieWriter ()
+@interface LPRGPUImageNewMovieWriter ()
 {
     GLuint movieRenderbuffer, movieFramebuffer;
     
@@ -36,7 +36,7 @@
 
 @end
 
-@implementation LPRGPUImageMovieWriter
+@implementation LPRGPUImageNewMovieWriter
 
 
 - (id)initWithMovieURL:(NSURL *)newMovieURL size:(CGSize)newSize;
@@ -53,10 +53,10 @@
     videoSize = newSize;
     movieURL = newMovieURL;
     fileType = newFileType;
-
+    
     runSynchronouslyOnVideoProcessingQueue(^{
         [GPUImageContext useImageProcessingContext];
-
+        
         
         if ([GPUImageContext supportsFastTextureUpload])
         {
@@ -66,7 +66,7 @@
             char *tmpF = (char *)[kPassThroughFragmentShaderC_lpr UTF8String];
             self->_program = cpp_compileProgramWithContent(glProgram1, tmpV, tmpF);
         }
-
+        
         //从program中获取position 顶点属性
         self->moviePositionAttribute = glGetAttribLocation(self->_program, "position");
         //从program中获取textCoordinate 纹理属性
@@ -78,7 +78,7 @@
     });
     
     [self commonInit:outputSettings];
-
+    
     return self;
 }
 
@@ -91,7 +91,7 @@
     {
         NSLog(@"error is:%@\n",error);
     }
-
+    
     if (settings == nil)
     {
         NSMutableDictionary *setting = [[NSMutableDictionary alloc]init];
@@ -148,7 +148,7 @@
         
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, CVOpenGLESTextureGetName(renderTexture), 0);
     }
-
+    
     __unused GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
     
     NSAssert(status == GL_FRAMEBUFFER_COMPLETE, @"Incomplete filter FBO: %d", status);
@@ -201,7 +201,7 @@
     [GPUImageContext useImageProcessingContext];
     [self setFilterFBO];
     glUseProgram(_program);
-
+    
     glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
@@ -211,21 +211,21 @@
         -0.5f,  0.5f,
         0.5f,  0.5f,
     };
-
+    
     static const GLfloat textureCoordinates[] = {
         0.0f, 0.0f,
         1.0f, 0.0f,
         0.0f, 1.0f,
         1.0f, 1.0f,
     };
-
+    
     glActiveTexture(GL_TEXTURE4);
     glBindTexture(GL_TEXTURE_2D, [textureId texture]);
     glUniform1i(movieInputTextureUniform, 4);
-
+    
     glVertexAttribPointer(moviePositionAttribute, 2, GL_FLOAT, 0, 0, squareVertices);
     glVertexAttribPointer(movieTextureCoordinateAttribute, 2, GL_FLOAT, 0, 0, textureCoordinates);
-
+    
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
     
     glFinish();
@@ -287,7 +287,7 @@
 - (void)stopRecording
 {
     NSLog(@"%s",__func__);
-
+    
 }
 
 @end

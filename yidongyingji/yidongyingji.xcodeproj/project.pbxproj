@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		FE1E8B31230BA305009A2979 /* LPRGPUCopyWriter.mm in Sources */ = {isa = PBXBuildFile; fileRef = FE1E8B30230BA305009A2979 /* LPRGPUCopyWriter.mm */; };
+		FE1E8B36230BC4E6009A2979 /* LPRGPUImageNewMovieWriter.mm in Sources */ = {isa = PBXBuildFile; fileRef = FE1E8B35230BC4E6009A2979 /* LPRGPUImageNewMovieWriter.mm */; };
 		FE56E88D22EE96A5001BD700 /* 11_320_480.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = FE56E88B22EE96A5001BD700 /* 11_320_480.jpeg */; };
 		FE56E88E22EE96A5001BD700 /* 10_480_480.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = FE56E88C22EE96A5001BD700 /* 10_480_480.jpeg */; };
 		FE56E89322EEE489001BD700 /* GPUImageFilter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FE56E89122EEE489001BD700 /* GPUImageFilter.cpp */; };
@@ -67,6 +69,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		FE1E8B2F230BA305009A2979 /* LPRGPUCopyWriter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LPRGPUCopyWriter.h; sourceTree = "<group>"; };
+		FE1E8B30230BA305009A2979 /* LPRGPUCopyWriter.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = LPRGPUCopyWriter.mm; sourceTree = "<group>"; };
+		FE1E8B34230BC4E6009A2979 /* LPRGPUImageNewMovieWriter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LPRGPUImageNewMovieWriter.h; sourceTree = "<group>"; };
+		FE1E8B35230BC4E6009A2979 /* LPRGPUImageNewMovieWriter.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = LPRGPUImageNewMovieWriter.mm; sourceTree = "<group>"; };
 		FE56E88B22EE96A5001BD700 /* 11_320_480.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 11_320_480.jpeg; sourceTree = "<group>"; };
 		FE56E88C22EE96A5001BD700 /* 10_480_480.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 10_480_480.jpeg; sourceTree = "<group>"; };
 		FE56E89122EEE489001BD700 /* GPUImageFilter.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = GPUImageFilter.cpp; sourceTree = "<group>"; };
@@ -277,6 +283,10 @@
 				FE9CF90E22FC41B8006BCE2B /* LPRGPUImageView.mm */,
 				FEEA477A2307A64C00B327C1 /* LPRGPUImageMovieWriter.h */,
 				FEEA477B2307A64C00B327C1 /* LPRGPUImageMovieWriter.mm */,
+				FE1E8B2F230BA305009A2979 /* LPRGPUCopyWriter.h */,
+				FE1E8B30230BA305009A2979 /* LPRGPUCopyWriter.mm */,
+				FE1E8B34230BC4E6009A2979 /* LPRGPUImageNewMovieWriter.h */,
+				FE1E8B35230BC4E6009A2979 /* LPRGPUImageNewMovieWriter.mm */,
 				FEF840F422F9270100C04CA3 /* GPUImageContext.h */,
 				FEF840F522F9270100C04CA3 /* GPUImageContext.mm */,
 				FE9CF8F222FAA608006BCE2B /* GPUImageMovie.h */,
@@ -486,6 +496,7 @@
 				FEE27B0822EFEE4500FF5511 /* GPUAnimateAttr.cpp in Sources */,
 				FE9CF92522FD76A4006BCE2B /* AVPlayer+SeekSmoothly.m in Sources */,
 				FE9CF91822FC4537006BCE2B /* LPRGPUImageFrameBuffer.m in Sources */,
+				FE1E8B36230BC4E6009A2979 /* LPRGPUImageNewMovieWriter.mm in Sources */,
 				FE6119D522E6FD5A00DD0741 /* GLProgram.cpp in Sources */,
 				FE6119EF22E9582F00DD0741 /* GuideView.mm in Sources */,
 				FE9CF90022FBC56A006BCE2B /* GPUImageMaskFilter.cpp in Sources */,
@@ -502,6 +513,7 @@
 				FEEA477C2307A64C00B327C1 /* LPRGPUImageMovieWriter.mm in Sources */,
 				FE9CF91022FC41B9006BCE2B /* LPRGPUImageView.mm in Sources */,
 				FEE27AF222EF091900FF5511 /* Parse_AE.cpp in Sources */,
+				FE1E8B31230BA305009A2979 /* LPRGPUCopyWriter.mm in Sources */,
 				FE9CF8F422FAA608006BCE2B /* GPUImageMovie.mm in Sources */,
 				FEE27AF522EF094800FF5511 /* BasicTools.cpp in Sources */,
 				FEE27B0522EFE4D700FF5511 /* GPUImage.cpp in Sources */,

@@ -11,6 +11,10 @@
 @interface LPRGPUImageFrameBuffer ()
 {
     GLuint framebuffer;
+    
+    
+    CVPixelBufferRef renderTarget;
+    CVOpenGLESTextureRef renderTexture;
 }
 
 @end
@@ -51,8 +55,7 @@
         glGenFramebuffers(1, &self->framebuffer);
         glBindFramebuffer(GL_FRAMEBUFFER, self->framebuffer);
         
-        // 此处暂时注释
-        /*// By default, all framebuffers on iOS 5.0+ devices are backed by texture caches, using one shared cache
+        // By default, all framebuffers on iOS 5.0+ devices are backed by texture caches, using one shared cache
         if ([GPUImageContext supportsFastTextureUpload])
         {
 #if TARGET_IPHONE_SIMULATOR || TARGET_OS_IPHONE
@@ -65,23 +68,23 @@
             attrs = CFDictionaryCreateMutable(kCFAllocatorDefault, 1, &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks);
             CFDictionarySetValue(attrs, kCVPixelBufferIOSurfacePropertiesKey, empty);
             
-            CVReturn err = CVPixelBufferCreate(kCFAllocatorDefault, (int)_size.width, (int)_size.height, kCVPixelFormatType_32BGRA, attrs, &renderTarget);
+            CVReturn err = CVPixelBufferCreate(kCFAllocatorDefault, (int)self->_size.width, (int)self->_size.height, kCVPixelFormatType_32BGRA, attrs, &self->renderTarget);
             if (err)
             {
-                NSLog(@"FBO size: %f, %f", _size.width, _size.height);
+                NSLog(@"FBO size: %f, %f", self->_size.width, self->_size.height);
                 NSAssert(NO, @"Error at CVPixelBufferCreate %d", err);
             }
             
-            err = CVOpenGLESTextureCacheCreateTextureFromImage (kCFAllocatorDefault, coreVideoTextureCache, renderTarget,
+            err = CVOpenGLESTextureCacheCreateTextureFromImage (kCFAllocatorDefault, coreVideoTextureCache, self->renderTarget,
                                                                 NULL, // texture attributes
                                                                 GL_TEXTURE_2D,
-                                                                _textureOptions.internalFormat, // opengl format
-                                                                (int)_size.width,
-                                                                (int)_size.height,
-                                                                _textureOptions.format, // native iOS format
-                                                                _textureOptions.type,
+                                                                GL_RGBA, // opengl format
+                                                                (int)self->_size.width,
+                                                                (int)self->_size.height,
+                                                                GL_BGRA, // native iOS format
+                                                                GL_UNSIGNED_BYTE,
                                                                 0,
-                                                                &renderTexture);
+                                                                &self->renderTexture);
             if (err)
             {
                 NSAssert(NO, @"Error at CVOpenGLESTextureCacheCreateTextureFromImage %d", err);
@@ -90,21 +93,13 @@
             CFRelease(attrs);
             CFRelease(empty);
             
-            glBindTexture(CVOpenGLESTextureGetTarget(renderTexture), CVOpenGLESTextureGetName(renderTexture));
-            _texture = CVOpenGLESTextureGetName(renderTexture);
-            glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, _textureOptions.wrapS);
-            glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, _textureOptions.wrapT);
+            glBindTexture(CVOpenGLESTextureGetTarget(self->renderTexture), CVOpenGLESTextureGetName(self->renderTexture));
+            self->_texture = CVOpenGLESTextureGetName(self->renderTexture);
+            glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+            glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
             
-            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, CVOpenGLESTextureGetName(renderTexture), 0);
+            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, CVOpenGLESTextureGetName(self->renderTexture), 0);
 #endif
-        }*/
-
-        // 此处代码代替上述注释代码
-        {
-            [self generateTexture];
-            glBindTexture(GL_TEXTURE_2D, self->_texture);
-            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, (int)self->_size.width, (int)self->_size.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
-            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, self->_texture, 0);
         }
         GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
         NSAssert(status == GL_FRAMEBUFFER_COMPLETE, @"Incomplete filter FBO: %d", status);

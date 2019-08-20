@@ -6,9 +6,9 @@
 //  Copyright © 2019 李沛然. All rights reserved.
 //
 
-#import "LPRGPUImageMovieWriter.h"
+#import "LPRGPUCopyWriter.h"
 
-@interface LPRGPUImageMovieWriter ()
+@interface LPRGPUCopyWriter ()
 {
     GLuint movieRenderbuffer, movieFramebuffer;
     
@@ -31,13 +31,15 @@
     BOOL _slider_bool;
     AEConfigEntity configEntity;
     
+    
     LPRGPUImageFrameBuffer *myFrameBuffer;
 }
 
 @end
 
-@implementation LPRGPUImageMovieWriter
+@implementation LPRGPUCopyWriter
 
+@synthesize movieWriterContext = _movieWriterContext;
 
 - (id)initWithMovieURL:(NSURL *)newMovieURL size:(CGSize)newSize;
 {
@@ -53,10 +55,12 @@
     videoSize = newSize;
     movieURL = newMovieURL;
     fileType = newFileType;
-
-    runSynchronouslyOnVideoProcessingQueue(^{
-        [GPUImageContext useImageProcessingContext];
-
+    
+    _movieWriterContext = [[GPUImageContext alloc] init];
+    [_movieWriterContext useSharegroup:[[[GPUImageContext sharedImageProcessingContext] context] sharegroup]];
+    
+    runSynchronouslyOnContextQueue(_movieWriterContext, ^{
+        [self->_movieWriterContext useAsCurrentContext];
         
         if ([GPUImageContext supportsFastTextureUpload])
         {
@@ -66,19 +70,20 @@
             char *tmpF = (char *)[kPassThroughFragmentShaderC_lpr UTF8String];
             self->_program = cpp_compileProgramWithContent(glProgram1, tmpV, tmpF);
         }
-
+        
         //从program中获取position 顶点属性
         self->moviePositionAttribute = glGetAttribLocation(self->_program, "position");
         //从program中获取textCoordinate 纹理属性
         self->movieTextureCoordinateAttribute = glGetAttribLocation(self->_program, "inputTextureCoordinate");
         self->movieInputTextureUniform = glGetUniformLocation(self->_program, "inputImageTexture");
+        [self->_movieWriterContext useAsCurrentContext];
         glUseProgram(self->_program);
         glEnableVertexAttribArray(self->moviePositionAttribute);
         glEnableVertexAttribArray(self->movieTextureCoordinateAttribute);
     });
     
     [self commonInit:outputSettings];
-
+    
     return self;
 }
 
@@ -91,7 +96,7 @@
     {
         NSLog(@"error is:%@\n",error);
     }
-
+    
     if (settings == nil)
     {
         NSMutableDictionary *setting = [[NSMutableDictionary alloc]init];
@@ -131,7 +136,7 @@
         CVBufferSetAttachment(renderTarget, kCVImageBufferYCbCrMatrixKey, kCVImageBufferYCbCrMatrix_ITU_R_601_4, kCVAttachmentMode_ShouldPropagate);
         CVBufferSetAttachment(renderTarget, kCVImageBufferTransferFunctionKey, kCVImageBufferTransferFunction_ITU_R_709_2, kCVAttachmentMode_ShouldPropagate);
         
-        CVOpenGLESTextureCacheCreateTextureFromImage (kCFAllocatorDefault, [[GPUImageContext sharedImageProcessingContext] coreVideoTextureCache], renderTarget,
+        CVOpenGLESTextureCacheCreateTextureFromImage (kCFAllocatorDefault, [_movieWriterContext coreVideoTextureCache], renderTarget,
                                                       NULL, // texture attributes
                                                       GL_TEXTURE_2D,
                                                       GL_RGBA, // opengl format
@@ -148,7 +153,7 @@
         
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, CVOpenGLESTextureGetName(renderTexture), 0);
     }
-
+    
     __unused GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
     
     NSAssert(status == GL_FRAMEBUFFER_COMPLETE, @"Incomplete filter FBO: %d", status);
@@ -167,8 +172,8 @@
 
 - (void)destroyDataFBO;
 {
-    runSynchronouslyOnVideoProcessingQueue(^{
-        [[GPUImageContext sharedImageProcessingContext] useAsCurrentContext];
+    runSynchronouslyOnContextQueue(_movieWriterContext, ^{
+        [self->_movieWriterContext useAsCurrentContext];
         
         if (self->movieFramebuffer)
         {
@@ -198,10 +203,10 @@
 
 - (void)renderAtInternalSizeUsingTexture:(LPRGPUImageFrameBuffer *)textureId
 {
-    [GPUImageContext useImageProcessingContext];
+    [_movieWriterContext useAsCurrentContext];
     [self setFilterFBO];
     glUseProgram(_program);
-
+    
     glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
@@ -211,21 +216,21 @@
         -0.5f,  0.5f,
         0.5f,  0.5f,
     };
-
+    
     static const GLfloat textureCoordinates[] = {
         0.0f, 0.0f,
         1.0f, 0.0f,
         0.0f, 1.0f,
         1.0f, 1.0f,
     };
-
+    
     glActiveTexture(GL_TEXTURE4);
     glBindTexture(GL_TEXTURE_2D, [textureId texture]);
     glUniform1i(movieInputTextureUniform, 4);
-
+    
     glVertexAttribPointer(moviePositionAttribute, 2, GL_FLOAT, 0, 0, squareVertices);
     glVertexAttribPointer(movieTextureCoordinateAttribute, 2, GL_FLOAT, 0, 0, textureCoordinates);
-
+    
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
     
     glFinish();
@@ -258,7 +263,7 @@
 
 - (void)startRecording
 {
-    self->imageFilter = [[LPRGPUImageFilter alloc]initSize:CGSizeMake(Draw_w, Draw_h) imageName:@"img_1.png" ae:self->configEntity];
+    self->imageFilter = [[LPRGPUImageFilter alloc]initSize:CGSizeMake(Draw_w, Draw_h) imageName:nil ae:self->configEntity];
     [self->imageFilter renderToTexture:60];
     myFrameBuffer = self->imageFilter.outputFramebuffer;
     
@@ -269,7 +274,7 @@
     glFinish();
     
     // Render the frame with swizzled colors, so that they can be uploaded quickly as BGRA frames
-    [GPUImageContext useImageProcessingContext];
+    [_movieWriterContext useAsCurrentContext];
     [self renderAtInternalSizeUsingTexture:inputFramebufferForBlock];
     
     GLubyte * rawImagePixels = (GLubyte *)malloc(videoSize.width * videoSize.height * 4);
@@ -283,11 +288,66 @@
     
     return;
 }
-
+/*
+ {
+ NSLog(@"%s",__func__);
+ 
+ [self->assetWriter startWriting];
+ [self->assetWriter startSessionAtSourceTime:CMTimeMake(0, 30)];
+ 
+ self->imageFilter = [[LPRGPUImageFilter alloc]initSize:CGSizeMake(Draw_w, Draw_h) imageName:@"img_0.png" ae:self->configEntity];
+ [self->imageFilter renderToTexture:100];
+ glFinish();
+ self->myFrameBuffer = self->imageFilter.outputFramebuffer;
+ 
+ runSynchronouslyOnVideoProcessingQueue(^{
+ 
+ [self->_movieWriterContext useAsCurrentContext];
+ glUseProgram(self->_program);
+ 
+ [self renderAtInternalSizeUsingTexture:self->myFrameBuffer.texture];
+ 
+ GLubyte * rawImagePixels = (GLubyte *)malloc(Draw_w * Draw_h * 4);
+ glReadPixels(0, 0, Draw_w, Draw_h, GL_RGBA, GL_UNSIGNED_BYTE, rawImagePixels);
+ NSString *pathToMovie = [NSHomeDirectory() stringByAppendingPathComponent:@"Documents/abc2.rgb"];
+ unlink(pathToMovie.UTF8String);
+ FILE *dst_file = fopen(pathToMovie.UTF8String, "wb");
+ fwrite(rawImagePixels, 1, Draw_w*4*Draw_h, dst_file);
+ fclose(dst_file);
+ NSLog(@"end");
+ 
+ return;
+ glFinish();
+ 
+ CVPixelBufferRef pixel_buffer = self->renderTarget;
+ CVPixelBufferLockBaseAddress(pixel_buffer, 0);
+ 
+ while( ! self->assetWriterVideoInput.readyForMoreMediaData )
+ {
+ NSDate *maxDate = [NSDate dateWithTimeIntervalSinceNow:0.1];
+ [[NSRunLoop currentRunLoop] runUntilDate:maxDate];
+ }
+ if(self->assetWriter.status == AVAssetWriterStatusWriting)
+ {
+ GLubyte *pixelBufferData = (GLubyte *)CVPixelBufferGetBaseAddress(pixel_buffer);
+ 
+ NSString *pathToMovie = [NSHomeDirectory() stringByAppendingPathComponent:@"Documents/abc.rgb"];
+ unlink(pathToMovie.UTF8String);
+ 
+ FILE *dst_file = fopen(pathToMovie.UTF8String, "wb");
+ fwrite(pixelBufferData, 1, 480*4*640, dst_file);
+ fclose(dst_file);
+ NSLog(@"end\n");
+ }
+ });
+ 
+ return;
+ }
+ */
 - (void)stopRecording
 {
     NSLog(@"%s",__func__);
-
+    
 }
 
 @end

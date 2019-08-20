@@ -417,13 +417,10 @@ NSString *const kGPUImageVertexShaderString_movie = SHADER_STRING
     AVAssetReader *assetReader = [AVAssetReader assetReaderWithAsset:self.asset error:&error];
     
     NSMutableDictionary *outputSettings = [NSMutableDictionary dictionary];
-    if ([GPUImageContext supportsFastTextureUpload]) {
+    if ([GPUImageContext supportsFastTextureUpload])
+    {
         [outputSettings setObject:@(kCVPixelFormatType_420YpCbCr8BiPlanarFullRange) forKey:(id)kCVPixelBufferPixelFormatTypeKey];
         isFullYUVRange = YES;
-    }
-    else {
-        [outputSettings setObject:@(kCVPixelFormatType_32BGRA) forKey:(id)kCVPixelBufferPixelFormatTypeKey];
-        isFullYUVRange = NO;
     }
     
     // Maybe set alwaysCopiesSampleData to NO on iOS 5.0 for faster video decoding

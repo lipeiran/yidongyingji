@@ -15,7 +15,7 @@
 #import "utils.hpp"
 #import "LPRGPUImageFilter.h"
 
-@interface LPRGPUImageMovieWriter : NSObject
+@interface LPRGPUCopyWriter : NSObject
 {
     NSURL *movieURL;
     NSString *fileType;
@@ -24,10 +24,11 @@
     AVAssetWriterInput *assetWriterVideoInput;
     AVAssetWriterInputPixelBufferAdaptor *assetWriterPixelBufferInput;
     
+    GPUImageContext *_movieWriterContext;
     CVPixelBufferRef renderTarget;
     CVOpenGLESTextureRef renderTexture;
     CGSize videoSize;
-
+    
     LPRGPUImageFilter *imageFilter;
 }
 @property(readonly, nonatomic) CGSize sizeInPixels;

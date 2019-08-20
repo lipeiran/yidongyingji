@@ -24,8 +24,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface LPRGPUImageFilter : NSObject
 {
-    LPRGPUImageFrameBuffer *firstInputFramebuffer;
-    
     GLuint _frameBuffer;
     GLuint program;
     GLint filterPositionAttribute, filterTextureCoordinateAttribute;
