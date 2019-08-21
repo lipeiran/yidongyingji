@@ -10,6 +10,8 @@
 #import <AssetsLibrary/ALAssetsLibrary.h>
 #import "GPUImageMovie.h"
 
+
+
 @interface LPRGPUCopyWriter ()
 {
     GLuint movieRenderbuffer, movieFramebuffer;
@@ -31,6 +33,7 @@
     
     BOOL _layer_exist;
     int _fr;
+    int _total_fr;
     BOOL _slider_bool;
     AEConfigEntity configEntity;
     
@@ -276,7 +279,7 @@
      NSLog(@"%s",__func__);
      
      [self->assetWriter startWriting];
-     [self->assetWriter startSessionAtSourceTime:CMTimeMake(0, 25)];
+     [self->assetWriter startSessionAtSourceTime:CMTimeMake(0, _fr)];
      
      self->imageFilter = [[LPRGPUImageFilter alloc]initSize:CGSizeMake(Draw_w, Draw_h) imageName:nil ae:self->configEntity];
      NSURL *tmpUrl = [[NSBundle mainBundle]URLForResource:@"tp_fg" withExtension:@"mp4"];
@@ -285,10 +288,17 @@
      [_preMovie startProcessing];
      
      runAsynchronouslyOnContextQueue(_movieWriterContext, ^{
-         for (int i = 0; i < 200; i++)
+         for (int i = 0; i < self->_total_fr; i++)
          {
+             if (self.progressBlock)
+             {
+                 self.progressBlock(i*1.0/self->_total_fr);
+             }
              [self->imageFilter renderToTexture:i];
-             [self->_preMovie copyNextFrame];
+             if (i > 0)
+             {
+                 [self->_preMovie copyNextFrame];
+             }
              runSynchronouslyOnContextQueue(self->_movieWriterContext, ^{
                  [self->_movieWriterContext useAsCurrentContext];
                  glUseProgram(self->_program);
@@ -305,7 +315,7 @@
                  }
                  if(self->assetWriter.status == AVAssetWriterStatusWriting)
                  {
-                     if (![self->assetWriterPixelBufferInput appendPixelBuffer:pixel_buffer withPresentationTime:CMTimeMake(i, 25)])
+                     if (![self->assetWriterPixelBufferInput appendPixelBuffer:pixel_buffer withPresentationTime:CMTimeMake(i, self->_fr)])
                      {
                          NSLog(@"write failed！！！");
                      }
@@ -314,6 +324,7 @@
                          NSLog(@"write success ~~");
                      }
                  }
+                 CVPixelBufferUnlockBaseAddress(pixel_buffer, 0);
              });
          }
          [self stopRecording];
@@ -360,18 +371,9 @@
 {
     runSynchronouslyOnContextQueue(_movieWriterContext, ^{
         [self->assetWriterVideoInput markAsFinished];
-        // iOS 6 SDK
-        if ([self->assetWriter respondsToSelector:@selector(finishWritingWithCompletionHandler:)])
-        {
-            // Running iOS 6
-            [self->assetWriter finishWritingWithCompletionHandler:(handler ?: ^{
-                NSLog(@"结束录制");
-            })];
-        }
-        else {
-            // Not running iOS 6
-            [self->assetWriter finishWriting];
-        }
+        [self->assetWriter finishWritingWithCompletionHandler:(handler ?: ^{
+            NSLog(@"结束录制");
+        })];
     });
 }
 
@@ -381,6 +383,7 @@
     ParseAE parseAE;
     parseAE.dofile(configPath, configEntity);
     _fr = configEntity.fr;
+    _total_fr = configEntity.op+1;
 }
 
 @end

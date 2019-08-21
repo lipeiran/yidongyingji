@@ -15,6 +15,9 @@
 #import "utils.hpp"
 #import "LPRGPUImageFilter.h"
 
+typedef void(^WriteBlock)(CGFloat percent);
+
+
 @interface LPRGPUCopyWriter : NSObject
 {
     NSURL *movieURL;
@@ -33,6 +36,7 @@
 }
 @property(readonly, nonatomic) CGSize sizeInPixels;
 @property(nonatomic, retain) GPUImageContext *movieWriterContext;
+@property (nonatomic, copy, nullable) WriteBlock progressBlock;
 
 // Initialization and teardown
 - (id)initWithMovieURL:(NSURL *)newMovieURL size:(CGSize)newSize;

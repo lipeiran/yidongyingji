@@ -20,6 +20,10 @@
 @property (nonatomic, strong) LPRGPUImageMovieWriter *movieWriter;
 @property (nonatomic, strong) LPRGPUCopyWriter *cpWriter;
 @property (nonatomic, strong) UISlider *progress_slider;
+@property (nonatomic, strong) UILabel *percent_label;
+
+@property (nonatomic, strong) UIButton *exportBtn;
+
 @end
 
 @implementation ViewController
@@ -29,37 +33,54 @@
     [super viewDidLoad];
     
     // 预览
-//    [self preView];
-    
-    // 导出
-    [self generateMP4];
+    [self preView];
 }
 
 - (void)preView
 {
     self.view.backgroundColor = [UIColor lightGrayColor];
-    self.lprGPUView = [[LPRGPUImageView alloc]initWithFrame:CGRectMake(Draw_x/[UIScreen mainScreen].scale, Draw_y/[UIScreen mainScreen].scale, Draw_w/[UIScreen mainScreen].scale, Draw_h/[UIScreen mainScreen].scale)];
+    
+    _percent_label = [[UILabel alloc]initWithFrame:CGRectMake(10, 100, 200, 50)];
+    _percent_label.backgroundColor = [UIColor blueColor];
+    _percent_label.textColor = [UIColor redColor];
+    _percent_label.font = [UIFont systemFontOfSize:30];
+    _percent_label.textAlignment = NSTextAlignmentCenter;
+    [self.view addSubview:_percent_label];
+    
+    _lprGPUView = [[LPRGPUImageView alloc]initWithFrame:CGRectMake(Draw_x/[UIScreen mainScreen].scale, Draw_y/[UIScreen mainScreen].scale, Draw_w/[UIScreen mainScreen].scale, Draw_h/[UIScreen mainScreen].scale)];
     [self.view addSubview:self.lprGPUView];
     
-    self.progress_slider = [[UISlider alloc]initWithFrame:CGRectMake(100, 400, 200, 30)];
+    _progress_slider = [[UISlider alloc]initWithFrame:CGRectMake(100, 400, 200, 30)];
     [self.progress_slider addTarget:self action:@selector(changeSliderValue:) forControlEvents:UIControlEventValueChanged];
     [self.progress_slider addTarget:self action:@selector(touchDownAction:) forControlEvents:UIControlEventTouchDown];
     [self.progress_slider addTarget:self action:@selector(touchUpInsideAction:) forControlEvents:UIControlEventTouchUpInside];
     self.progress_slider.value = 0.0;
     [self.view addSubview:self.progress_slider];
+    
+    _exportBtn = [[UIButton alloc]initWithFrame:CGRectMake(100, 450, 200, 30)];
+    [self.exportBtn setTitle:@"导出" forState:UIControlStateNormal];
+    [self.exportBtn addTarget:self action:@selector(generateMP4) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:self.exportBtn];
 }
 
 - (void)generateMP4
 {
+    [self.lprGPUView stopTimer];
+    [self.lprGPUView removeFromSuperview];
+    self.lprGPUView = nil;
+    
     self.view.backgroundColor = [UIColor lightGrayColor];
     
     NSString *pathToMovie = [NSHomeDirectory() stringByAppendingPathComponent:@"Documents/Movie10.mp4"];
     unlink(pathToMovie.UTF8String);
 
-//    self.movieWriter = [[LPRGPUImageMovieWriter alloc]initWithMovieURL:[NSURL fileURLWithPath:pathToMovie] size:CGSizeMake(Draw_w, Draw_h)];
-//    [self.movieWriter startRecording];
-
     self.cpWriter = [[LPRGPUCopyWriter alloc]initWithMovieURL:[NSURL fileURLWithPath:pathToMovie] size:CGSizeMake(Draw_w, Draw_h)];
+    __block ViewController *tmpWeakSelf = self;
+    self.cpWriter.progressBlock = ^(CGFloat percent){
+        dispatch_async(dispatch_get_main_queue(), ^{
+            tmpWeakSelf.percent_label.text = [NSString stringWithFormat:@"%.2f",percent];
+        });
+    };
     [self.cpWriter startRecording];
 }
 

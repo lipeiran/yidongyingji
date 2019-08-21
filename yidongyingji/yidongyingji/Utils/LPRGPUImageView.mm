@@ -61,6 +61,15 @@
     return self;
 }
 
+- (void)stopTimer;
+{
+    if (self->_renderTimer)
+    {
+        [self->_renderTimer invalidate];
+        self->_renderTimer = nil;
+    }
+}
+
 - (void)setTimer
 {
     self->_renderTimer = [NSTimer scheduledTimerWithTimeInterval:1.0/_fr target:self selector:@selector(startQueue) userInfo:nil repeats:YES];
@@ -164,6 +173,7 @@
 
 - (void)dealloc
 {
+    [self stopTimer];
     runSynchronouslyOnVideoProcessingQueue(^{
         [self destroyDisplayFramebuffer];
     });

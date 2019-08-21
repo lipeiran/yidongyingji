@@ -31,6 +31,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)createDisplayFramebuffer;
 - (void)destroyDisplayFramebuffer;
 
+- (void)stopTimer;
+
 - (void)play;
 - (void)pause;
 - (void)resume;
