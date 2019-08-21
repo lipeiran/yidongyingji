@@ -7,6 +7,7 @@
 //
 
 #import "LPRGPUCopyWriter.h"
+#import <AssetsLibrary/ALAssetsLibrary.h>
 
 @interface LPRGPUCopyWriter ()
 {
@@ -212,10 +213,10 @@
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
     static const GLfloat squareVertices[] = {
-        -0.5f, -0.5f,
-        0.5f, -0.5f,
-        -0.5f,  0.5f,
-        0.5f,  0.5f,
+        -1.0f, -1.0f,
+        1.0f, -1.0f,
+        -1.0f,  1.0f,
+        1.0f,  1.0f,
     };
     
     static const GLfloat textureCoordinates[] = {
@@ -267,50 +268,43 @@
      NSLog(@"%s",__func__);
      
      [self->assetWriter startWriting];
-     [self->assetWriter startSessionAtSourceTime:CMTimeMake(0, 30)];
+     [self->assetWriter startSessionAtSourceTime:CMTimeMake(0, 25)];
      
      self->imageFilter = [[LPRGPUImageFilter alloc]initSize:CGSizeMake(Draw_w, Draw_h) imageName:nil ae:self->configEntity];
-     [self->imageFilter renderToTexture:100];
-     glFinish();
-     
-     for (int i = 0; i < 30; i++)
-     {
-         runSynchronouslyOnContextQueue(_movieWriterContext, ^{
-             [self->_movieWriterContext useAsCurrentContext];
-             glUseProgram(self->_program);
-             
-             [self renderAtInternalSizeUsingTexture:self->imageFilter.outputFramebuffer.texture];
+     runAsynchronouslyOnContextQueue(_movieWriterContext, ^{
+         for (int i = 0; i < 500; i++)
+         {
+             [self->imageFilter renderToTexture:i];
              glFinish();
-             
-             CVPixelBufferRef pixel_buffer = self->renderTarget;
-             CVPixelBufferLockBaseAddress(pixel_buffer, 0);
-             
-             while( ! self->assetWriterVideoInput.readyForMoreMediaData )
-             {
-                 NSDate *maxDate = [NSDate dateWithTimeIntervalSinceNow:0.1];
-                 [[NSRunLoop currentRunLoop] runUntilDate:maxDate];
-             }
-             if(self->assetWriter.status == AVAssetWriterStatusWriting)
-             {
-                 GLubyte *pixelBufferData = (GLubyte *)CVPixelBufferGetBaseAddress(pixel_buffer);
-                 NSString *pathToMovie = [NSHomeDirectory() stringByAppendingPathComponent:@"Documents/abc3.rgb"];
-                 unlink(pathToMovie.UTF8String);
-                 FILE *dst_file = fopen(pathToMovie.UTF8String, "wb");
-                 fwrite(pixelBufferData, 1, Draw_w*4*Draw_h, dst_file);
-                 fclose(dst_file);
-                 NSLog(@"end");
-                 if (![self->assetWriterPixelBufferInput appendPixelBuffer:pixel_buffer withPresentationTime:CMTimeMake(i, 30)])
+             runSynchronouslyOnContextQueue(self->_movieWriterContext, ^{
+                 [self->_movieWriterContext useAsCurrentContext];
+                 glUseProgram(self->_program);
+                 
+                 [self renderAtInternalSizeUsingTexture:self->imageFilter.outputFramebuffer.texture];
+                 CVPixelBufferRef pixel_buffer = self->renderTarget;
+                 CVPixelBufferLockBaseAddress(pixel_buffer, 0);
+                 
+                 while( ! self->assetWriterVideoInput.readyForMoreMediaData )
                  {
-                     NSLog(@"write failed！！！");
+                     NSDate *maxDate = [NSDate dateWithTimeIntervalSinceNow:0.1];
+                     [[NSRunLoop currentRunLoop] runUntilDate:maxDate];
                  }
-                 else
+                 if(self->assetWriter.status == AVAssetWriterStatusWriting)
                  {
-                     NSLog(@"write success ~~");
+                     if (![self->assetWriterPixelBufferInput appendPixelBuffer:pixel_buffer withPresentationTime:CMTimeMake(i, 25)])
+                     {
+                         NSLog(@"write failed！！！");
+                     }
+                     else
+                     {
+                         NSLog(@"write success ~~");
+                     }
                  }
-             }
-         });
-     }
-     [self stopRecording];
+             });
+         }
+         [self stopRecording];
+     });
+
      return;
  }
 
@@ -322,7 +316,30 @@
 
 - (void)finishRecording;
 {
-    [self finishRecordingWithCompletionHandler:NULL];
+    [self finishRecordingWithCompletionHandler:^{
+        NSString *pathToMovie = [NSHomeDirectory() stringByAppendingPathComponent:@"Documents/Movie10.mp4"];
+        NSURL *movieURL = [NSURL fileURLWithPath:pathToMovie];
+        
+        ALAssetsLibrary *library = [[ALAssetsLibrary alloc] init];
+        if (UIVideoAtPathIsCompatibleWithSavedPhotosAlbum(pathToMovie))
+        {
+            [library writeVideoAtPathToSavedPhotosAlbum:movieURL completionBlock:^(NSURL *assetURL, NSError *error)
+             {
+                 dispatch_async(dispatch_get_main_queue(), ^{
+
+                     if (error) {
+                         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"视频保存失败" message:nil
+                                                                        delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+                         [alert show];
+                     } else {
+                         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"视频保存成功" message:nil
+                                                                        delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+                         [alert show];
+                     }
+                 });
+             }];
+        }
+    }];
 }
 
 - (void)finishRecordingWithCompletionHandler:(void (^)(void))handler;
