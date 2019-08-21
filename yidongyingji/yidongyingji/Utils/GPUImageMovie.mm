@@ -167,18 +167,18 @@ NSString *const kGPUImageVertexShaderString_movie = SHADER_STRING
     if (_readerVideoTrackOutput)
     {
         success = [self readNextVideoFrameFromOutput:_readerVideoTrackOutput];
-        if (!success)
-        {
-            if (reader.status == AVAssetReaderStatusCompleted)
-            {
-                [reader cancelReading];
-                reader = nil;
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [self startProcessing];
-                });
-                return YES;
-            }
-        }
+//        if (!success)
+//        {
+//            if (reader.status == AVAssetReaderStatusCompleted)
+//            {
+//                [reader cancelReading];
+//                reader = nil;
+//                dispatch_async(dispatch_get_main_queue(), ^{
+//                    [self startProcessing];
+//                });
+//                return YES;
+//            }
+//        }
     }
     return success;
 }
@@ -349,6 +349,9 @@ NSString *const kGPUImageVertexShaderString_movie = SHADER_STRING
     glVertexAttribPointer(yuvConversionTextureCoordinateAttribute, 2, GL_FLOAT, 0, 0, textureCoordinates);
     
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+    
+    glFinish();
+
 }
 
 - (void)processPtsFrameBufferWithTime:(CMTime)time

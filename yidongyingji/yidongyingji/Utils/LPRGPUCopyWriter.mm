@@ -8,6 +8,7 @@
 
 #import "LPRGPUCopyWriter.h"
 #import <AssetsLibrary/ALAssetsLibrary.h>
+#import "GPUImageMovie.h"
 
 @interface LPRGPUCopyWriter ()
 {
@@ -15,7 +16,8 @@
     
     GLint moviePositionAttribute, movieTextureCoordinateAttribute;
     GLint movieInputTextureUniform;
-    
+    GLint movieInputTextureUniform2;
+
     CGSize boundsSizeAtFrameBufferEpoch;
     
     GLuint _program;
@@ -32,8 +34,8 @@
     BOOL _slider_bool;
     AEConfigEntity configEntity;
     
-    
     LPRGPUImageFrameBuffer *myFrameBuffer;
+    GPUImageMovie *_preMovie;
 }
 
 @end
@@ -68,7 +70,7 @@
             GLProgram glProgram1;
             //编译program
             char *tmpV = (char *)[kSamplingVertexShaderC_lpr UTF8String];
-            char *tmpF = (char *)[kPassThroughFragmentShaderC_lpr UTF8String];
+            char *tmpF = (char *)[kSamplingFragmentShaderC_file_lpr UTF8String];
             self->_program = cpp_compileProgramWithContent(glProgram1, tmpV, tmpF);
         }
         
@@ -77,6 +79,8 @@
         //从program中获取textCoordinate 纹理属性
         self->movieTextureCoordinateAttribute = glGetAttribLocation(self->_program, "inputTextureCoordinate");
         self->movieInputTextureUniform = glGetUniformLocation(self->_program, "inputImageTexture");
+        self->movieInputTextureUniform2 = glGetUniformLocation(self->_program, "inputImageTexture2");
+
         [self->_movieWriterContext useAsCurrentContext];
         glUseProgram(self->_program);
         glEnableVertexAttribArray(self->moviePositionAttribute);
@@ -203,7 +207,7 @@
     });
 }
 
-- (void)renderAtInternalSizeUsingTexture:(GLuint)textureId
+- (void)renderAtInternalSizeUsingTexture
 {
     [_movieWriterContext useAsCurrentContext];
     [self setFilterFBO];
@@ -227,8 +231,12 @@
     };
     
     glActiveTexture(GL_TEXTURE4);
-    glBindTexture(GL_TEXTURE_2D, textureId);
+    glBindTexture(GL_TEXTURE_2D, _texture_test);
     glUniform1i(movieInputTextureUniform, 4);
+    
+    glActiveTexture(GL_TEXTURE5);
+    glBindTexture(GL_TEXTURE_2D, _texture_test2);
+    glUniform1i(movieInputTextureUniform2, 5);
     
     glVertexAttribPointer(moviePositionAttribute, 2, GL_FLOAT, 0, 0, squareVertices);
     glVertexAttribPointer(movieTextureCoordinateAttribute, 2, GL_FLOAT, 0, 0, textureCoordinates);
@@ -271,16 +279,22 @@
      [self->assetWriter startSessionAtSourceTime:CMTimeMake(0, 25)];
      
      self->imageFilter = [[LPRGPUImageFilter alloc]initSize:CGSizeMake(Draw_w, Draw_h) imageName:nil ae:self->configEntity];
+     NSURL *tmpUrl = [[NSBundle mainBundle]URLForResource:@"tp_fg" withExtension:@"mp4"];
+     AVAsset *tmpAsset = [AVAsset assetWithURL:tmpUrl];
+     _preMovie = [[GPUImageMovie alloc]initWithAsset:tmpAsset];
+     [_preMovie startProcessing];
+     
      runAsynchronouslyOnContextQueue(_movieWriterContext, ^{
-         for (int i = 0; i < 500; i++)
+         for (int i = 0; i < 200; i++)
          {
              [self->imageFilter renderToTexture:i];
-             glFinish();
+             [self->_preMovie copyNextFrame];
              runSynchronouslyOnContextQueue(self->_movieWriterContext, ^{
                  [self->_movieWriterContext useAsCurrentContext];
                  glUseProgram(self->_program);
-                 
-                 [self renderAtInternalSizeUsingTexture:self->imageFilter.outputFramebuffer.texture];
+                 self->_texture_test = self->imageFilter.outputFramebuffer.texture;
+                 self->_texture_test2 = self->_preMovie.outputFramebuffer.texture;
+                 [self renderAtInternalSizeUsingTexture];
                  CVPixelBufferRef pixel_buffer = self->renderTarget;
                  CVPixelBufferLockBaseAddress(pixel_buffer, 0);
                  
