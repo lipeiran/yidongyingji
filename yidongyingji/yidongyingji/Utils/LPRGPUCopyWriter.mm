@@ -342,28 +342,20 @@
 - (void)finishRecording;
 {
     [self finishRecordingWithCompletionHandler:^{
-        NSString *pathToMovie = [NSHomeDirectory() stringByAppendingPathComponent:@"Documents/Movie10.mp4"];
-        NSURL *movieURL = [NSURL fileURLWithPath:pathToMovie];
-        
-        ALAssetsLibrary *library = [[ALAssetsLibrary alloc] init];
-        if (UIVideoAtPathIsCompatibleWithSavedPhotosAlbum(pathToMovie))
-        {
-            [library writeVideoAtPathToSavedPhotosAlbum:movieURL completionBlock:^(NSURL *assetURL, NSError *error)
-             {
-                 dispatch_async(dispatch_get_main_queue(), ^{
-
-                     if (error) {
-                         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"视频保存失败" message:nil
-                                                                        delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-                         [alert show];
-                     } else {
-                         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"视频保存成功" message:nil
-                                                                        delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
-                         [alert show];
-                     }
-                 });
-             }];
-        }
+        dispatch_async(dispatch_get_main_queue(), ^{
+            NSString *easyPath = [NSHomeDirectory() stringByAppendingPathComponent:@"Documents/Movie10.mp4"];
+            NSString *wayPath = [[NSBundle mainBundle] pathForResource:@"music" ofType:@"mp3"];
+            NSString *destPath = [NSHomeDirectory() stringByAppendingPathComponent:@"Documents/Movie_result.mp4"];
+            
+            if ([[NSFileManager defaultManager] fileExistsAtPath:destPath])
+            {
+                [[NSFileManager defaultManager] removeItemAtPath:destPath error:nil];
+            }
+            [self audioVedioMerge:[NSURL fileURLWithPath:wayPath] vedioUrl:[NSURL fileURLWithPath:easyPath] destUrl:[NSURL fileURLWithPath:destPath]];
+            
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"视频保存成功" message:nil delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+            [alert show];
+        });
     }];
 }
 
@@ -384,6 +376,35 @@
     parseAE.dofile(configPath, configEntity);
     _fr = configEntity.fr;
     _total_fr = configEntity.op+1;
+}
+
+- (void)audioVedioMerge:(NSURL *)audioUrl vedioUrl:(NSURL *)vedioUrl destUrl:(NSURL *)destUrl
+{
+    AVMutableComposition *mixComposition = [AVMutableComposition composition];
+    NSError *error;
+    
+    AVMutableCompositionTrack *audioCompostionTrack = [mixComposition addMutableTrackWithMediaType:AVMediaTypeAudio preferredTrackID:kCMPersistentTrackID_Invalid];
+    //音频文件资源
+    AVURLAsset  *audioAsset = [[AVURLAsset alloc] initWithURL:audioUrl options:nil];
+    CMTimeRange audio_timeRange = CMTimeRangeMake(kCMTimeZero, audioAsset.duration);
+    [audioCompostionTrack insertTimeRange:audio_timeRange ofTrack:[[audioAsset tracksWithMediaType:AVMediaTypeAudio] firstObject] atTime:kCMTimeZero error:&error];
+    
+    //视频文件资源
+    AVMutableCompositionTrack *vedioCompostionTrack = [mixComposition addMutableTrackWithMediaType:AVMediaTypeVideo preferredTrackID:kCMPersistentTrackID_Invalid];
+    AVURLAsset *vedioAsset = [[AVURLAsset alloc] initWithURL:vedioUrl options:nil];
+    CMTimeRange vedio_timeRange = CMTimeRangeMake(kCMTimeZero, vedioAsset.duration);
+    [vedioCompostionTrack insertTimeRange:vedio_timeRange ofTrack:[[vedioAsset tracksWithMediaType:AVMediaTypeVideo] firstObject] atTime:kCMTimeZero error:&error];
+    
+    // presetName 与 outputFileType 要对应  导出合并的音频
+    AVAssetExportSession* assetExportSession = [[AVAssetExportSession alloc] initWithAsset:mixComposition presetName:AVAssetExportPreset640x480];
+    assetExportSession.outputURL = destUrl;
+    assetExportSession.outputFileType = @"com.apple.quicktime-movie";
+    assetExportSession.shouldOptimizeForNetworkUse = YES;
+    [assetExportSession exportAsynchronouslyWithCompletionHandler:^{
+        dispatch_async(dispatch_get_main_queue(), ^{
+            NSLog(@"%@",assetExportSession.error);
+        });
+    }];
 }
 
 @end

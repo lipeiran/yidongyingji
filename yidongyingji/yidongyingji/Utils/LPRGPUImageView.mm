@@ -41,6 +41,9 @@
 @property (nonatomic, strong) AVPlayer *player;
 @property (nonatomic, strong) GPUImageMovie *preMovie;
 
+@property (nonatomic, strong) AVAudioPlayer *audioPlayer;
+@property (nonatomic, assign) BOOL audioPlaying;
+
 @end
 
 @implementation LPRGPUImageView
@@ -77,6 +80,12 @@
 
 - (void)setMaskMovieTexture
 {
+    NSError *error;
+    NSString *musicPath = [[NSBundle mainBundle]pathForResource:@"music" ofType:@"mp3"];
+    _audioPlayer = [[AVAudioPlayer alloc]initWithContentsOfURL:[NSURL URLWithString:musicPath] error:&error];
+    _audioPlayer.numberOfLoops = 0;
+    [_audioPlayer prepareToPlay];
+    
     char *configPath = (char *)[[[NSBundle mainBundle]pathForResource:@"tp" ofType:@"json"] UTF8String];
     ParseAE parseAE;
     parseAE.dofile(configPath, configEntity);
@@ -89,9 +98,9 @@
     _duration = tmpAsset.duration.value/tmpAsset.duration.timescale;
     
     _preMovie = [[GPUImageMovie alloc]initWithPlayerItem:playerItem];
-    _player.rate = 1.0;
+    self.player.rate = 1.0;
     [_preMovie startProcessing];
-    [_player play];
+    [self.player play];
 }
 
 - (void)startQueue
@@ -108,6 +117,11 @@
                     self->_texture_test = self->imageFilter.outputFramebuffer.texture;
                     self->_texture_test2 = self->_preMovie.outputFramebuffer.texture;
                     [self draw];
+                    if ( !self.audioPlaying )
+                    {
+                        self.audioPlaying = YES;
+                        [self.audioPlayer play];
+                    }
                 });
             });
         }
@@ -195,6 +209,7 @@
     self->_slider_bool = YES;
     self.preMovie.not_check_new = YES;
     [self.player pause];
+    [self.audioPlayer pause];
 }
 
 - (void)resume
@@ -203,6 +218,7 @@
     self->_slider_bool = NO;
     self.preMovie.not_check_new = NO;
     [self.player play];
+    [self.audioPlayer play];
 }
 
 - (void)stop
@@ -217,17 +233,15 @@
     NSLog(@"%s",__func__);
     self->_slider_bool = YES;
     self.preMovie.not_check_new = YES;
-//    int fr_pts = (int)((configEntity.op+1) * percent);
-//    [self.player seekToTime:CMTimeMake(fr_pts, self->_fr)];
-    
+
     CGFloat tmpNowSecond = _duration * percent;
     [self.player seekToTime:CMTimeMakeWithSeconds(tmpNowSecond, _timeScale)
             toleranceBefore:kCMTimeZero
              toleranceAfter:kCMTimeZero
           completionHandler:^(BOOL finished)
      {
-
      }];
+    self.audioPlayer.currentTime = self.audioPlayer.duration * percent;
 }
 
 - (void)createDisplayFramebuffer;
