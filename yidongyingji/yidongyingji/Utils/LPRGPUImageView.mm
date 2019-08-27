@@ -321,7 +321,8 @@
 
             glClearColor(1.0, 0.0, 1.0, 1.0);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-            
+            glEnable(GL_DEPTH_TEST);
+
             glActiveTexture(GL_TEXTURE4);
             glBindTexture(GL_TEXTURE_2D,self->_texture_test);
             glUniform1i(self->displayInputTextureUniform, 4);

@@ -24,7 +24,7 @@ public:
     float scaleZ = 1.0f;
     float deltaX = 0.0f;
     float deltaY = 0.0f;
-    float deltaZ = -10.0f;
+    float deltaZ = -666.0f/240.0f;
     float alpha = 1.0f;
 private:
     

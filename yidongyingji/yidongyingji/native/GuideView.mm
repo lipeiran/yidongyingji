@@ -100,6 +100,7 @@
     glClearColor(0.75, 0.85, 0.85, 1);
     //清理颜色缓冲、深度缓冲
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glEnable(GL_DEPTH_TEST);
     //缩放
     GLfloat scale = UIScreen.mainScreen.scale;
     //设置视口

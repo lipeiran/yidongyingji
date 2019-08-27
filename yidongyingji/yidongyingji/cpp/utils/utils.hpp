@@ -56,8 +56,13 @@ void cpp_generateAndUniform2DMatrix(bool is3D, float perspective_left, float per
 // 生成动画矩阵
 void cpp_generate2DMatrix(float perspective_left, float perspective_right, float perspective_bottom, float perspective_top, float perspective_near, float perspective_far, float deltaX, float deltaY, float deltaZ, float rotateAngleX, float rotateAngleY, float rotateAngleZ, float scaleX, float scaleY, float scaleZ, float anchorPX,float anchorPY, KSMatrix4 &sourceMatrix);
 
+void cpp_generate3DMatrix(float perspective_left, float perspective_right, float perspective_bottom, float perspective_top, float perspective_near, float perspective_far, float deltaX, float deltaY, float deltaZ, float rotateAngleX, float rotateAngleY, float rotateAngleZ, float scaleX, float scaleY, float scaleZ, float anchorPX,float anchorPY, KSMatrix4 &sourceMatrix);
+
 // Projection，正交投影2D效果
 void cpp_glProjection(float left, float right, float bottom, float top, float nearZ, float farZ, KSMatrix4 &sourceMatrix);
+
+// Projection，3D效果
+void cpp_glProjection_3D(float left, float right, float bottom, float top, float nearZ, float farZ, KSMatrix4 &sourceMatrix);
 
 // View，位移
 void cpp_glTranslate(float xDelta, float yDelta, float zDelta, KSMatrix4 &sourceMatrix);

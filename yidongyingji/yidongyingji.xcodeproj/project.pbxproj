@@ -32,7 +32,6 @@
 		FE6119C122E6F6F900DD0741 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FE6119C022E6F6F900DD0741 /* Assets.xcassets */; };
 		FE6119C422E6F6F900DD0741 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FE6119C222E6F6F900DD0741 /* LaunchScreen.storyboard */; };
 		FE6119C722E6F6F900DD0741 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = FE6119C622E6F6F900DD0741 /* main.m */; };
-		FE6119D122E6F89300DD0741 /* OpenGLESView.mm in Sources */ = {isa = PBXBuildFile; fileRef = FE6119D022E6F89300DD0741 /* OpenGLESView.mm */; };
 		FE6119D522E6FD5A00DD0741 /* GLProgram.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FE6119D322E6FD5A00DD0741 /* GLProgram.cpp */; };
 		FE6119D922E7191200DD0741 /* shaderv.vsh in Resources */ = {isa = PBXBuildFile; fileRef = FE6119D822E7191200DD0741 /* shaderv.vsh */; };
 		FE6119DB22E7191E00DD0741 /* shaderf.fsh in Resources */ = {isa = PBXBuildFile; fileRef = FE6119DA22E7191E00DD0741 /* shaderf.fsh */; };
@@ -107,8 +106,6 @@
 		FE6119C322E6F6F900DD0741 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		FE6119C522E6F6F900DD0741 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		FE6119C622E6F6F900DD0741 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		FE6119CF22E6F89300DD0741 /* OpenGLESView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OpenGLESView.h; sourceTree = "<group>"; };
-		FE6119D022E6F89300DD0741 /* OpenGLESView.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = OpenGLESView.mm; sourceTree = "<group>"; };
 		FE6119D322E6FD5A00DD0741 /* GLProgram.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = GLProgram.cpp; sourceTree = "<group>"; };
 		FE6119D422E6FD5A00DD0741 /* GLProgram.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = GLProgram.hpp; sourceTree = "<group>"; };
 		FE6119D622E6FD8900DD0741 /* GL_Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GL_Header.h; sourceTree = "<group>"; };
@@ -291,8 +288,6 @@
 			children = (
 				FEE27AFD22EF0AFC00FF5511 /* GLESUtils.h */,
 				FEE27AFC22EF0AFC00FF5511 /* GLESUtils.m */,
-				FE6119CF22E6F89300DD0741 /* OpenGLESView.h */,
-				FE6119D022E6F89300DD0741 /* OpenGLESView.mm */,
 				FE6119ED22E9582F00DD0741 /* GuideView.h */,
 				FE6119EE22E9582F00DD0741 /* GuideView.mm */,
 			);
@@ -527,7 +522,6 @@
 				FEE27AE922EEFB3100FF5511 /* GLESMath.c in Sources */,
 				FE9CF8F722FAAFC3006BCE2B /* GPUImageColorConversion.m in Sources */,
 				FE6119BC22E6F6F700DD0741 /* ViewController.mm in Sources */,
-				FE6119D122E6F89300DD0741 /* OpenGLESView.mm in Sources */,
 				FE6119C722E6F6F900DD0741 /* main.m in Sources */,
 				FEE27AFE22EF0AFC00FF5511 /* GLESUtils.m in Sources */,
 				FE56E89322EEE489001BD700 /* GPUImageFilter.cpp in Sources */,

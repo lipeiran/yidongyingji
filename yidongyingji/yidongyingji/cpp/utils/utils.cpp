@@ -107,7 +107,6 @@ void cpp_glRotate(float anchorX,float anchorY, float xDegree, float yDegree, flo
     ksMatrixLoadIdentity(&tmp_modelViewMatrix);
     // 先平移
     ksTranslate(&tmp_modelViewMatrix, anchorX, anchorY, 0.0);
-    
     //旋转矩阵
     KSMatrix4 _rotateMartix;
     //加载旋转矩阵
@@ -175,10 +174,34 @@ void cpp_glProjection(float left, float right, float bottom, float top, float ne
     ksMatrixMultiply(&sourceMatrix,  &project, &sourceMatrix);
 }
 
+// 2D 组合矩阵
 void cpp_generate2DMatrix(float perspective_left, float perspective_right, float perspective_bottom, float perspective_top, float perspective_near, float perspective_far, float deltaX, float deltaY, float deltaZ, float rotateAngleX, float rotateAngleY, float rotateAngleZ, float scaleX, float scaleY, float scaleZ, float anchorPX,float anchorPY, KSMatrix4 &sourceMatrix)
 {
     //------------------------------------------ Projection正交投影开始 ------------------------------------------//
     cpp_glProjection( perspective_left, perspective_right, perspective_bottom, perspective_top, perspective_near, perspective_far, sourceMatrix);
+    //------------------------------------------ View位移开始 ------------------------------------------//
+    cpp_glTranslate(deltaX, deltaY, deltaZ, sourceMatrix);
+    //------------------------------------------ Model旋转开始 ------------------------------------------//
+    cpp_glRotate(anchorPX, anchorPY, rotateAngleX, rotateAngleY, rotateAngleZ, sourceMatrix);
+    //------------------------------------------ Model缩放开始 ------------------------------------------//
+    cpp_glScale(anchorPX, anchorPY, scaleX, scaleY, scaleZ, sourceMatrix);
+    //------------------------------------------ Model缩放结束 ------------------------------------------//
+}
+
+void cpp_glProjection_3D(float left, float right, float bottom, float top, float nearZ, float farZ, KSMatrix4 &sourceMatrix)
+{
+    KSMatrix4 project;
+    ksMatrixLoadIdentity(&project);
+//    ksPerspective(&project, 30.0, 0.75, 5.0f, 20.0f); //透视变换，视角30°
+    ksFrustum(&project, -86.7/240.0, 86.7/240.0, -115.3/240.0, 115.3/240.0, 1.0, 1000.0/240.0);
+    ksMatrixMultiply(&sourceMatrix,  &project, &sourceMatrix);
+}
+
+// 3D 组合矩阵
+void cpp_generate3DMatrix(float perspective_left, float perspective_right, float perspective_bottom, float perspective_top, float perspective_near, float perspective_far, float deltaX, float deltaY, float deltaZ, float rotateAngleX, float rotateAngleY, float rotateAngleZ, float scaleX, float scaleY, float scaleZ, float anchorPX,float anchorPY, KSMatrix4 &sourceMatrix)
+{
+    //------------------------------------------ Projection正交投影开始 ------------------------------------------//
+    cpp_glProjection_3D( perspective_left, perspective_right, perspective_bottom, perspective_top, perspective_near, perspective_far, sourceMatrix);
     //------------------------------------------ View位移开始 ------------------------------------------//
     cpp_glTranslate(deltaX, deltaY, deltaZ, sourceMatrix);
     //------------------------------------------ Model旋转开始 ------------------------------------------//
@@ -194,7 +217,14 @@ void cpp_generateAndUniform2DMatrix(bool is3D, float perspective_left, float per
     KSMatrix4 _modelViewMatrix;
     //加载矩阵
     ksMatrixLoadIdentity(&_modelViewMatrix);
-    cpp_generate2DMatrix( perspective_left,  perspective_right, perspective_bottom, perspective_top,  perspective_near,  perspective_far,  deltaX,  deltaY,  deltaZ,  rotateAngleX,  rotateAngleY,  rotateAngleZ,  scaleX,  scaleY,  scaleZ,  anchorPX,  anchorPY, _modelViewMatrix);
+    if (is3D)
+    {
+        cpp_generate3DMatrix( perspective_left,  perspective_right, perspective_bottom, perspective_top,  perspective_near,  perspective_far,  deltaX,  deltaY,  deltaZ,  rotateAngleX,  rotateAngleY,  rotateAngleZ,  scaleX,  scaleY,  scaleZ,  anchorPX,  anchorPY, _modelViewMatrix);
+    }
+    else
+    {
+        cpp_generate2DMatrix( perspective_left,  perspective_right, perspective_bottom, perspective_top,  perspective_near,  perspective_far,  deltaX,  deltaY,  deltaZ,  rotateAngleX,  rotateAngleY,  rotateAngleZ,  scaleX,  scaleY,  scaleZ,  anchorPX,  anchorPY, _modelViewMatrix);
+    }
     glUniformMatrix4fv(modelViewProjectionMatrix_location, 1, GL_FALSE, (GLfloat *)&_modelViewMatrix.m[0][0]);
 }
 
@@ -244,9 +274,10 @@ void cpp_glDraw_pre(void)
     //设置背景色
     glClearColor(0.0f, 1.0f, 0.0f, 1.0f);
     //清除颜色缓冲
-    glClear(GL_COLOR_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     //开启正背面剔除
-    glEnable(GL_CULL_FACE);
+    glEnable(GL_DEPTH_TEST);
+
     //开启颜色混合
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);

@@ -7,14 +7,12 @@
 //
 
 #import "ViewController.h"
-#import "OpenGLESView.h"
 #import "GuideView.h"
 #import "LPRGPUImageView.h"
 #import "LPRGPUImageMovieWriter.h"
 #import "LPRGPUCopyWriter.h"
 
 @interface ViewController ()
-@property (nonatomic, strong) OpenGLESView *glesView;
 @property (nonatomic, strong) GuideView *guideView;
 @property (nonatomic, strong) LPRGPUImageView *lprGPUView;
 @property (nonatomic, strong) LPRGPUImageMovieWriter *movieWriter;
