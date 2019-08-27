@@ -188,7 +188,7 @@ void cpp_generate2DMatrix(float perspective_left, float perspective_right, float
     //------------------------------------------ Model缩放结束 ------------------------------------------//
 }
 
-void cpp_generateAndUniform2DMatrix(float perspective_left, float perspective_right, float perspective_bottom, float perspective_top, float perspective_near, float perspective_far, float deltaX, float deltaY, float deltaZ, float rotateAngleX, float rotateAngleY, float rotateAngleZ, float scaleX, float scaleY, float scaleZ, float anchorPX,float anchorPY, GLuint modelViewProjectionMatrix_location)
+void cpp_generateAndUniform2DMatrix(bool is3D, float perspective_left, float perspective_right, float perspective_bottom, float perspective_top, float perspective_near, float perspective_far, float deltaX, float deltaY, float deltaZ, float rotateAngleX, float rotateAngleY, float rotateAngleZ, float scaleX, float scaleY, float scaleZ, float anchorPX,float anchorPY, GLuint modelViewProjectionMatrix_location)
 {
     //模型视图矩阵
     KSMatrix4 _modelViewMatrix;

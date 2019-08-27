@@ -75,8 +75,8 @@ void ParseAE::doit(char *text, AEConfigEntity &configEntity)
         AELayerEntity *layersEntity = NULL;
         layersEntity = (AELayerEntity *)malloc(layerArraySize * sizeof(*layersEntity));
 
-        const int ks_char_count = 5;
-        const char *ks_char[5] = {"o","r","p","a","s"};
+        const int ks_char_count = 8;
+        const char *ks_char[8] = {"o","r","p","a","s","rx","ry","rz"};
         for ( i = 0; i < layerArraySize; i++)
         {
             cJSON *layersObject = cJSON_GetArrayItem(layersArrayItem, i);
@@ -174,14 +174,6 @@ void ParseAE::doit(char *text, AEConfigEntity &configEntity)
             for ( index = 0; index < ks_char_count; index++)
             {
                 ksDicJson = cJSON_GetObjectItem(tmpJson, ks_char[index]);
-                if (index == 1) // 获取 r 的值
-                {
-                    if (ksDicJson == NULL)
-                    {
-                        ksDicJson = cJSON_GetObjectItem(tmpJson, "rz");
-                    }
-                }
-                
                 ksSubDicJson = ksDicJson?cJSON_GetObjectItem(ksDicJson, "a"):NULL;
                 a_int = ksSubDicJson?ksSubDicJson->valueint:0;
                 ksSubDicJson = ksDicJson?cJSON_GetObjectItem(ksDicJson, "ix"):NULL;
@@ -296,6 +288,9 @@ void ParseAE::doit(char *text, AEConfigEntity &configEntity)
             layerKsEntity.p = tmpDicValueSets[2];
             layerKsEntity.a = tmpDicValueSets[3];
             layerKsEntity.s = tmpDicValueSets[4];
+            layerKsEntity.rx = tmpDicValueSets[5];
+            layerKsEntity.ry = tmpDicValueSets[6];
+            layerKsEntity.rz = tmpDicValueSets[7];
             layersEntity[i].ks = layerKsEntity;
             // ks------------------------------end//
             
@@ -574,6 +569,453 @@ void ParseAE::dofile(char *filename,AEConfigEntity &tmpEntity)
     data = NULL;
 }
 
+void ParseAE::get_ae_params_3D(int i, AELayerEntity tmpLayerEntity, float *angle_f_v, float *angle_fx_v, float *angle_fy_v, float *angle_fz_v, float *scale_f_x_v, float *scale_f_y_v, float *x_f_v, float *y_f_v, float *anchor_x_f_v, float *anchor_y_f_v, float *alpha_f_v, int *blur_radius_v)
+{
+    float angle_f = 0;
+    float scale_f_x = 1.0;
+    float scale_f_y = 1.0;
+    float x_f = 0;
+    float y_f = 0;
+    float anchor_x_f = 0;
+    float anchor_y_f = 0;
+    float alpha_f = 1.0;
+    float angle_fx = 1.0;
+    float angle_fy = 1.0;
+    float angle_fz = 1.0;
+    int blur_radius = 0.0;
+    // 高斯模糊度
+    const char *blur_str = "Blur";
+    if (tmpLayerEntity.ef && tmpLayerEntity.ef[0].ef && str_isIn_str(tmpLayerEntity.ef[0].mn,blur_str) && tmpLayerEntity.ef[0].ef[0].v.k_entity_num > 0 )
+    {
+        int tmp_k_entity_num = tmpLayerEntity.ef[0].ef[0].v.k_entity_num;
+        int ef_ip = tmpLayerEntity.ef[0].ef[0].v.k_entity[0].t;
+        int ef_op = tmpLayerEntity.ef[0].ef[0].v.k_entity[tmp_k_entity_num-1].t;
+        if (i >= ef_ip && i <= ef_op)
+        {
+            int tmp_k_index = 0;
+            for (tmp_k_index = 0; tmp_k_index < tmp_k_entity_num; tmp_k_index++)
+            {
+                int tmp_k_t = tmpLayerEntity.ef[0].ef[0].v.k_entity[tmp_k_index].t;
+                if (i == tmp_k_t)
+                {
+                    if (tmpLayerEntity.ef[0].ef[0].v.k_entity[tmp_k_index].s_num > 0)
+                    {
+                        blur_radius = (int)tmpLayerEntity.ef[0].ef[0].v.k_entity[tmp_k_index].s[0];
+                    }
+                    else
+                    {
+                        int tmp_sub_i = tmp_k_index;
+                        while ((tmp_sub_i--) >=0)
+                        {
+                            if (tmpLayerEntity.ef[0].ef[0].v.k_entity[tmp_sub_i].s_num > 0)
+                            {
+                                blur_radius = (int)tmpLayerEntity.ef[0].ef[0].v.k_entity[tmp_sub_i].e[0];
+                                break;
+                            }
+                        }
+                    }
+                    break;
+                }
+                else if (i < tmp_k_t)
+                {
+                    int tmp_pre_k_t = tmpLayerEntity.ef[0].ef[0].v.k_entity[tmp_k_index-1].t;
+                    int tmp_pre_k_s_blur_radius = 0;
+                    int tmp_pre_k_e_blur_radius = 0;
+                    
+                    if (tmpLayerEntity.ef[0].ef[0].v.k_entity[tmp_k_index-1].s_num > 0)
+                    {
+                        tmp_pre_k_s_blur_radius = tmpLayerEntity.ef[0].ef[0].v.k_entity[tmp_k_index-1].s[0];
+                        tmp_pre_k_e_blur_radius = tmpLayerEntity.ef[0].ef[0].v.k_entity[tmp_k_index-1].e[0];
+                    }
+                    else
+                    {
+                        int tmp_sub_i = tmp_k_index-1;
+                        while ((tmp_sub_i--) >=0)
+                        {
+                            if (tmpLayerEntity.ef[0].ef[0].v.k_entity[tmp_sub_i].s_num > 0)
+                            {
+                                tmp_pre_k_s_blur_radius = (int)tmpLayerEntity.ef[0].ef[0].v.k_entity[tmp_sub_i].s[0];
+                                tmp_pre_k_e_blur_radius = (int)tmpLayerEntity.ef[0].ef[0].v.k_entity[tmp_sub_i].e[0];
+                                break;
+                            }
+                        }
+                    }
+                    blur_radius = (int)(i-tmp_pre_k_t)*1.0/(tmp_k_t-tmp_pre_k_t)*(tmp_pre_k_e_blur_radius-tmp_pre_k_s_blur_radius)+tmp_pre_k_s_blur_radius;
+                    break;
+                }
+            }
+        }
+        else
+        {
+            blur_radius = 0;
+        }
+    }
+    else if (tmpLayerEntity.ef && tmpLayerEntity.ef[0].ef)
+    {
+        blur_radius = (int)tmpLayerEntity.ef[0].ef[0].v.k;
+    }
+    else
+    {
+        blur_radius = 0;
+    }
+    if (blur_radius < 0)
+    {
+        blur_radius = 0;
+    }
+    // 透明度
+    if (tmpLayerEntity.ks.o.k_entity_num > 0)
+    {
+        if (i >= tmpLayerEntity.ip && i - tmpLayerEntity.ip < tmpLayerEntity.ks.o.k_entity_num)
+        {
+            if (tmpLayerEntity.ks.o.k_entity[i-tmpLayerEntity.ip].s_num > 0)
+            {
+                alpha_f = tmpLayerEntity.ks.o.k_entity[i-tmpLayerEntity.ip].s[0] / 100.0;
+            }
+            else
+            {
+                int tmp_i = 1;
+                while (i - tmpLayerEntity.ip - tmp_i >=0)
+                {
+                    if (tmpLayerEntity.ks.o.k_entity[i-tmpLayerEntity.ip-tmp_i].s_num > 0)
+                    {
+                        alpha_f = tmpLayerEntity.ks.o.k_entity[i-tmpLayerEntity.ip-tmp_i].e[0] / 100.0;
+                        break;
+                    }
+                    tmp_i++;
+                }
+            }
+        }
+        else
+        {
+            int tmp_i = 1;
+            while (i - tmpLayerEntity.ip - tmp_i >=0)
+            {
+                if (tmpLayerEntity.ks.o.k_entity[i-tmpLayerEntity.ip-tmp_i].s_num > 0)
+                {
+                    alpha_f = tmpLayerEntity.ks.o.k_entity[i-tmpLayerEntity.ip-tmp_i].e[0] / 100.0;
+                    break;
+                }
+                tmp_i++;
+            }
+        }
+    }
+    else
+    {
+        alpha_f = tmpLayerEntity.ks.o.k /100.0;
+    }
+    // 锚点
+    if (tmpLayerEntity.ks.a.k_entity_num > 0)
+    {
+        if (i >= tmpLayerEntity.ip && i - tmpLayerEntity.ip < tmpLayerEntity.ks.a.k_entity_num)
+        {
+            if (tmpLayerEntity.ks.a.k_entity[i-tmpLayerEntity.ip].s_num > 0)
+            {
+                anchor_x_f = tmpLayerEntity.ks.a.k_entity[i-tmpLayerEntity.ip].s[0];
+                anchor_y_f = tmpLayerEntity.ks.a.k_entity[i-tmpLayerEntity.ip].s[1];
+            }
+            else
+            {
+                int tmp_i = 1;
+                while (i - tmpLayerEntity.ip - tmp_i >=0)
+                {
+                    if (tmpLayerEntity.ks.a.k_entity[i - tmpLayerEntity.ip - tmp_i].s_num > 0)
+                    {
+                        anchor_x_f = tmpLayerEntity.ks.a.k_entity[i - tmpLayerEntity.ip - tmp_i].e[0];
+                        anchor_y_f = tmpLayerEntity.ks.a.k_entity[i - tmpLayerEntity.ip - tmp_i].e[1];
+                        break;
+                    }
+                    tmp_i++;
+                }
+            }
+        }
+        else
+        {
+            int tmp_i = 1;
+            while (i - tmpLayerEntity.ip - tmp_i >=0)
+            {
+                if (tmpLayerEntity.ks.a.k_entity[i - tmpLayerEntity.ip - tmp_i].s_num > 0)
+                {
+                    anchor_x_f = tmpLayerEntity.ks.a.k_entity[i - tmpLayerEntity.ip - tmp_i].e[0];
+                    anchor_y_f = tmpLayerEntity.ks.a.k_entity[i - tmpLayerEntity.ip - tmp_i].e[1];
+                    break;
+                }
+                tmp_i++;
+            }
+        }
+    }
+    else
+    {
+        anchor_x_f = tmpLayerEntity.ks.a.k_float[0];
+        anchor_y_f = tmpLayerEntity.ks.a.k_float[1];
+    }
+    // 旋转角度r
+    if (tmpLayerEntity.ks.r.k_entity_num > 0)
+    {
+        if (i >= tmpLayerEntity.ip && i - tmpLayerEntity.ip < tmpLayerEntity.ks.r.k_entity_num)
+        {
+            if (tmpLayerEntity.ks.r.k_entity[i-tmpLayerEntity.ip].s_num > 0)
+            {
+                angle_f = tmpLayerEntity.ks.r.k_entity[i-tmpLayerEntity.ip].s[0];
+            }
+            else
+            {
+                int tmp_i = 1;
+                while (i - tmpLayerEntity.ip - tmp_i >=0)
+                {
+                    if (tmpLayerEntity.ks.r.k_entity[i-tmpLayerEntity.ip-tmp_i].s_num > 0)
+                    {
+                        angle_f = tmpLayerEntity.ks.r.k_entity[i-tmpLayerEntity.ip-tmp_i].e[0];
+                        break;
+                    }
+                    tmp_i++;
+                }
+            }
+        }
+        else
+        {
+            int tmp_i = 1;
+            while (i - tmpLayerEntity.ip - tmp_i >=0)
+            {
+                if (tmpLayerEntity.ks.r.k_entity[i-tmpLayerEntity.ip-tmp_i].s_num > 0)
+                {
+                    angle_f = tmpLayerEntity.ks.r.k_entity[i-tmpLayerEntity.ip-tmp_i].e[0];
+                    break;
+                }
+                tmp_i++;
+            }
+        }
+    }
+    else
+    {
+        angle_f = tmpLayerEntity.ks.r.k;
+    }
+    // 旋转角度rx
+    if (tmpLayerEntity.ks.rx.k_entity_num > 0)
+    {
+        if (i >= tmpLayerEntity.ip && i - tmpLayerEntity.ip < tmpLayerEntity.ks.rx.k_entity_num)
+        {
+            if (tmpLayerEntity.ks.rx.k_entity[i-tmpLayerEntity.ip].s_num > 0)
+            {
+                angle_fx = tmpLayerEntity.ks.rx.k_entity[i-tmpLayerEntity.ip].s[0];
+            }
+            else
+            {
+                int tmp_i = 1;
+                while (i - tmpLayerEntity.ip - tmp_i >=0)
+                {
+                    if (tmpLayerEntity.ks.rx.k_entity[i-tmpLayerEntity.ip-tmp_i].s_num > 0)
+                    {
+                        angle_fx = tmpLayerEntity.ks.rx.k_entity[i-tmpLayerEntity.ip-tmp_i].e[0];
+                        break;
+                    }
+                    tmp_i++;
+                }
+            }
+        }
+        else
+        {
+            int tmp_i = 1;
+            while (i - tmpLayerEntity.ip - tmp_i >=0)
+            {
+                if (tmpLayerEntity.ks.rx.k_entity[i-tmpLayerEntity.ip-tmp_i].s_num > 0)
+                {
+                    angle_fx = tmpLayerEntity.ks.rx.k_entity[i-tmpLayerEntity.ip-tmp_i].e[0];
+                    break;
+                }
+                tmp_i++;
+            }
+        }
+    }
+    else
+    {
+        angle_fx = tmpLayerEntity.ks.rx.k;
+    }
+    // 旋转角度ry
+    if (tmpLayerEntity.ks.ry.k_entity_num > 0)
+    {
+        if (i >= tmpLayerEntity.ip && i - tmpLayerEntity.ip < tmpLayerEntity.ks.ry.k_entity_num)
+        {
+            if (tmpLayerEntity.ks.ry.k_entity[i-tmpLayerEntity.ip].s_num > 0)
+            {
+                angle_fy = tmpLayerEntity.ks.ry.k_entity[i-tmpLayerEntity.ip].s[0];
+            }
+            else
+            {
+                int tmp_i = 1;
+                while (i - tmpLayerEntity.ip - tmp_i >=0)
+                {
+                    if (tmpLayerEntity.ks.ry.k_entity[i-tmpLayerEntity.ip-tmp_i].s_num > 0)
+                    {
+                        angle_fy = tmpLayerEntity.ks.ry.k_entity[i-tmpLayerEntity.ip-tmp_i].e[0];
+                        break;
+                    }
+                    tmp_i++;
+                }
+            }
+        }
+        else
+        {
+            int tmp_i = 1;
+            while (i - tmpLayerEntity.ip - tmp_i >=0)
+            {
+                if (tmpLayerEntity.ks.ry.k_entity[i-tmpLayerEntity.ip-tmp_i].s_num > 0)
+                {
+                    angle_fy = tmpLayerEntity.ks.ry.k_entity[i-tmpLayerEntity.ip-tmp_i].e[0];
+                    break;
+                }
+                tmp_i++;
+            }
+        }
+    }
+    else
+    {
+        angle_fy = tmpLayerEntity.ks.ry.k;
+    }
+    // 旋转角度rz
+    if (tmpLayerEntity.ks.rz.k_entity_num > 0)
+    {
+        if (i >= tmpLayerEntity.ip && i - tmpLayerEntity.ip < tmpLayerEntity.ks.rz.k_entity_num)
+        {
+            if (tmpLayerEntity.ks.rz.k_entity[i-tmpLayerEntity.ip].s_num > 0)
+            {
+                angle_fz = tmpLayerEntity.ks.rz.k_entity[i-tmpLayerEntity.ip].s[0];
+            }
+            else
+            {
+                int tmp_i = 1;
+                while (i - tmpLayerEntity.ip - tmp_i >=0)
+                {
+                    if (tmpLayerEntity.ks.rz.k_entity[i-tmpLayerEntity.ip-tmp_i].s_num > 0)
+                    {
+                        angle_fz = tmpLayerEntity.ks.rz.k_entity[i-tmpLayerEntity.ip-tmp_i].e[0];
+                        break;
+                    }
+                    tmp_i++;
+                }
+            }
+        }
+        else
+        {
+            int tmp_i = 1;
+            while (i - tmpLayerEntity.ip - tmp_i >=0)
+            {
+                if (tmpLayerEntity.ks.rz.k_entity[i-tmpLayerEntity.ip-tmp_i].s_num > 0)
+                {
+                    angle_fz = tmpLayerEntity.ks.rz.k_entity[i-tmpLayerEntity.ip-tmp_i].e[0];
+                    break;
+                }
+                tmp_i++;
+            }
+        }
+    }
+    else
+    {
+        angle_fz = tmpLayerEntity.ks.rz.k;
+    }
+    // 缩放大小，获得值需要除以 100，得到小数
+    if (tmpLayerEntity.ks.s.k_entity_num > 0)
+    {
+        if (i >= tmpLayerEntity.ip && i - tmpLayerEntity.ip < tmpLayerEntity.ks.s.k_entity_num)
+        {
+            if (tmpLayerEntity.ks.s.k_entity[i-tmpLayerEntity.ip].s_num > 0)
+            {
+                scale_f_x = tmpLayerEntity.ks.s.k_entity[i-tmpLayerEntity.ip].s[0]/100.0;
+                scale_f_y = tmpLayerEntity.ks.s.k_entity[i-tmpLayerEntity.ip].s[1]/100.0;
+            }
+            else
+            {
+                int tmp_i = 1;
+                while (i - tmpLayerEntity.ip - tmp_i >=0)
+                {
+                    if (tmpLayerEntity.ks.s.k_entity[i-tmpLayerEntity.ip- tmp_i].s_num > 0)
+                    {
+                        scale_f_x = tmpLayerEntity.ks.s.k_entity[i-tmpLayerEntity.ip- tmp_i].e[0]/100.0;
+                        scale_f_y = tmpLayerEntity.ks.s.k_entity[i-tmpLayerEntity.ip- tmp_i].e[1]/100.0;
+                        break;
+                    }
+                    tmp_i++;
+                }
+            }
+        }
+        else
+        {
+            int tmp_i = 1;
+            while (i - tmpLayerEntity.ip - tmp_i >=0)
+            {
+                if (tmpLayerEntity.ks.s.k_entity[i-tmpLayerEntity.ip- tmp_i].s_num > 0)
+                {
+                    scale_f_x = tmpLayerEntity.ks.s.k_entity[i-tmpLayerEntity.ip- tmp_i].e[0]/100.0;
+                    scale_f_y = tmpLayerEntity.ks.s.k_entity[i-tmpLayerEntity.ip- tmp_i].e[1]/100.0;
+                    break;
+                }
+                tmp_i++;
+            }
+        }
+    }
+    else if (tmpLayerEntity.ks.s.k_float)
+    {
+        scale_f_x = tmpLayerEntity.ks.s.k_float[0]/100.0;
+        scale_f_y = tmpLayerEntity.ks.s.k_float[1]/100.0;
+    }
+    // 位移，xy轴方向
+    if (tmpLayerEntity.ks.p.k_entity_num > 0)
+    {
+        if (i >= tmpLayerEntity.ip && i - tmpLayerEntity.ip < tmpLayerEntity.ks.p.k_entity_num)
+        {
+            if (tmpLayerEntity.ks.p.k_entity[i-tmpLayerEntity.ip].s_num > 0)
+            {
+                x_f = tmpLayerEntity.ks.p.k_entity[i-tmpLayerEntity.ip].s[0]-anchor_x_f;
+                y_f = tmpLayerEntity.ks.p.k_entity[i-tmpLayerEntity.ip].s[1]-anchor_y_f;
+            }
+            else
+            {
+                int tmp_i = 1;
+                while (i - tmpLayerEntity.ip - tmp_i >=0)
+                {
+                    if (tmpLayerEntity.ks.p.k_entity[i-tmpLayerEntity.ip- tmp_i].s_num > 0)
+                    {
+                        x_f = tmpLayerEntity.ks.p.k_entity[i-tmpLayerEntity.ip- tmp_i].e[0]-anchor_x_f;
+                        y_f = tmpLayerEntity.ks.p.k_entity[i-tmpLayerEntity.ip- tmp_i].e[1]-anchor_y_f;
+                        break;
+                    }
+                    tmp_i++;
+                }
+            }
+        }
+        else
+        {
+            int tmp_i = 1;
+            while (i - tmpLayerEntity.ip - tmp_i >=0)
+            {
+                if (tmpLayerEntity.ks.p.k_entity[i-tmpLayerEntity.ip- tmp_i].s_num > 0)
+                {
+                    x_f = tmpLayerEntity.ks.p.k_entity[i-tmpLayerEntity.ip- tmp_i].e[0]-anchor_x_f;
+                    y_f = tmpLayerEntity.ks.p.k_entity[i-tmpLayerEntity.ip- tmp_i].e[1]-anchor_y_f;
+                    break;
+                }
+                tmp_i++;
+            }
+        }
+    }
+    else
+    {
+        x_f = tmpLayerEntity.ks.p.k_float[0]-anchor_x_f;
+        y_f = tmpLayerEntity.ks.p.k_float[1]-anchor_y_f;
+    }
+    
+    *angle_f_v = angle_f;
+    *angle_fx_v = angle_fx;
+    *angle_fy_v = angle_fy;
+    *angle_fz_v = angle_fz;
+    *scale_f_x_v = scale_f_x;
+    *scale_f_y_v = scale_f_y;
+    *x_f_v = x_f;
+    *y_f_v = y_f;
+    *anchor_x_f_v = anchor_x_f;
+    *anchor_y_f_v = anchor_y_f;
+    *alpha_f_v = alpha_f;
+}
+
 // 获取相应浮层的属性值，r，o，a，s，p
 void ParseAE::get_ae_params(int i, AELayerEntity tmpLayerEntity, float *angle_f_v, float *scale_f_x_v, float *scale_f_y_v, float *x_f_v, float *y_f_v, float *anchor_x_f_v, float *anchor_y_f_v, float *alpha_f_v, int *blur_radius_v)
 {
@@ -751,7 +1193,7 @@ void ParseAE::get_ae_params(int i, AELayerEntity tmpLayerEntity, float *angle_f_
         anchor_x_f = tmpLayerEntity.ks.a.k_float[0];
         anchor_y_f = tmpLayerEntity.ks.a.k_float[1];
     }
-    // 旋转角度
+    // 旋转角度r
     if (tmpLayerEntity.ks.r.k_entity_num > 0)
     {
         if (i >= tmpLayerEntity.ip && i - tmpLayerEntity.ip < tmpLayerEntity.ks.r.k_entity_num)

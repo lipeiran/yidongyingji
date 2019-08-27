@@ -15,6 +15,7 @@ class GPUAnimateAttr {
 public:
     float anchorPX = 0.5f;
     float anchorPY = 0.5f;
+    float rotateAngle = 0.0f;
     float rotateAngleX = 0.0f;
     float rotateAngleY = 0.0f;
     float rotateAngleZ = 0.0f;

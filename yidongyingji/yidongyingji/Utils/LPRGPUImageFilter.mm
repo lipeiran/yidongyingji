@@ -296,10 +296,12 @@ NSString *const kPicGPUImagePassthroughFragmentShaderString = SHADER_STRING
                 float ae_s_x = 0.0f;
                 float ae_s_y = 0.0f;
                 float ae_r = 0.0f;
+                float ae_rx = 0.0f;
+                float ae_ry = 0.0f;
+                float ae_rz = 0.0f;
                 int ae_blur = 0;
                 float ae_alpha = 0;
-                
-                parseAE.get_ae_params(fr, tmpEntity, &ae_r, &ae_s_x, &ae_s_y, &ae_p_x, &ae_p_y, &ae_a_x, &ae_a_y, &ae_alpha, &ae_blur);
+                parseAE.get_ae_params_3D(fr, tmpEntity, &ae_r, &ae_rx, &ae_ry, &ae_rz, &ae_s_x, &ae_s_y, &ae_p_x, &ae_p_y, &ae_a_x, &ae_a_y, &ae_alpha, &ae_blur);
                 ae_w *= self->_screen_ratio;
                 ae_h *= self->_screen_ratio;
                 ae_a_x *= self->_screen_ratio;
@@ -313,7 +315,15 @@ NSString *const kPicGPUImagePassthroughFragmentShaderString = SHADER_STRING
                 GPUAnimateAttr animateAttr;
                 animateAttr.anchorPX = ae_a_x_result;
                 animateAttr.anchorPY = ae_a_y_result;
-                animateAttr.rotateAngleZ = ae_r;
+                animateAttr.rotateAngleX = ae_rx;
+                animateAttr.rotateAngleY = ae_ry;
+                animateAttr.rotateAngleZ = ae_rz;
+                animateAttr.rotateAngle = ae_r;
+                if (!tmpEntity.ddd)
+                {
+                    animateAttr.rotateAngleZ = ae_r;
+                }
+
                 animateAttr.scaleX = ae_s_x;
                 animateAttr.scaleY = ae_s_y;
                 
@@ -330,7 +340,7 @@ NSString *const kPicGPUImagePassthroughFragmentShaderString = SHADER_STRING
                 glVertexAttribPointer(self->filterPositionAttribute, 3, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 5, (GLfloat *)tmpData + 0);
                 glVertexAttribPointer(self->filterTextureCoordinateAttribute, 2, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 5, (GLfloat *)tmpData + 3);
                 
-                cpp_generateAndUniform2DMatrix(self->_perspective_left, self->_perspective_right, self->_perspective_bottom, self->_perspective_top, self->_perspective_near, self->_perspective_far, animateAttr.deltaX, animateAttr.deltaY, animateAttr.deltaZ, animateAttr.rotateAngleX, animateAttr.rotateAngleY, animateAttr.rotateAngleZ, animateAttr.scaleX, animateAttr.scaleY, animateAttr.scaleZ, animateAttr.anchorPX, animateAttr.anchorPY, self->_modelViewMartix_S);
+                cpp_generateAndUniform2DMatrix(tmpEntity.ddd, self->_perspective_left, self->_perspective_right, self->_perspective_bottom, self->_perspective_top, self->_perspective_near, self->_perspective_far, animateAttr.deltaX, animateAttr.deltaY, animateAttr.deltaZ, animateAttr.rotateAngleX, animateAttr.rotateAngleY, animateAttr.rotateAngleZ, animateAttr.scaleX, animateAttr.scaleY, animateAttr.scaleZ, animateAttr.anchorPX, animateAttr.anchorPY, self->_modelViewMartix_S);
                 glDrawArrays(GL_TRIANGLES, 0, 6);
             }
         }
