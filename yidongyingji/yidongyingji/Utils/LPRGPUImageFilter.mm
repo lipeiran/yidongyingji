@@ -323,6 +323,11 @@ NSString *const kPicGPUImagePassthroughFragmentShaderString = SHADER_STRING
                 {
                     animateAttr.rotateAngleZ = ae_r;
                 }
+                
+                if (tmpEntity.asset_index == 0 && fr == 31)
+                {
+                    NSLog(@"rx,ry,rz:%f,%f,%f",ae_rx,ae_ry,ae_rz);
+                }
 
                 animateAttr.scaleX = ae_s_x;
                 animateAttr.scaleY = ae_s_y;

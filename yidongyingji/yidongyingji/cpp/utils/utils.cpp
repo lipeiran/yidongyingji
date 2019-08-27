@@ -111,9 +111,9 @@ void cpp_glRotate(float anchorX,float anchorY, float xDegree, float yDegree, flo
     KSMatrix4 _rotateMartix;
     //加载旋转矩阵
     ksMatrixLoadIdentity(&_rotateMartix);
-    ksRotate(&_rotateMartix, xDegree, 1.0, 0, 0);
+    ksRotate(&_rotateMartix, -xDegree, 1.0, 0, 0);
     ksRotate(&_rotateMartix, yDegree, 0, 1.0, 0);
-    ksRotate(&_rotateMartix, zDegree, 0, 0, 1.0);
+//    ksRotate(&_rotateMartix, zDegree, 0, 0, 1.0);
     //把变换矩阵相乘.将_modelViewMatrix矩阵与_rotationMatrix矩阵相乘，结合到模型视图
     ksMatrixMultiply(&tmp_modelViewMatrix, &_rotateMartix, &tmp_modelViewMatrix);
     
@@ -192,7 +192,6 @@ void cpp_glProjection_3D(float left, float right, float bottom, float top, float
 {
     KSMatrix4 project;
     ksMatrixLoadIdentity(&project);
-//    ksPerspective(&project, 30.0, 0.75, 5.0f, 20.0f); //透视变换，视角30°
     ksFrustum(&project, -86.7/240.0, 86.7/240.0, -115.3/240.0, 115.3/240.0, 1.0, 1000.0/240.0);
     ksMatrixMultiply(&sourceMatrix,  &project, &sourceMatrix);
 }
@@ -272,7 +271,7 @@ GLuint cpp_createImageTexture(GLubyte *byte, GLuint w, GLuint h, GLuint screenWi
 void cpp_glDraw_pre(void)
 {
     //设置背景色
-    glClearColor(0.0f, 1.0f, 0.0f, 1.0f);
+    glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
     //清除颜色缓冲
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     //开启正背面剔除
