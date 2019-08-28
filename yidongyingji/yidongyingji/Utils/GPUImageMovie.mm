@@ -167,18 +167,6 @@ NSString *const kGPUImageVertexShaderString_movie = SHADER_STRING
     if (_readerVideoTrackOutput)
     {
         success = [self readNextVideoFrameFromOutput:_readerVideoTrackOutput];
-//        if (!success)
-//        {
-//            if (reader.status == AVAssetReaderStatusCompleted)
-//            {
-//                [reader cancelReading];
-//                reader = nil;
-//                dispatch_async(dispatch_get_main_queue(), ^{
-//                    [self startProcessing];
-//                });
-//                return YES;
-//            }
-//        }
     }
     return success;
 }
@@ -187,13 +175,10 @@ NSString *const kGPUImageVertexShaderString_movie = SHADER_STRING
 {
     if ([playerItemOutput hasNewPixelBufferForItemTime:outputItemTime] || self.not_check_new)
     {
-        
         __unsafe_unretained GPUImageMovie *weakSelf = self;
         CVPixelBufferRef pixelBuffer = [playerItemOutput copyPixelBufferForItemTime:outputItemTime itemTimeForDisplay:NULL];
-        NSLog(@"----------->>> process11111111");
         if(pixelBuffer)
         {
-            NSLog(@"----------->>> process data!!!!!!");
             runSynchronouslyOnVideoProcessingQueue(^{
                 [weakSelf processMovieFrame:pixelBuffer withSampleTime:outputItemTime];
                 CFRelease(pixelBuffer);

@@ -45,21 +45,5 @@
             stopOnStyle = "0">
          </BreakpointContent>
       </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "yidongyingji/cpp/utils/utils.cpp"
-            timestampString = "588679804.6533459"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "223"
-            endingLineNumber = "223"
-            landmarkName = "cpp_generate3DMatrix(float cameraX, float cameraY, float cameraZ, float deltaX, float deltaY, float deltaZ, float rotateAngleX, float rotateAngleY, float rotateAngleZ, float scaleX, float scaleY, float scaleZ, float anchorPX,float anchorPY, KSMatrix4 &amp;sourceMatrix)"
-            landmarkType = "9">
-         </BreakpointContent>
-      </BreakpointProxy>
    </Breakpoints>
 </Bucket>
