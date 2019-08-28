@@ -35,11 +35,11 @@ typedef void(^WriteBlock)(CGFloat percent);
     LPRGPUImageFilter *imageFilter;
 }
 @property(readonly, nonatomic) CGSize sizeInPixels;
-@property(nonatomic, retain) GPUImageContext *movieWriterContext;
+@property(nonatomic, retain) GPUImageContext * _Nullable movieWriterContext;
 @property (nonatomic, copy, nullable) WriteBlock progressBlock;
 
 // Initialization and teardown
-- (id)initWithMovieURL:(NSURL *)newMovieURL size:(CGSize)newSize;
+- (id _Nullable )initWithMovieURL:(NSURL *_Nullable)newMovieURL size:(CGSize)newSize;
 
 // Managing the data FBO
 - (void)createDataFBO;

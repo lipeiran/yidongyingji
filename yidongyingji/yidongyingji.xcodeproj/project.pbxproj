@@ -39,7 +39,6 @@
 		FE611A0422E980A500DD0741 /* 2.jpg in Resources */ = {isa = PBXBuildFile; fileRef = FE6119FE22E980A500DD0741 /* 2.jpg */; };
 		FE9CF8F422FAA608006BCE2B /* GPUImageMovie.mm in Sources */ = {isa = PBXBuildFile; fileRef = FE9CF8F322FAA608006BCE2B /* GPUImageMovie.mm */; };
 		FE9CF8F722FAAFC3006BCE2B /* GPUImageColorConversion.m in Sources */ = {isa = PBXBuildFile; fileRef = FE9CF8F622FAAFC3006BCE2B /* GPUImageColorConversion.m */; };
-		FE9CF90022FBC56A006BCE2B /* GPUImageMaskFilter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FE9CF8FE22FBC56A006BCE2B /* GPUImageMaskFilter.cpp */; };
 		FE9CF91022FC41B9006BCE2B /* LPRGPUImageView.mm in Sources */ = {isa = PBXBuildFile; fileRef = FE9CF90E22FC41B8006BCE2B /* LPRGPUImageView.mm */; };
 		FE9CF91522FC442B006BCE2B /* LPRGPUImageFilter.mm in Sources */ = {isa = PBXBuildFile; fileRef = FE9CF91422FC442B006BCE2B /* LPRGPUImageFilter.mm */; };
 		FE9CF91822FC4537006BCE2B /* LPRGPUImageFrameBuffer.m in Sources */ = {isa = PBXBuildFile; fileRef = FE9CF91722FC4537006BCE2B /* LPRGPUImageFrameBuffer.m */; };
@@ -116,8 +115,6 @@
 		FE9CF8F322FAA608006BCE2B /* GPUImageMovie.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = GPUImageMovie.mm; sourceTree = "<group>"; };
 		FE9CF8F522FAAFC3006BCE2B /* GPUImageColorConversion.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GPUImageColorConversion.h; sourceTree = "<group>"; };
 		FE9CF8F622FAAFC3006BCE2B /* GPUImageColorConversion.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GPUImageColorConversion.m; sourceTree = "<group>"; };
-		FE9CF8FE22FBC56A006BCE2B /* GPUImageMaskFilter.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = GPUImageMaskFilter.cpp; sourceTree = "<group>"; };
-		FE9CF8FF22FBC56A006BCE2B /* GPUImageMaskFilter.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = GPUImageMaskFilter.hpp; sourceTree = "<group>"; };
 		FE9CF90E22FC41B8006BCE2B /* LPRGPUImageView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = LPRGPUImageView.mm; sourceTree = "<group>"; };
 		FE9CF90F22FC41B8006BCE2B /* LPRGPUImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LPRGPUImageView.h; sourceTree = "<group>"; };
 		FE9CF91322FC442B006BCE2B /* LPRGPUImageFilter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LPRGPUImageFilter.h; sourceTree = "<group>"; };
@@ -243,8 +240,6 @@
 				FE6119D322E6FD5A00DD0741 /* GLProgram.cpp */,
 				FE56E89222EEE489001BD700 /* GPUImageFilter.hpp */,
 				FE56E89122EEE489001BD700 /* GPUImageFilter.cpp */,
-				FE9CF8FF22FBC56A006BCE2B /* GPUImageMaskFilter.hpp */,
-				FE9CF8FE22FBC56A006BCE2B /* GPUImageMaskFilter.cpp */,
 				FEE27B0422EFE4D700FF5511 /* GPUImage.hpp */,
 				FEE27B0322EFE4D700FF5511 /* GPUImage.cpp */,
 				FEE27B0722EFEE4500FF5511 /* GPUAnimateAttr.hpp */,
@@ -505,7 +500,6 @@
 				FE9CF91822FC4537006BCE2B /* LPRGPUImageFrameBuffer.m in Sources */,
 				FE6119D522E6FD5A00DD0741 /* GLProgram.cpp in Sources */,
 				FE6119EF22E9582F00DD0741 /* GuideView.mm in Sources */,
-				FE9CF90022FBC56A006BCE2B /* GPUImageMaskFilter.cpp in Sources */,
 				FEE27AE922EEFB3100FF5511 /* GLESMath.c in Sources */,
 				FE9CF8F722FAAFC3006BCE2B /* GPUImageColorConversion.m in Sources */,
 				FE6119BC22E6F6F700DD0741 /* ViewController.mm in Sources */,
@@ -681,10 +675,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/yidongyingji/ffmpeg/lib",
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = com.maibo.yidongyingji;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -707,10 +698,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/yidongyingji/ffmpeg/lib",
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = com.maibo.yidongyingji;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = "1,2";
