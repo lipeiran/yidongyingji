@@ -355,7 +355,7 @@
             }
             [self audioVedioMerge:[NSURL fileURLWithPath:wayPath] vedioUrl:[NSURL fileURLWithPath:easyPath] destUrl:[NSURL fileURLWithPath:destPath]];
             
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"视频保存成功" message:nil delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"视频保存沙盒成功" message:nil delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
             [alert show];
         });
     }];
