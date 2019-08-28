@@ -139,10 +139,9 @@
 		FE9CF92122FD63BC006BCE2B /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
 		FE9CF92322FD76A4006BCE2B /* AVPlayer+SeekSmoothly.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "AVPlayer+SeekSmoothly.h"; sourceTree = "<group>"; };
 		FE9CF92422FD76A4006BCE2B /* AVPlayer+SeekSmoothly.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "AVPlayer+SeekSmoothly.m"; sourceTree = "<group>"; };
+		FEDE587C2316591000B8E123 /* Vector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Vector.h; sourceTree = "<group>"; };
 		FEE27AE722EEFB3100FF5511 /* GLESMath.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLESMath.h; sourceTree = "<group>"; };
 		FEE27AE822EEFB3100FF5511 /* GLESMath.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = GLESMath.c; sourceTree = "<group>"; };
-		FEE27AEA22EEFBBA00FF5511 /* Vector.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Vector.h; sourceTree = "<group>"; };
-		FEE27AEB22EEFC5400FF5511 /* Quaternion.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Quaternion.h; sourceTree = "<group>"; };
 		FEE27AEF22EF091900FF5511 /* Parse_AE.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Parse_AE.h; sourceTree = "<group>"; };
 		FEE27AF022EF091900FF5511 /* AE_struct.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AE_struct.h; sourceTree = "<group>"; };
 		FEE27AF122EF091900FF5511 /* Parse_AE.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Parse_AE.cpp; sourceTree = "<group>"; };
@@ -352,8 +351,7 @@
 		FEE27AFF22EF0B4F00FF5511 /* math */ = {
 			isa = PBXGroup;
 			children = (
-				FEE27AEA22EEFBBA00FF5511 /* Vector.h */,
-				FEE27AEB22EEFC5400FF5511 /* Quaternion.h */,
+				FEDE587C2316591000B8E123 /* Vector.h */,
 				FEE27AE722EEFB3100FF5511 /* GLESMath.h */,
 				FEE27AE822EEFB3100FF5511 /* GLESMath.c */,
 			);

@@ -16,6 +16,54 @@ void * memset(void *, int, size_t);
 // Matrix math utils
 //
 
+void ksLookAt(KSMatrix4 *result, KSVec3 *camera, KSVec3 *at, KSVec3 *up)
+{
+    KSVec3 forward, side;
+    forward.x = at->x - camera->x;
+    forward.y = at->y - camera->y;
+    forward.z = at->z - camera->z;
+    
+    float s1 = 1.0f / sqrt(forward.x * forward.x + forward.y * forward.y + forward.z * forward.z);
+    forward.x *= s1;
+    forward.y *= s1;
+    forward.z *= s1;
+
+    side.x = forward.y* up->z-forward.z * up->y;
+    side.y = forward.z* up->x-forward.x * up->z;
+    side.z = forward.x* up->y-forward.y * up->x;
+    
+    float s2 = 1.0f / sqrt(side.x * side.x + side.y * side.y + side.z * side.z);
+    side.x *= s2;
+    side.y *= s2;
+    side.z *= s2;
+
+    up->x = side.y* forward.z-side.z * forward.y;
+    up->y = side.z* forward.x-side.x * forward.z;
+    up->z = side.x* forward.y-side.y * forward.x;
+    
+    result->m[0][0] = side.x;
+    result->m[0][1] = up->x;
+    result->m[0][2] = -forward.x;
+    result->m[0][3] = 0;
+    
+    result->m[1][0] = side.y;
+    result->m[1][1] = up->y;
+    result->m[1][2] = -forward.y;
+    result->m[1][3] = 0;
+    
+    result->m[2][0] = side.z;
+    result->m[2][1] = up->z;
+    result->m[2][2] = -forward.z;
+    result->m[2][3] = 0;
+    
+    result->m[3][0] = 0;
+    result->m[3][1] = 0;
+    result->m[3][2] = 0;
+    result->m[3][3] = 1;
+    
+    ksTranslate(result, -camera->x, -camera->y, -camera->z);
+}
+
 void ksScale(KSMatrix4 *result, GLfloat sx, GLfloat sy, GLfloat sz)
 {
     result->m[0][0] *= sx;

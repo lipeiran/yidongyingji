@@ -323,11 +323,6 @@ NSString *const kPicGPUImagePassthroughFragmentShaderString = SHADER_STRING
                 {
                     animateAttr.rotateAngleZ = ae_r;
                 }
-                
-                if (tmpEntity.asset_index == 0 && fr == 31)
-                {
-                    NSLog(@"rx,ry,rz:%f,%f,%f",ae_rx,ae_ry,ae_rz);
-                }
 
                 animateAttr.scaleX = ae_s_x;
                 animateAttr.scaleY = ae_s_y;
@@ -337,7 +332,8 @@ NSString *const kPicGPUImagePassthroughFragmentShaderString = SHADER_STRING
                 
                 animateAttr.deltaX = end_deltaX/self->_texture_size.width*2.0;
                 animateAttr.deltaY = end_deltaY/self->_texture_size.width*2.0;
-                
+                animateAttr.deltaZ = 0;
+
                 cpp_glBindTexture(GL_TEXTURE3, self->_texture[layer_num-i-1]);
                 glUniform1i(self->filterInputTextureUniform, 3);
                 

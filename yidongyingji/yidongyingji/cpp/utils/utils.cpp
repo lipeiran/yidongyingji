@@ -188,26 +188,48 @@ void cpp_generate2DMatrix(float perspective_left, float perspective_right, float
     //------------------------------------------ Model缩放结束 ------------------------------------------//
 }
 
-void cpp_glProjection_3D(float left, float right, float bottom, float top, float nearZ, float farZ, KSMatrix4 &sourceMatrix)
+void cpp_glProjection_3D(float cameraZ, KSMatrix4 &sourceMatrix)
 {
     KSMatrix4 project;
     ksMatrixLoadIdentity(&project);
-    ksFrustum(&project, -86.7/240.0, 86.7/240.0, -115.3/240.0, 115.3/240.0, 1.0, 1000.0/240.0);
+    float near = Base_Draw_w;
+    float far = cameraZ * 2;
+    float height = (Base_Draw_w/2.0) * (Base_Draw_h/2.0) / cameraZ;
+    float ratio = Base_Draw_w/Base_Draw_h;
+    float width = height * ratio;
+    ksFrustum(&project, -width/Base_3D_ratio, width/Base_3D_ratio, -height/Base_3D_ratio, height/Base_3D_ratio, near/Base_Draw_w, far/Base_3D_ratio);
     ksMatrixMultiply(&sourceMatrix,  &project, &sourceMatrix);
+}
+
+void cpp_lookAt(float cameraX, float cameraY, float cameraZ, KSMatrix4 &sourceMatrix)
+{
+    //模型视图矩阵
+    KSMatrix4 tmp_modelViewMatrix_s;
+    //加载矩阵
+    ksMatrixLoadIdentity(&tmp_modelViewMatrix_s);
+    GLfloat ratio = Base_3D_ratio;
+    KSVec3 camera = {cameraX/ratio,cameraY/ratio,cameraZ/ratio};
+    KSVec3 at = {0,0,0};
+    KSVec3 up = {0,1,0};
+    //位移
+    ksLookAt(&tmp_modelViewMatrix_s, &camera, &at, &up);
+    ksMatrixMultiply(&sourceMatrix,  &tmp_modelViewMatrix_s, &sourceMatrix);
 }
 
 // 3D 组合矩阵
 void cpp_generate3DMatrix(float perspective_left, float perspective_right, float perspective_bottom, float perspective_top, float perspective_near, float perspective_far, float deltaX, float deltaY, float deltaZ, float rotateAngleX, float rotateAngleY, float rotateAngleZ, float scaleX, float scaleY, float scaleZ, float anchorPX,float anchorPY, KSMatrix4 &sourceMatrix)
 {
-    //------------------------------------------ Projection正交投影开始 ------------------------------------------//
-    cpp_glProjection_3D( perspective_left, perspective_right, perspective_bottom, perspective_top, perspective_near, perspective_far, sourceMatrix);
-    //------------------------------------------ View位移开始 ------------------------------------------//
+    //------------------------------------------ Projection透视投影开始 ------------------------------------------//
+    cpp_glProjection_3D( 666.6, sourceMatrix);
+    //------------------------------------------ View 开始 ------------------------------------------//
+    cpp_lookAt(0, 0, 666.6, sourceMatrix);
+    //------------------------------------------ Model translate开始 ------------------------------------------//
     cpp_glTranslate(deltaX, deltaY, deltaZ, sourceMatrix);
-    //------------------------------------------ Model旋转开始 ------------------------------------------//
+    //------------------------------------------ Model rotate开始 ------------------------------------------//
     cpp_glRotate(anchorPX, anchorPY, rotateAngleX, rotateAngleY, rotateAngleZ, sourceMatrix);
-    //------------------------------------------ Model缩放开始 ------------------------------------------//
+    //------------------------------------------ Model scale开始 ------------------------------------------//
     cpp_glScale(anchorPX, anchorPY, scaleX, scaleY, scaleZ, sourceMatrix);
-    //------------------------------------------ Model缩放结束 ------------------------------------------//
+    //------------------------------------------ Model scale结束 ------------------------------------------//
 }
 
 void cpp_generateAndUniform2DMatrix(bool is3D, float perspective_left, float perspective_right, float perspective_bottom, float perspective_top, float perspective_near, float perspective_far, float deltaX, float deltaY, float deltaZ, float rotateAngleX, float rotateAngleY, float rotateAngleZ, float scaleX, float scaleY, float scaleZ, float anchorPX,float anchorPY, GLuint modelViewProjectionMatrix_location)

@@ -12,6 +12,8 @@
 #define Base_Draw_w 480.0
 #define Base_Draw_h 640.0
 
+#define Base_3D_ratio (Base_Draw_w/2.0)
+
 #define Draw_x 0
 #define Draw_y 0
 #define Draw_w 1200

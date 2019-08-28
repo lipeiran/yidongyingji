@@ -62,7 +62,10 @@ void cpp_generate3DMatrix(float perspective_left, float perspective_right, float
 void cpp_glProjection(float left, float right, float bottom, float top, float nearZ, float farZ, KSMatrix4 &sourceMatrix);
 
 // Projection，3D效果
-void cpp_glProjection_3D(float left, float right, float bottom, float top, float nearZ, float farZ, KSMatrix4 &sourceMatrix);
+void cpp_glProjection_3D(float cameraZ, KSMatrix4 &sourceMatrix);
+
+// View, 3D效果
+void cpp_lookAt(float cameraX, float cameraY, float cameraZ, KSMatrix4 &sourceMatrix);
 
 // View，位移
 void cpp_glTranslate(float xDelta, float yDelta, float zDelta, KSMatrix4 &sourceMatrix);
