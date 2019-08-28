@@ -15,7 +15,25 @@ void * memset(void *, int, size_t);
 //
 // Matrix math utils
 //
+/* camera code
+ Matrix4 GetLookAtMatrix(Vector3 eye, Vector3 at, Vector3 up){
 
+ Vector3 forward, side;
+ forward = at - eye;
+ normalize(forward);
+ side = cross(forward, up);
+ normalize(side);
+ up = cross(side, forward);
+ 
+ Matrix4 res = Matrix4(
+ side.x, up.x, -forward.x, 0,
+ side.y, up.y, -forward.y, 0,
+ side.z, up.z, -forward.z, 0,
+ 0, 0, 0, 1);
+ translate(res, Vector3(0 - eye));
+ return res;
+ }
+ */
 void ksLookAt(KSMatrix4 *result, KSVec3 *camera, KSVec3 *at, KSVec3 *up)
 {
     KSVec3 forward, side;
