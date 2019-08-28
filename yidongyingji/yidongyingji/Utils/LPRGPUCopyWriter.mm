@@ -378,6 +378,12 @@
     parseAE.dofile(configPath, configEntity);
     _fr = configEntity.fr;
     _total_fr = configEntity.op+1;
+    if (configEntity.ddd)
+    {
+        char *configPath = (char *)[[[NSBundle mainBundle]pathForResource:@"tp_camera" ofType:@"json"] UTF8String];
+        ParseAE parseAE;
+        parseAE.dofile(configPath, camera_configEntity);
+    }
 }
 
 - (void)audioVedioMerge:(NSURL *)audioUrl vedioUrl:(NSURL *)vedioUrl destUrl:(NSURL *)destUrl
