@@ -36,7 +36,8 @@
     int _total_fr;
     BOOL _slider_bool;
     AEConfigEntity configEntity;
-    
+    AEConfigEntity camera_configEntity;
+
     LPRGPUImageFrameBuffer *myFrameBuffer;
     GPUImageMovie *_preMovie;
 }
@@ -282,7 +283,7 @@
      [self->assetWriter startWriting];
      [self->assetWriter startSessionAtSourceTime:CMTimeMake(0, _fr)];
      
-     self->imageFilter = [[LPRGPUImageFilter alloc]initSize:CGSizeMake(Draw_w, Draw_h) imageName:nil ae:self->configEntity];
+     self->imageFilter = [[LPRGPUImageFilter alloc]initSize:CGSizeMake(Draw_w, Draw_h) imageName:nil ae:self->configEntity camera:self->camera_configEntity];
      NSURL *tmpUrl = [[NSBundle mainBundle]URLForResource:@"tp_fg" withExtension:@"mp4"];
      AVAsset *tmpAsset = [AVAsset assetWithURL:tmpUrl];
      _preMovie = [[GPUImageMovie alloc]initWithAsset:tmpAsset];

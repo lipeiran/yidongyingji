@@ -30,7 +30,8 @@
     int _fr;
     BOOL _slider_bool;
     AEConfigEntity configEntity;
-    
+    AEConfigEntity camera_configEntity;
+
     LPRGPUImageFrameBuffer *myFrameBuffer;
 }
 
@@ -259,7 +260,7 @@
 
 - (void)startRecording
 {
-    self->imageFilter = [[LPRGPUImageFilter alloc]initSize:CGSizeMake(Draw_w, Draw_h) imageName:@"img_1.png" ae:self->configEntity];
+    self->imageFilter = [[LPRGPUImageFilter alloc]initSize:CGSizeMake(Draw_w, Draw_h) imageName:@"img_1.png" ae:self->configEntity camera:self->camera_configEntity];
     [self->imageFilter renderToTexture:60];
     myFrameBuffer = self->imageFilter.outputFramebuffer;
     

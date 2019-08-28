@@ -38,6 +38,8 @@ void ParseAE::doit(char *text, AEConfigEntity &configEntity)
         int op_int = tmpJson?tmpJson->valueint:0;
         tmpJson = cJSON_GetObjectItem(json, "fr");
         int fr_int = tmpJson?tmpJson->valueint:0;
+        tmpJson = cJSON_GetObjectItem(json, "ddd");
+        int ddd_int = tmpJson?tmpJson->valueint:0;
         
         // AEConfigEntity: assets 解析
         cJSON *assetArrayItem = NULL;
@@ -513,6 +515,7 @@ void ParseAE::doit(char *text, AEConfigEntity &configEntity)
         configEntity.ip = ip_int;
         configEntity.op = op_int;
         configEntity.fr = fr_int;
+        configEntity.ddd = ddd_int;
         configEntity.assets = assetsEntity;
         configEntity.layers = layersEntity;
         configEntity.assets_num = assetArraySize;

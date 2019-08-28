@@ -153,7 +153,7 @@ void GPUImageMaskFilter::draw(int fr)
         animateAttr.deltaX = end_deltaX/_viewPort_w*2.0;
         animateAttr.deltaY = end_deltaY/_viewPort_w*2.0;
         
-        cpp_generateAndUniform2DMatrix(false, _perspective_left, _perspective_right, _perspective_bottom, _perspective_top, _perspective_near, _perspective_far, animateAttr.deltaX, animateAttr.deltaY, animateAttr.deltaZ, animateAttr.rotateAngleX, animateAttr.rotateAngleY, animateAttr.rotateAngleZ, animateAttr.scaleX, animateAttr.scaleY, animateAttr.scaleZ, animateAttr.anchorPX, animateAttr.anchorPY, _modelViewMartix_S);
+        cpp_generateAndUniform2DMatrix(false, 0, 0, 0, _perspective_left, _perspective_right, _perspective_bottom, _perspective_top, _perspective_near, _perspective_far, animateAttr.deltaX, animateAttr.deltaY, animateAttr.deltaZ, animateAttr.rotateAngleX, animateAttr.rotateAngleY, animateAttr.rotateAngleZ, animateAttr.scaleX, animateAttr.scaleY, animateAttr.scaleZ, animateAttr.anchorPX, animateAttr.anchorPY, _modelViewMartix_S);
         cpp_glBindTexture(GL_TEXTURE0, _texture[_aBufferID_num-i-1]);
         glDrawArrays(GL_TRIANGLES, 0, 6);
         glBindVertexArray(0);

@@ -34,7 +34,7 @@
     CGFloat _duration;
     int32_t _timeScale;
     AEConfigEntity configEntity;
-
+    AEConfigEntity camera_configEntity;
 }
 
 @property(nonatomic, strong) NSTimer *renderTimer;
@@ -90,6 +90,14 @@
     ParseAE parseAE;
     parseAE.dofile(configPath, configEntity);
     _fr = configEntity.fr;
+    
+    if (configEntity.ddd)
+    {
+        char *configPath = (char *)[[[NSBundle mainBundle]pathForResource:@"tp_camera" ofType:@"json"] UTF8String];
+        ParseAE parseAE;
+        parseAE.dofile(configPath, camera_configEntity);
+    }
+    
     NSURL *tmpUrl = [[NSBundle mainBundle]URLForResource:@"tp_fg" withExtension:@"mp4"];
     AVAsset *tmpAsset = [AVAsset assetWithURL:tmpUrl];
     AVPlayerItem *playerItem = [[AVPlayerItem alloc]initWithAsset:tmpAsset];
@@ -166,7 +174,7 @@
             glEnableVertexAttribArray(self->displayTextureCoordinateAttribute);
             [self createDisplayFramebuffer];
             
-            self->imageFilter = [[LPRGPUImageFilter alloc]initSize:screenSize imageName:nil ae:self->configEntity];
+            self->imageFilter = [[LPRGPUImageFilter alloc]initSize:screenSize imageName:nil ae:self->configEntity camera:self->camera_configEntity];
         });
     });
 }

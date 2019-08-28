@@ -16,8 +16,8 @@
 
 #define Draw_x 0
 #define Draw_y 0
-#define Draw_w 1200
-#define Draw_h 1600
+#define Draw_w 480//1200
+#define Draw_h 640//1600
 
 #ifdef __OBJC__
 #import <UIKit/UIKit.h>

@@ -140,6 +140,7 @@ typedef struct{
     int ip;     // 起始关键帧
     int op;     // 结束关键帧
     int fr;     // 帧率
+    int ddd;
     AEAssetEntity *assets;      // 包含所有资源
     int assets_num;             // 资源数量
     AELayerEntity *layers;      // 包含所有涂层

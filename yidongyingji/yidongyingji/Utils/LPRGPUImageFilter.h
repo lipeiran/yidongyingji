@@ -42,7 +42,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (retain) LPRGPUImageFrameBuffer *outputFramebuffer;
 @property (nonatomic) CGSize texture_size;
 
-- (id)initSize:(CGSize)size imageName:(nullable NSString *)imageName ae:(AEConfigEntity &)aeConfig;
+- (id)initSize:(CGSize)size imageName:(nullable NSString *)imageName ae:(AEConfigEntity &)aeConfig camera:(AEConfigEntity &)cameraConfig;
 
 - (void)renderToTexture:(int)fr;
 

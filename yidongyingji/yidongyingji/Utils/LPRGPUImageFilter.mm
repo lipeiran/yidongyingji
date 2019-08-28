@@ -80,10 +80,15 @@ NSString *const kPicGPUImagePassthroughFragmentShaderString = SHADER_STRING
  }
  );
 
-
 @interface LPRGPUImageFilter ()
 {
     AEConfigEntity *configEntity;
+    AEConfigEntity *camera_configEntity;
+
+    float cameraX;
+    float cameraY;
+    float cameraZ;
+    
     float _aspectRatio;
     float _perspective_left;
     float _perspective_right;
@@ -167,7 +172,7 @@ NSString *const kPicGPUImagePassthroughFragmentShaderString = SHADER_STRING
     return byte;
 }
 
-- (id)initSize:(CGSize)size imageName:(nullable NSString *)imageName ae:(AEConfigEntity &)aeConfig
+- (id)initSize:(CGSize)size imageName:(nullable NSString *)imageName ae:(AEConfigEntity &)aeConfig camera:(AEConfigEntity &)cameraConfig
 {
     if (!(self = [super init]))
     {
@@ -177,8 +182,15 @@ NSString *const kPicGPUImagePassthroughFragmentShaderString = SHADER_STRING
     {
         _ae_b = YES;
         configEntity = &aeConfig;
+        camera_configEntity = &cameraConfig;
+        if (configEntity->ddd == 1)
+        {
+            AELayerEntity layer = camera_configEntity->layers[0];
+            cameraX = layer.ks.a.k_float[0]-layer.ks.p.k_float[0];
+            cameraY = layer.ks.a.k_float[1]-layer.ks.p.k_float[1];
+            cameraZ = layer.ks.a.k_float[2]-layer.ks.p.k_float[2];
+        }
     }
-    
     self.texture_size = size;
     _aspectRatio = size.height/size.width;
     _perspective_left = -1;
@@ -341,7 +353,7 @@ NSString *const kPicGPUImagePassthroughFragmentShaderString = SHADER_STRING
                 glVertexAttribPointer(self->filterPositionAttribute, 3, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 5, (GLfloat *)tmpData + 0);
                 glVertexAttribPointer(self->filterTextureCoordinateAttribute, 2, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 5, (GLfloat *)tmpData + 3);
                 
-                cpp_generateAndUniform2DMatrix(tmpEntity.ddd, self->_perspective_left, self->_perspective_right, self->_perspective_bottom, self->_perspective_top, self->_perspective_near, self->_perspective_far, animateAttr.deltaX, animateAttr.deltaY, animateAttr.deltaZ, animateAttr.rotateAngleX, animateAttr.rotateAngleY, animateAttr.rotateAngleZ, animateAttr.scaleX, animateAttr.scaleY, animateAttr.scaleZ, animateAttr.anchorPX, animateAttr.anchorPY, self->_modelViewMartix_S);
+                cpp_generateAndUniform2DMatrix(tmpEntity.ddd, self->cameraX, self->cameraY, self->cameraZ, self->_perspective_left, self->_perspective_right, self->_perspective_bottom, self->_perspective_top, self->_perspective_near, self->_perspective_far, animateAttr.deltaX, animateAttr.deltaY, animateAttr.deltaZ, animateAttr.rotateAngleX, animateAttr.rotateAngleY, animateAttr.rotateAngleZ, animateAttr.scaleX, animateAttr.scaleY, animateAttr.scaleZ, animateAttr.anchorPX, animateAttr.anchorPY, self->_modelViewMartix_S);
                 glDrawArrays(GL_TRIANGLES, 0, 6);
             }
         }

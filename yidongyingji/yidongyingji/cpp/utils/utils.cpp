@@ -217,12 +217,12 @@ void cpp_lookAt(float cameraX, float cameraY, float cameraZ, KSMatrix4 &sourceMa
 }
 
 // 3D 组合矩阵
-void cpp_generate3DMatrix(float perspective_left, float perspective_right, float perspective_bottom, float perspective_top, float perspective_near, float perspective_far, float deltaX, float deltaY, float deltaZ, float rotateAngleX, float rotateAngleY, float rotateAngleZ, float scaleX, float scaleY, float scaleZ, float anchorPX,float anchorPY, KSMatrix4 &sourceMatrix)
+void cpp_generate3DMatrix(float cameraX, float cameraY, float cameraZ, float deltaX, float deltaY, float deltaZ, float rotateAngleX, float rotateAngleY, float rotateAngleZ, float scaleX, float scaleY, float scaleZ, float anchorPX,float anchorPY, KSMatrix4 &sourceMatrix)
 {
     //------------------------------------------ Projection透视投影开始 ------------------------------------------//
-    cpp_glProjection_3D( 666.6, sourceMatrix);
+    cpp_glProjection_3D( cameraZ, sourceMatrix);
     //------------------------------------------ View 开始 ------------------------------------------//
-    cpp_lookAt(0, 0, 666.6, sourceMatrix);
+    cpp_lookAt(cameraX, cameraY, cameraZ, sourceMatrix);
     //------------------------------------------ Model translate开始 ------------------------------------------//
     cpp_glTranslate(deltaX, deltaY, deltaZ, sourceMatrix);
     //------------------------------------------ Model rotate开始 ------------------------------------------//
@@ -232,7 +232,7 @@ void cpp_generate3DMatrix(float perspective_left, float perspective_right, float
     //------------------------------------------ Model scale结束 ------------------------------------------//
 }
 
-void cpp_generateAndUniform2DMatrix(bool is3D, float perspective_left, float perspective_right, float perspective_bottom, float perspective_top, float perspective_near, float perspective_far, float deltaX, float deltaY, float deltaZ, float rotateAngleX, float rotateAngleY, float rotateAngleZ, float scaleX, float scaleY, float scaleZ, float anchorPX,float anchorPY, GLuint modelViewProjectionMatrix_location)
+void cpp_generateAndUniform2DMatrix(bool is3D, float cameraX, float cameraY, float cameraZ, float perspective_left, float perspective_right, float perspective_bottom, float perspective_top, float perspective_near, float perspective_far, float deltaX, float deltaY, float deltaZ, float rotateAngleX, float rotateAngleY, float rotateAngleZ, float scaleX, float scaleY, float scaleZ, float anchorPX,float anchorPY, GLuint modelViewProjectionMatrix_location)
 {
     //模型视图矩阵
     KSMatrix4 _modelViewMatrix;
@@ -240,10 +240,11 @@ void cpp_generateAndUniform2DMatrix(bool is3D, float perspective_left, float per
     ksMatrixLoadIdentity(&_modelViewMatrix);
     if (is3D)
     {
-        cpp_generate3DMatrix( perspective_left,  perspective_right, perspective_bottom, perspective_top,  perspective_near,  perspective_far,  deltaX,  deltaY,  deltaZ,  rotateAngleX,  rotateAngleY,  rotateAngleZ,  scaleX,  scaleY,  scaleZ,  anchorPX,  anchorPY, _modelViewMatrix);
+        cpp_generate3DMatrix( cameraX, cameraY, cameraZ,  deltaX,  deltaY,  deltaZ,  rotateAngleX,  rotateAngleY,  rotateAngleZ,  scaleX,  scaleY,  scaleZ,  anchorPX,  anchorPY, _modelViewMatrix);
     }
     else
     {
+        deltaZ = -10.0;
         cpp_generate2DMatrix( perspective_left,  perspective_right, perspective_bottom, perspective_top,  perspective_near,  perspective_far,  deltaX,  deltaY,  deltaZ,  rotateAngleX,  rotateAngleY,  rotateAngleZ,  scaleX,  scaleY,  scaleZ,  anchorPX,  anchorPY, _modelViewMatrix);
     }
     glUniformMatrix4fv(modelViewProjectionMatrix_location, 1, GL_FALSE, (GLfloat *)&_modelViewMatrix.m[0][0]);
