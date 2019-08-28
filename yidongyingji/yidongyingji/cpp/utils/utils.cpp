@@ -113,7 +113,7 @@ void cpp_glRotate(float anchorX,float anchorY, float xDegree, float yDegree, flo
     ksMatrixLoadIdentity(&_rotateMartix);
     ksRotate(&_rotateMartix, -xDegree, 1.0, 0, 0);
     ksRotate(&_rotateMartix, yDegree, 0, 1.0, 0);
-//    ksRotate(&_rotateMartix, zDegree, 0, 0, 1.0);
+    ksRotate(&_rotateMartix, zDegree, 0, 0, 1.0);
     //把变换矩阵相乘.将_modelViewMatrix矩阵与_rotationMatrix矩阵相乘，结合到模型视图
     ksMatrixMultiply(&tmp_modelViewMatrix, &_rotateMartix, &tmp_modelViewMatrix);
     
