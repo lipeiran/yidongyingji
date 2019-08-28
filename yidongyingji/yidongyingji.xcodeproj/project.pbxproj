@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		FE1E8B31230BA305009A2979 /* LPRGPUCopyWriter.mm in Sources */ = {isa = PBXBuildFile; fileRef = FE1E8B30230BA305009A2979 /* LPRGPUCopyWriter.mm */; };
-		FE1E8B36230BC4E6009A2979 /* LPRGPUImageNewMovieWriter.mm in Sources */ = {isa = PBXBuildFile; fileRef = FE1E8B35230BC4E6009A2979 /* LPRGPUImageNewMovieWriter.mm */; };
 		FE1E8B39230BDB0A009A2979 /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FE1E8B38230BDB0A009A2979 /* AddressBook.framework */; };
 		FE1E8B3B230BDB1B009A2979 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FE1E8B3A230BDB1B009A2979 /* SystemConfiguration.framework */; };
 		FE1E8B3D230BDB23009A2979 /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FE1E8B3C230BDB23009A2979 /* CoreTelephony.framework */; };
@@ -62,7 +61,6 @@
 		FEE27B0522EFE4D700FF5511 /* GPUImage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FEE27B0322EFE4D700FF5511 /* GPUImage.cpp */; };
 		FEE27B0822EFEE4500FF5511 /* GPUAnimateAttr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FEE27B0622EFEE4500FF5511 /* GPUAnimateAttr.cpp */; };
 		FEE27B1E22F1958800FF5511 /* TimeWheel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FEE27B1C22F1958800FF5511 /* TimeWheel.cpp */; };
-		FEEA477C2307A64C00B327C1 /* LPRGPUImageMovieWriter.mm in Sources */ = {isa = PBXBuildFile; fileRef = FEEA477B2307A64C00B327C1 /* LPRGPUImageMovieWriter.mm */; };
 		FEF840F622F9270100C04CA3 /* GPUImageContext.mm in Sources */ = {isa = PBXBuildFile; fileRef = FEF840F522F9270100C04CA3 /* GPUImageContext.mm */; };
 		FEF845F922F991E300C04CA3 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = FEF845F822F991E300C04CA3 /* libz.tbd */; };
 		FEF845FB22F991EA00C04CA3 /* libbz2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = FEF845FA22F991EA00C04CA3 /* libbz2.tbd */; };
@@ -76,8 +74,6 @@
 /* Begin PBXFileReference section */
 		FE1E8B2F230BA305009A2979 /* LPRGPUCopyWriter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LPRGPUCopyWriter.h; sourceTree = "<group>"; };
 		FE1E8B30230BA305009A2979 /* LPRGPUCopyWriter.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = LPRGPUCopyWriter.mm; sourceTree = "<group>"; };
-		FE1E8B34230BC4E6009A2979 /* LPRGPUImageNewMovieWriter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LPRGPUImageNewMovieWriter.h; sourceTree = "<group>"; };
-		FE1E8B35230BC4E6009A2979 /* LPRGPUImageNewMovieWriter.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = LPRGPUImageNewMovieWriter.mm; sourceTree = "<group>"; };
 		FE1E8B38230BDB0A009A2979 /* AddressBook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = System/Library/Frameworks/AddressBook.framework; sourceTree = SDKROOT; };
 		FE1E8B3A230BDB1B009A2979 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		FE1E8B3C230BDB23009A2979 /* CoreTelephony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = System/Library/Frameworks/CoreTelephony.framework; sourceTree = SDKROOT; };
@@ -159,8 +155,6 @@
 		FEE27B1D22F1958800FF5511 /* TimeWheel.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = TimeWheel.hpp; sourceTree = "<group>"; };
 		FEE27B1F22F195F100FF5511 /* time_wheel.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = time_wheel.cpp; sourceTree = "<group>"; };
 		FEEA47542306807500B327C1 /* Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Header.h; sourceTree = "<group>"; };
-		FEEA477A2307A64C00B327C1 /* LPRGPUImageMovieWriter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LPRGPUImageMovieWriter.h; sourceTree = "<group>"; };
-		FEEA477B2307A64C00B327C1 /* LPRGPUImageMovieWriter.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = LPRGPUImageMovieWriter.mm; sourceTree = "<group>"; };
 		FEF840F422F9270100C04CA3 /* GPUImageContext.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GPUImageContext.h; sourceTree = "<group>"; };
 		FEF840F522F9270100C04CA3 /* GPUImageContext.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = GPUImageContext.mm; sourceTree = "<group>"; };
 		FEF845F822F991E300C04CA3 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
@@ -293,12 +287,8 @@
 				FE9CF91422FC442B006BCE2B /* LPRGPUImageFilter.mm */,
 				FE9CF90F22FC41B8006BCE2B /* LPRGPUImageView.h */,
 				FE9CF90E22FC41B8006BCE2B /* LPRGPUImageView.mm */,
-				FEEA477A2307A64C00B327C1 /* LPRGPUImageMovieWriter.h */,
-				FEEA477B2307A64C00B327C1 /* LPRGPUImageMovieWriter.mm */,
 				FE1E8B2F230BA305009A2979 /* LPRGPUCopyWriter.h */,
 				FE1E8B30230BA305009A2979 /* LPRGPUCopyWriter.mm */,
-				FE1E8B34230BC4E6009A2979 /* LPRGPUImageNewMovieWriter.h */,
-				FE1E8B35230BC4E6009A2979 /* LPRGPUImageNewMovieWriter.mm */,
 				FEF840F422F9270100C04CA3 /* GPUImageContext.h */,
 				FEF840F522F9270100C04CA3 /* GPUImageContext.mm */,
 				FE9CF8F222FAA608006BCE2B /* GPUImageMovie.h */,
@@ -513,7 +503,6 @@
 				FEE27B0822EFEE4500FF5511 /* GPUAnimateAttr.cpp in Sources */,
 				FE9CF92522FD76A4006BCE2B /* AVPlayer+SeekSmoothly.m in Sources */,
 				FE9CF91822FC4537006BCE2B /* LPRGPUImageFrameBuffer.m in Sources */,
-				FE1E8B36230BC4E6009A2979 /* LPRGPUImageNewMovieWriter.mm in Sources */,
 				FE6119D522E6FD5A00DD0741 /* GLProgram.cpp in Sources */,
 				FE6119EF22E9582F00DD0741 /* GuideView.mm in Sources */,
 				FE9CF90022FBC56A006BCE2B /* GPUImageMaskFilter.cpp in Sources */,
@@ -526,7 +515,6 @@
 				FEE27B1E22F1958800FF5511 /* TimeWheel.cpp in Sources */,
 				FEF840F622F9270100C04CA3 /* GPUImageContext.mm in Sources */,
 				FE6119B922E6F6F700DD0741 /* AppDelegate.m in Sources */,
-				FEEA477C2307A64C00B327C1 /* LPRGPUImageMovieWriter.mm in Sources */,
 				FE9CF91022FC41B9006BCE2B /* LPRGPUImageView.mm in Sources */,
 				FEE27AF222EF091900FF5511 /* Parse_AE.cpp in Sources */,
 				FE1E8B31230BA305009A2979 /* LPRGPUCopyWriter.mm in Sources */,

@@ -9,13 +9,11 @@
 #import "ViewController.h"
 #import "GuideView.h"
 #import "LPRGPUImageView.h"
-#import "LPRGPUImageMovieWriter.h"
 #import "LPRGPUCopyWriter.h"
 
 @interface ViewController ()
 @property (nonatomic, strong) GuideView *guideView;
 @property (nonatomic, strong) LPRGPUImageView *lprGPUView;
-@property (nonatomic, strong) LPRGPUImageMovieWriter *movieWriter;
 @property (nonatomic, strong) LPRGPUCopyWriter *cpWriter;
 @property (nonatomic, strong) UISlider *progress_slider;
 @property (nonatomic, strong) UILabel *percent_label;

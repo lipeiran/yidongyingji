@@ -1,5 +1,5 @@
 //
-//  LPRGPUImageMovieWriter.h
+//  LPRGPUCopyWriter.h
 //  yidongyingji
 //
 //  Created by 李沛然 on 2019/8/17.

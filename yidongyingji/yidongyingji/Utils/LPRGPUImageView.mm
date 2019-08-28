@@ -335,9 +335,9 @@
             glBindTexture(GL_TEXTURE_2D,self->_texture_test);
             glUniform1i(self->displayInputTextureUniform, 4);
             
-//            glActiveTexture(GL_TEXTURE5);
-//            glBindTexture(GL_TEXTURE_2D,self->_texture_test2);
-//            glUniform1i(self->displayInputTextureUniform2, 5);
+            glActiveTexture(GL_TEXTURE5);
+            glBindTexture(GL_TEXTURE_2D,self->_texture_test2);
+            glUniform1i(self->displayInputTextureUniform2, 5);
             
             glVertexAttribPointer(self->displayPositionAttribute, 2, GL_FLOAT, 0, 0, imageVertices_lpr);
             glVertexAttribPointer(self->displayTextureCoordinateAttribute, 2, GL_FLOAT, 0, 0, textureCoordinates_lpr);
