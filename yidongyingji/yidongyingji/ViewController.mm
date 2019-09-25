@@ -7,12 +7,10 @@
 //
 
 #import "ViewController.h"
-#import "GuideView.h"
 #import "LPRGPUImageView.h"
 #import "LPRGPUCopyWriter.h"
 
 @interface ViewController ()
-@property (nonatomic, strong) GuideView *guideView;
 @property (nonatomic, strong) LPRGPUImageView *lprGPUView;
 @property (nonatomic, strong) LPRGPUCopyWriter *cpWriter;
 @property (nonatomic, strong) UISlider *progress_slider;
@@ -27,15 +25,12 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
-    // 预览
     [self preView];
 }
 
 - (void)preView
 {
     self.view.backgroundColor = [UIColor lightGrayColor];
-    
     _percent_label = [[UILabel alloc]initWithFrame:CGRectMake(10, 100, 200, 50)];
     _percent_label.backgroundColor = [UIColor blueColor];
     _percent_label.textColor = [UIColor redColor];

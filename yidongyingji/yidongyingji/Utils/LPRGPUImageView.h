@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import <OpenGLES/EAGLDrawable.h>
 #import <QuartzCore/QuartzCore.h>
-#import "GPUImageContext.h"
+#import "LPRGPUImageContext.h"
 #import <AVFoundation/AVFoundation.h>
 #import "GLProgram.hpp"
 #import "utils.hpp"

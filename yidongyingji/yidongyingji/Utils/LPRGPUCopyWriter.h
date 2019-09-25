@@ -10,7 +10,7 @@
 #import <AVFoundation/AVFoundation.h>
 #import <OpenGLES/EAGLDrawable.h>
 #import <QuartzCore/QuartzCore.h>
-#import "GPUImageContext.h"
+#import "LPRGPUImageContext.h"
 #import "GLProgram.hpp"
 #import "utils.hpp"
 #import "LPRGPUImageFilter.h"
@@ -27,7 +27,7 @@ typedef void(^WriteBlock)(CGFloat percent);
     AVAssetWriterInput *assetWriterVideoInput;
     AVAssetWriterInputPixelBufferAdaptor *assetWriterPixelBufferInput;
     
-    GPUImageContext *_movieWriterContext;
+    LPRGPUImageContext *_movieWriterContext;
     CVPixelBufferRef renderTarget;
     CVOpenGLESTextureRef renderTexture;
     CGSize videoSize;
@@ -35,7 +35,7 @@ typedef void(^WriteBlock)(CGFloat percent);
     LPRGPUImageFilter *imageFilter;
 }
 @property(readonly, nonatomic) CGSize sizeInPixels;
-@property(nonatomic, retain) GPUImageContext * _Nullable movieWriterContext;
+@property(nonatomic, retain) LPRGPUImageContext * _Nullable movieWriterContext;
 @property (nonatomic, copy, nullable) WriteBlock progressBlock;
 
 // Initialization and teardown

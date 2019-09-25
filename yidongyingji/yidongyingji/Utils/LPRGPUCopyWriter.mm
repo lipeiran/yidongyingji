@@ -8,7 +8,7 @@
 
 #import "LPRGPUCopyWriter.h"
 #import <AssetsLibrary/ALAssetsLibrary.h>
-#import "GPUImageMovie.h"
+#import "LPRGPUImageMovie.h"
 
 
 
@@ -39,7 +39,7 @@
     AEConfigEntity camera_configEntity;
 
     LPRGPUImageFrameBuffer *myFrameBuffer;
-    GPUImageMovie *_preMovie;
+    LPRGPUImageMovie *_preMovie;
 }
 
 @end
@@ -63,13 +63,13 @@
     movieURL = newMovieURL;
     fileType = newFileType;
     
-    _movieWriterContext = [[GPUImageContext alloc] init];
-    [_movieWriterContext useSharegroup:[[[GPUImageContext sharedImageProcessingContext] context] sharegroup]];
+    _movieWriterContext = [[LPRGPUImageContext alloc] init];
+    [_movieWriterContext useSharegroup:[[[LPRGPUImageContext sharedImageProcessingContext] context] sharegroup]];
     
     runSynchronouslyOnContextQueue(_movieWriterContext, ^{
         [self->_movieWriterContext useAsCurrentContext];
         
-        if ([GPUImageContext supportsFastTextureUpload])
+        if ([LPRGPUImageContext supportsFastTextureUpload])
         {
             GLProgram glProgram1;
             //编译program
@@ -138,7 +138,7 @@
     glGenFramebuffers(1, &movieFramebuffer);
     glBindFramebuffer(GL_FRAMEBUFFER, movieFramebuffer);
     
-    if ([GPUImageContext supportsFastTextureUpload])
+    if ([LPRGPUImageContext supportsFastTextureUpload])
     {
         CVPixelBufferPoolCreatePixelBuffer(NULL, [assetWriterPixelBufferInput pixelBufferPool], &renderTarget);
         
@@ -197,7 +197,7 @@
             self->movieRenderbuffer = 0;
         }
         
-        if ([GPUImageContext supportsFastTextureUpload])
+        if ([LPRGPUImageContext supportsFastTextureUpload])
         {
             if (self->renderTexture)
             {
@@ -286,7 +286,7 @@
      self->imageFilter = [[LPRGPUImageFilter alloc]initSize:CGSizeMake(Draw_w, Draw_h) imageName:nil ae:self->configEntity camera:self->camera_configEntity];
      NSURL *tmpUrl = [[NSBundle mainBundle]URLForResource:@"tp_fg" withExtension:@"mp4"];
      AVAsset *tmpAsset = [AVAsset assetWithURL:tmpUrl];
-     _preMovie = [[GPUImageMovie alloc]initWithAsset:tmpAsset];
+     _preMovie = [[LPRGPUImageMovie alloc]initWithAsset:tmpAsset];
      [_preMovie startProcessing];
      
      runAsynchronouslyOnContextQueue(_movieWriterContext, ^{

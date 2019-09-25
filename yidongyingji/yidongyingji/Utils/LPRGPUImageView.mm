@@ -7,7 +7,7 @@
 //
 
 #import "LPRGPUImageView.h"
-#import "GPUImageMovie.h"
+#import "LPRGPUImageMovie.h"
 
 @interface LPRGPUImageView ()
 {
@@ -39,7 +39,7 @@
 
 @property(nonatomic, strong) NSTimer *renderTimer;
 @property (nonatomic, strong) AVPlayer *player;
-@property (nonatomic, strong) GPUImageMovie *preMovie;
+@property (nonatomic, strong) LPRGPUImageMovie *preMovie;
 
 @property (nonatomic, strong) AVAudioPlayer *audioPlayer;
 @property (nonatomic, assign) BOOL audioPlaying;
@@ -105,7 +105,7 @@
     _timeScale = tmpAsset.duration.timescale;
     _duration = tmpAsset.duration.value/tmpAsset.duration.timescale;
     
-    _preMovie = [[GPUImageMovie alloc]initWithPlayerItem:playerItem];
+    _preMovie = [[LPRGPUImageMovie alloc]initWithPlayerItem:playerItem];
     self.player.rate = 1.0;
     [_preMovie startProcessing];
     [self.player play];
@@ -156,7 +156,7 @@
     runAsynchronouslyOnVideoProcessingQueue(^{
         runSynchronouslyOnVideoProcessingQueue(^{
 
-            [GPUImageContext useImageProcessingContext];
+            [LPRGPUImageContext useImageProcessingContext];
             GLProgram glProgram1;
             //编译program
             char *tmpV = (char *)[kSamplingVertexShaderC_lpr UTF8String];
@@ -168,7 +168,7 @@
             self->displayTextureCoordinateAttribute = glGetAttribLocation(self->_program, "inputTextureCoordinate");
             self->displayInputTextureUniform = glGetUniformLocation(self->_program, "inputImageTexture");
             self->displayInputTextureUniform2 = glGetUniformLocation(self->_program, "inputImageTexture2");
-            [GPUImageContext useImageProcessingContext];
+            [LPRGPUImageContext useImageProcessingContext];
             glUseProgram(self->_program);
             glEnableVertexAttribArray(self->displayPositionAttribute);
             glEnableVertexAttribArray(self->displayTextureCoordinateAttribute);
@@ -254,7 +254,7 @@
 
 - (void)createDisplayFramebuffer;
 {
-    [GPUImageContext useImageProcessingContext];
+    [LPRGPUImageContext useImageProcessingContext];
     
     glGenFramebuffers(1, &displayFramebuffer);
     glBindFramebuffer(GL_FRAMEBUFFER, displayFramebuffer);
@@ -262,7 +262,7 @@
     glGenRenderbuffers(1, &displayRenderbuffer);
     glBindRenderbuffer(GL_RENDERBUFFER, displayRenderbuffer);
     
-    [[[GPUImageContext sharedImageProcessingContext] context] renderbufferStorage:GL_RENDERBUFFER fromDrawable:(CAEAGLLayer*)self.layer];
+    [[[LPRGPUImageContext sharedImageProcessingContext] context] renderbufferStorage:GL_RENDERBUFFER fromDrawable:(CAEAGLLayer*)self.layer];
     
     GLint backingWidth, backingHeight;
     
@@ -287,7 +287,7 @@
 
 - (void)destroyDisplayFramebuffer;
 {
-    [GPUImageContext useImageProcessingContext];
+    [LPRGPUImageContext useImageProcessingContext];
     
     if (displayFramebuffer)
     {
@@ -315,7 +315,7 @@
 - (void)presentFramebuffer;
 {
     glBindRenderbuffer(GL_RENDERBUFFER, displayRenderbuffer);
-    [[[GPUImageContext sharedImageProcessingContext] context] presentRenderbuffer:GL_RENDERBUFFER];
+    [[[LPRGPUImageContext sharedImageProcessingContext] context] presentRenderbuffer:GL_RENDERBUFFER];
 }
 
 - (void)draw
@@ -323,7 +323,7 @@
     runAsynchronouslyOnVideoProcessingQueue(^{
         runSynchronouslyOnVideoProcessingQueue(^{
             
-            [GPUImageContext useImageProcessingContext];
+            [LPRGPUImageContext useImageProcessingContext];
             glUseProgram(self->_program);
             [self setDisplayFramebuffer];
 

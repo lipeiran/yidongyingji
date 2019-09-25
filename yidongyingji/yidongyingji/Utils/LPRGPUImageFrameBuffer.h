@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "GPUImageContext.h"
+#import "LPRGPUImageContext.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

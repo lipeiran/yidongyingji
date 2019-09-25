@@ -201,7 +201,7 @@ NSString *const kPicGPUImagePassthroughFragmentShaderString = SHADER_STRING
     _perspective_far = 100.0f;
     _screen_ratio = Draw_w/Base_Draw_w;
     runSynchronouslyOnVideoProcessingQueue(^{
-        [GPUImageContext useImageProcessingContext];
+        [LPRGPUImageContext useImageProcessingContext];
         GLProgram glProgram1;
         
         char *tmpV = NULL;
@@ -238,7 +238,7 @@ NSString *const kPicGPUImagePassthroughFragmentShaderString = SHADER_STRING
             self->filterInputTextureUniform = glGetUniformLocation(self->program, "inputImageTexture");
         }
 
-        [GPUImageContext useImageProcessingContext];
+        [LPRGPUImageContext useImageProcessingContext];
         glUseProgram(self->program);
         
         glEnableVertexAttribArray(self->filterPositionAttribute);
@@ -281,7 +281,7 @@ NSString *const kPicGPUImagePassthroughFragmentShaderString = SHADER_STRING
 - (void)renderToTexture:(int)fr
 {
     runSynchronouslyOnVideoProcessingQueue(^{
-        [GPUImageContext useImageProcessingContext];
+        [LPRGPUImageContext useImageProcessingContext];
         glUseProgram(self->program);
 
         [self.outputFramebuffer activateFramebuffer];

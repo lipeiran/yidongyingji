@@ -50,16 +50,16 @@
 - (void)generateFramebuffer;
 {
     runSynchronouslyOnVideoProcessingQueue(^{
-        [GPUImageContext useImageProcessingContext];
+        [LPRGPUImageContext useImageProcessingContext];
         
         glGenFramebuffers(1, &self->framebuffer);
         glBindFramebuffer(GL_FRAMEBUFFER, self->framebuffer);
         
         // By default, all framebuffers on iOS 5.0+ devices are backed by texture caches, using one shared cache
-        if ([GPUImageContext supportsFastTextureUpload])
+        if ([LPRGPUImageContext supportsFastTextureUpload])
         {
 #if TARGET_IPHONE_SIMULATOR || TARGET_OS_IPHONE
-            CVOpenGLESTextureCacheRef coreVideoTextureCache = [[GPUImageContext sharedImageProcessingContext] coreVideoTextureCache];
+            CVOpenGLESTextureCacheRef coreVideoTextureCache = [[LPRGPUImageContext sharedImageProcessingContext] coreVideoTextureCache];
             // Code originally sourced from http://allmybrain.com/2011/12/08/rendering-to-a-texture-with-ios-5-texture-cache-api/
             
             CFDictionaryRef empty; // empty value for attr value.
@@ -110,7 +110,7 @@
 - (void)destroyFramebuffer;
 {
     runSynchronouslyOnVideoProcessingQueue(^{
-        [GPUImageContext useImageProcessingContext];
+        [LPRGPUImageContext useImageProcessingContext];
         if (self->framebuffer)
         {
             glDeleteFramebuffers(1, &self->framebuffer);

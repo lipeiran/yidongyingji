@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 #import "LPRGPUImageFrameBuffer.h"
-#include "GPUImageContext.h"
+#include "LPRGPUImageContext.h"
 #include "GLProgram.hpp"
 #import "GPUImage.hpp"
 #import "GPUAnimateAttr.hpp"
