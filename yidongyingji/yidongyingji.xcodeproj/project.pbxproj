@@ -20,8 +20,6 @@
 		FE6119C422E6F6F900DD0741 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FE6119C222E6F6F900DD0741 /* LaunchScreen.storyboard */; };
 		FE6119C722E6F6F900DD0741 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = FE6119C622E6F6F900DD0741 /* main.m */; };
 		FE6119D522E6FD5A00DD0741 /* GLProgram.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FE6119D322E6FD5A00DD0741 /* GLProgram.cpp */; };
-		FE6119F122E9588B00DD0741 /* guide.vsh in Resources */ = {isa = PBXBuildFile; fileRef = FE6119F022E9588B00DD0741 /* guide.vsh */; };
-		FE6119F322E9589800DD0741 /* guide.fsh in Resources */ = {isa = PBXBuildFile; fileRef = FE6119F222E9589800DD0741 /* guide.fsh */; };
 		FE7505C3233B1AE40076694A /* LPRGPUImageMovieWriter.mm in Sources */ = {isa = PBXBuildFile; fileRef = FE7505C2233B1AE40076694A /* LPRGPUImageMovieWriter.mm */; };
 		FE7505C6233B1B1A0076694A /* LPRGPUImageView.mm in Sources */ = {isa = PBXBuildFile; fileRef = FE7505C5233B1B1A0076694A /* LPRGPUImageView.mm */; };
 		FE7505C9233B1B220076694A /* LPRGPUImageFilter.mm in Sources */ = {isa = PBXBuildFile; fileRef = FE7505C7233B1B220076694A /* LPRGPUImageFilter.mm */; };
@@ -70,8 +68,6 @@
 		FE6119D322E6FD5A00DD0741 /* GLProgram.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = GLProgram.cpp; sourceTree = "<group>"; };
 		FE6119D422E6FD5A00DD0741 /* GLProgram.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = GLProgram.hpp; sourceTree = "<group>"; };
 		FE6119D622E6FD8900DD0741 /* AEConfig.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AEConfig.h; sourceTree = "<group>"; };
-		FE6119F022E9588B00DD0741 /* guide.vsh */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = guide.vsh; sourceTree = "<group>"; };
-		FE6119F222E9589800DD0741 /* guide.fsh */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = guide.fsh; sourceTree = "<group>"; };
 		FE7505C0233B1AC30076694A /* Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Header.h; sourceTree = "<group>"; };
 		FE7505C1233B1AE40076694A /* LPRGPUImageMovieWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LPRGPUImageMovieWriter.h; sourceTree = "<group>"; };
 		FE7505C2233B1AE40076694A /* LPRGPUImageMovieWriter.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = LPRGPUImageMovieWriter.mm; sourceTree = "<group>"; };
@@ -166,7 +162,6 @@
 				FE7505F1233B5F8B0076694A /* 2 */,
 				FE7505F0233B5F8B0076694A /* 3 */,
 				FE7505F2233B5F8B0076694A /* 4 */,
-				FE6119D722E718FD00DD0741 /* glsl */,
 				FE6119CD22E6F81300DD0741 /* cpp */,
 				FE7505BB233B19B60076694A /* Edit */,
 				FE7505BC233B19B60076694A /* Export */,
@@ -200,15 +195,6 @@
 				FEE27B0622EFEE4500FF5511 /* LPRGPUAnimateAttr.cpp */,
 			);
 			path = cpp;
-			sourceTree = "<group>";
-		};
-		FE6119D722E718FD00DD0741 /* glsl */ = {
-			isa = PBXGroup;
-			children = (
-				FE6119F022E9588B00DD0741 /* guide.vsh */,
-				FE6119F222E9589800DD0741 /* guide.fsh */,
-			);
-			path = glsl;
 			sourceTree = "<group>";
 		};
 		FE7505BA233B19B60076694A /* Filter */ = {
@@ -369,10 +355,8 @@
 				FE7505F7233B5F8B0076694A /* 1 in Resources */,
 				FE7505F4233B5F8B0076694A /* 3 in Resources */,
 				FE6119C422E6F6F900DD0741 /* LaunchScreen.storyboard in Resources */,
-				FE6119F122E9588B00DD0741 /* guide.vsh in Resources */,
 				FE6119C122E6F6F900DD0741 /* Assets.xcassets in Resources */,
 				FE7505F5233B5F8B0076694A /* 2 in Resources */,
-				FE6119F322E9589800DD0741 /* guide.fsh in Resources */,
 				FE6119BF22E6F6F700DD0741 /* Main.storyboard in Resources */,
 				FE7505F6233B5F8B0076694A /* 4 in Resources */,
 			);
