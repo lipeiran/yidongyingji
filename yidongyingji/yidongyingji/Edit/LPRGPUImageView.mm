@@ -62,7 +62,6 @@
     }
     self.resName = fileName;
     [self commonInit];
-    [self setTimer];
     return self;
 }
 
@@ -179,8 +178,6 @@
     eaglLayer.opaque = YES;
     eaglLayer.drawableProperties = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:NO], kEAGLDrawablePropertyRetainedBacking, kEAGLColorFormatRGBA8, kEAGLDrawablePropertyColorFormat, nil];
 
-    [self setMaskMovieTexture];
-
     runAsynchronouslyOnVideoProcessingQueue(^{
         runSynchronouslyOnVideoProcessingQueue(^{
             [LPRGPUImageContext useImageProcessingContext];
@@ -207,6 +204,7 @@
 
 - (void)setDataAndRefresh
 {
+    [self stopTimer];
     float scale = [UIScreen mainScreen].scale;
     CGSize screenSize = CGSizeMake(self.frame.size.width * scale, self.frame.size.height * scale);
 
@@ -216,6 +214,7 @@
             self->imageFilter = [[LPRGPUImageFilter alloc]initSize:screenSize imageName:nil ae:self->configEntity camera:self->camera_configEntity withFileName:self.resName];
         });
     });
+    [self setTimer];
 }
 
 - (void)layoutSubviews
@@ -391,6 +390,12 @@
 - (void)resetByResName:(NSString *)name
 {
     self.resName = name;
+    [_audioPlayer stop];
+    _audioPlayer = nil;
+    self.audioPlaying = false;
+    [_player.currentItem cancelPendingSeeks];
+    [_player.currentItem.asset cancelLoading];
+    _player = nil;
     [self setDataAndRefresh];
 }
 

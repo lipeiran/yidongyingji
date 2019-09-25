@@ -324,7 +324,7 @@
         dispatch_async(dispatch_get_main_queue(), ^{
             NSString *resPath = [ResourceBasePath stringByAppendingPathComponent:self.resName];
             NSString *wayPath = [resPath stringByAppendingPathComponent:@"music.mp3"];
-            NSString *easyPath = [NSHomeDirectory() stringByAppendingPathComponent:@"Documents/Movie10.mp4"];
+            NSString *easyPath = [NSHomeDirectory() stringByAppendingPathComponent:[NSString stringWithFormat:@"Documents/Movie%@.mp4",self.resName]];
             NSString *destPath = [NSHomeDirectory() stringByAppendingPathComponent:@"Documents/Movie_result.mp4"];
             if ([[NSFileManager defaultManager] fileExistsAtPath:destPath])
             {
