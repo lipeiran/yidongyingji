@@ -67,6 +67,11 @@
 
 - (void)stopTimer;
 {
+    if (self.player)
+    {
+        [self.player pause];
+    }
+    
     if (self->_renderTimer)
     {
         [self->_renderTimer invalidate];
@@ -77,6 +82,10 @@
 - (void)setTimer
 {
     self->_renderTimer = [NSTimer scheduledTimerWithTimeInterval:1.0/_fr target:self selector:@selector(startQueue) userInfo:nil repeats:YES];
+    if (self.player && self.player.rate == 0)
+    {
+        [self.player play];
+    }
 }
 
 - (void)setMaskMovieTexture
@@ -181,11 +190,16 @@
     runAsynchronouslyOnVideoProcessingQueue(^{
         runSynchronouslyOnVideoProcessingQueue(^{
             [LPRGPUImageContext useImageProcessingContext];
-            GLProgram glProgram1;
-            //编译program
-            char *tmpV = (char *)[kSamplingVertexShaderC_lpr UTF8String];
-            char *tmpF = (char *)[kSamplingFragmentShaderC_lpr UTF8String];
-            self->_program = cpp_compileProgramWithContent(glProgram1, tmpV, tmpF);
+            
+            if ([LPRGPUImageContext supportsFastTextureUpload])
+            {
+                GLProgram glProgram1;
+                //编译program
+                char *tmpV = (char *)[kGPUImageVertexShaderString UTF8String];
+                char *tmpF = (char *)[kSamplingFragmentShaderC_lpr UTF8String];
+                self->_program = cpp_compileProgramWithContent(glProgram1, tmpV, tmpF);
+            }
+            
             //从program中获取position 顶点属性
             self->displayPositionAttribute = glGetAttribLocation(self->_program, "position");
             //从program中获取textCoordinate 纹理属性
@@ -211,7 +225,7 @@
     [self setMaskMovieTexture];
     runAsynchronouslyOnVideoProcessingQueue(^{
         runSynchronouslyOnVideoProcessingQueue(^{
-            self->imageFilter = [[LPRGPUImageFilter alloc]initSize:screenSize imageName:nil ae:self->configEntity camera:self->camera_configEntity withFileName:self.resName];
+            self->imageFilter = [[LPRGPUImageFilter alloc]initSize:screenSize ae:self->configEntity camera:self->camera_configEntity withFileName:self.resName];
         });
     });
     [self setTimer];

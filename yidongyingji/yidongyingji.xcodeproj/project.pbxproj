@@ -101,7 +101,6 @@
 		FE7505E2233B1F630076694A /* Parse_AE.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Parse_AE.cpp; sourceTree = "<group>"; };
 		FE7505E8233B208E0076694A /* AnimationMatrix.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = AnimationMatrix.cpp; sourceTree = "<group>"; };
 		FE7505E9233B208E0076694A /* AnimationMatrix.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = AnimationMatrix.hpp; sourceTree = "<group>"; };
-		FE7505EB233B50B50076694A /* LPR_config.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LPR_config.h; sourceTree = "<group>"; };
 		FE7505F0233B5F8B0076694A /* 3 */ = {isa = PBXFileReference; lastKnownFileType = folder; path = 3; sourceTree = "<group>"; };
 		FE7505F1233B5F8B0076694A /* 2 */ = {isa = PBXFileReference; lastKnownFileType = folder; path = 2; sourceTree = "<group>"; };
 		FE7505F2233B5F8B0076694A /* 4 */ = {isa = PBXFileReference; lastKnownFileType = folder; path = 4; sourceTree = "<group>"; };
@@ -265,7 +264,6 @@
 			isa = PBXGroup;
 			children = (
 				FE7505C0233B1AC30076694A /* Header.h */,
-				FE7505EB233B50B50076694A /* LPR_config.h */,
 			);
 			path = Utils;
 			sourceTree = "<group>";

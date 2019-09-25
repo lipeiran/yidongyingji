@@ -32,14 +32,6 @@
 
 - (void)preView
 {
-    self.view.backgroundColor = [UIColor lightGrayColor];
-    _percent_label = [[UILabel alloc]initWithFrame:CGRectMake(10, 100, 200, 50)];
-    _percent_label.backgroundColor = [UIColor blueColor];
-    _percent_label.textColor = [UIColor redColor];
-    _percent_label.font = [UIFont systemFontOfSize:30];
-    _percent_label.textAlignment = NSTextAlignmentCenter;
-    [self.view addSubview:_percent_label];
-    
     _lprGPUView = [[LPRGPUImageView alloc]initWithFrame:CGRectMake(Draw_x/[UIScreen mainScreen].scale, Draw_y/[UIScreen mainScreen].scale, Draw_w/[UIScreen mainScreen].scale, Draw_h/[UIScreen mainScreen].scale) withName:self.resName];
     [self.view addSubview:self.lprGPUView];
     
@@ -61,6 +53,16 @@
     [changeBtn setTitle:@"切换" forState:UIControlStateNormal];
     [changeBtn addTarget:self action:@selector(changeResource) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:changeBtn];
+    
+    self.view.backgroundColor = [UIColor lightGrayColor];
+    _percent_label = [[UILabel alloc]initWithFrame:CGRectMake(40, 100, 100, 100)];
+    _percent_label.backgroundColor = [UIColor orangeColor];
+    _percent_label.textColor = [UIColor redColor];
+    _percent_label.font = [UIFont systemFontOfSize:30];
+    _percent_label.textAlignment = NSTextAlignmentCenter;
+    _percent_label.hidden = YES;
+    [self.view addSubview:_percent_label];
+    
 }
 
 - (void)changeResource
@@ -76,19 +78,25 @@
 - (void)generateMP4
 {
     [self.lprGPUView stopTimer];
-    [self.lprGPUView removeFromSuperview];
-    self.lprGPUView = nil;
+//    [self.lprGPUView removeFromSuperview];
+//    self.lprGPUView = nil;
     
     self.view.backgroundColor = [UIColor lightGrayColor];
     
     NSString *pathToMovie = [NSHomeDirectory() stringByAppendingPathComponent:[NSString stringWithFormat:@"Documents/Movie%@.mp4",self.resName]];
     unlink(pathToMovie.UTF8String);
-
     self.cpWriter = [[LPRGPUImageMovieWriter alloc]initWithMovieURL:[NSURL fileURLWithPath:pathToMovie] withFileName:self.resName size:CGSizeMake(Draw_w, Draw_h)];
     __block ViewController *tmpWeakSelf = self;
     self.cpWriter.progressBlock = ^(CGFloat percent){
         dispatch_async(dispatch_get_main_queue(), ^{
+            tmpWeakSelf.percent_label.hidden = NO;
             tmpWeakSelf.percent_label.text = [NSString stringWithFormat:@"%.2f",percent];
+            if (percent >= 1.0)
+            {
+                tmpWeakSelf.percent_label.hidden = YES;
+                [tmpWeakSelf.lprGPUView setTimer];
+            }
+            
         });
     };
     [self.cpWriter startRecording];

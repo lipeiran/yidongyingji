@@ -15,11 +15,6 @@
 #import "LPRGPUAnimateAttr.hpp"
 #import "Parse_AE.h"
 #import "Header.h"
-#import "LPR_config.h"
-
-#define STRINGIZE(x) #x
-#define STRINGIZE2(x) STRINGIZE(x)
-#define SHADER_STRING(text) @ STRINGIZE2(text)
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -35,8 +30,6 @@ NS_ASSUME_NONNULL_BEGIN
     GLuint _texture_num;
     LPRGPUImage *_imageAsset[512];
     GLuint _imageAsset_num;
-    
-    BOOL _ae_b;
 }
 
 @property (readonly) GLuint texture_test;
@@ -44,7 +37,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic) CGSize texture_size;
 @property (nonatomic, copy) NSString *resName;
 
-- (id)initSize:(CGSize)size imageName:(nullable NSString *)imageName ae:(AEConfigEntity &)aeConfig camera:(AEConfigEntity &)cameraConfig withFileName:(NSString *)fileName;
+- (id)initSize:(CGSize)size ae:(AEConfigEntity &)aeConfig camera:(AEConfigEntity &)cameraConfig withFileName:(NSString *)fileName;
 
 - (void)renderToTexture:(int)fr;
 

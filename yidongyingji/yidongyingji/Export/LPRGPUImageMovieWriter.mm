@@ -73,7 +73,7 @@
         {
             GLProgram glProgram1;
             //编译program
-            char *tmpV = (char *)[kSamplingVertexShaderC_lpr UTF8String];
+            char *tmpV = (char *)[kGPUImageVertexShaderString UTF8String];
             char *tmpF = (char *)[kSamplingFragmentShaderC_file_lpr UTF8String];
             self->_program = cpp_compileProgramWithContent(glProgram1, tmpV, tmpF);
         }
@@ -220,20 +220,6 @@
     glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glEnable(GL_DEPTH_TEST);
-
-    static const GLfloat squareVertices[] = {
-        -1.0f, -1.0f,
-        1.0f, -1.0f,
-        -1.0f,  1.0f,
-        1.0f,  1.0f,
-    };
-    
-    static const GLfloat textureCoordinates[] = {
-        0.0f, 0.0f,
-        1.0f, 0.0f,
-        0.0f, 1.0f,
-        1.0f, 1.0f,
-    };
     
     glActiveTexture(GL_TEXTURE4);
     glBindTexture(GL_TEXTURE_2D, _texture_test);
@@ -243,8 +229,8 @@
     glBindTexture(GL_TEXTURE_2D, _texture_test2);
     glUniform1i(movieInputTextureUniform2, 5);
     
-    glVertexAttribPointer(moviePositionAttribute, 2, GL_FLOAT, 0, 0, squareVertices);
-    glVertexAttribPointer(movieTextureCoordinateAttribute, 2, GL_FLOAT, 0, 0, textureCoordinates);
+    glVertexAttribPointer(moviePositionAttribute, 2, GL_FLOAT, 0, 0, imageVertices_lpr);
+    glVertexAttribPointer(movieTextureCoordinateAttribute, 2, GL_FLOAT, 0, 0, textureCoordinates_lpr);
     
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
     
@@ -260,7 +246,7 @@
      [self->assetWriter startWriting];
      [self->assetWriter startSessionAtSourceTime:CMTimeMake(0, _fr)];
      
-     self->imageFilter = [[LPRGPUImageFilter alloc]initSize:CGSizeMake(Draw_w, Draw_h) imageName:nil ae:self->configEntity camera:self->camera_configEntity withFileName:self.resName];
+     self->imageFilter = [[LPRGPUImageFilter alloc]initSize:CGSizeMake(Draw_w, Draw_h) ae:self->configEntity camera:self->camera_configEntity withFileName:self.resName];
      NSURL *tmpUrl = [NSURL fileURLWithPath:tp_fg_Path];
      AVAsset *tmpAsset = [AVAsset assetWithURL:tmpUrl];
      _preMovie = [[LPRGPUImageMovie alloc]initWithAsset:tmpAsset];
@@ -271,7 +257,7 @@
          {
              if (self.progressBlock)
              {
-                 self.progressBlock(i*1.0/self->_total_fr);
+                 self.progressBlock((i*1.0+1)/self->_total_fr);
              }
              [self->imageFilter renderToTexture:i];
              if (i > 0)

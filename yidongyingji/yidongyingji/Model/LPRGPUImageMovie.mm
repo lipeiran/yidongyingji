@@ -9,19 +9,6 @@
 #import "LPRGPUImageMovie.h"
 #import "LPRGPUImageColorConversion.h"
 
-NSString *const kGPUImageVertexShaderString_movie = SHADER_STRING
-(
- attribute vec4 position;
- attribute vec4 inputTextureCoordinate;
- varying vec2 textureCoordinate;
- void main()
- {
-     gl_Position = position;
-     textureCoordinate = inputTextureCoordinate.xy;
- }
- );
-
-
 @interface LPRGPUImageMovie ()<AVPlayerItemOutputPullDelegate>
 {
     const GLfloat *_preferredConversion;
@@ -80,7 +67,7 @@ NSString *const kGPUImageVertexShaderString_movie = SHADER_STRING
         GLProgram glProgram;
         self->_preferredConversion = kColorConversion709;
         self->isFullYUVRange       = YES;
-        char *tmpV = (char *)[kGPUImageVertexShaderString_movie UTF8String];
+        char *tmpV = (char *)[kGPUImageVertexShaderString UTF8String];
         char *tmpF = (char *)[kGPUImageYUVFullRangeConversionForLAFragmentShaderString UTF8String];
  
         self->yuvConversionProgram = cpp_compileProgramWithContent(glProgram, tmpV, tmpF);
@@ -306,20 +293,6 @@ NSString *const kGPUImageVertexShaderString_movie = SHADER_STRING
     glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glEnable(GL_DEPTH_TEST);
-
-    static const GLfloat squareVertices[] = {
-        -1.0f, -1.0f,
-        1.0f, -1.0f,
-        -1.0f,  1.0f,
-        1.0f,  1.0f,
-    };
-    
-    static const GLfloat textureCoordinates[] = {
-        0.0f, 0.0f,
-        1.0f, 0.0f,
-        0.0f, 1.0f,
-        1.0f, 1.0f,
-    };
     
     glActiveTexture(GL_TEXTURE4);
     glBindTexture(GL_TEXTURE_2D, luminanceTexture);
@@ -331,8 +304,8 @@ NSString *const kGPUImageVertexShaderString_movie = SHADER_STRING
     
     glUniformMatrix3fv(yuvConversionMatrixUniform, 1, GL_FALSE, _preferredConversion);
     
-    glVertexAttribPointer(yuvConversionPositionAttribute, 2, GL_FLOAT, 0, 0, squareVertices);
-    glVertexAttribPointer(yuvConversionTextureCoordinateAttribute, 2, GL_FLOAT, 0, 0, textureCoordinates);
+    glVertexAttribPointer(yuvConversionPositionAttribute, 2, GL_FLOAT, 0, 0, imageVertices_lpr);
+    glVertexAttribPointer(yuvConversionTextureCoordinateAttribute, 2, GL_FLOAT, 0, 0, textureCoordinates_lpr);
     
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
     
