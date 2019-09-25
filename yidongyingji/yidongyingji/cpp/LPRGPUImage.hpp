@@ -14,7 +14,7 @@
 #include <string>
 #include "utils.hpp"
 
-class GPUImage {
+class LPRGPUImage {
 public:
     GLubyte *byte;
     int index;

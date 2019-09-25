@@ -8,11 +8,11 @@
 
 #import "ViewController.h"
 #import "LPRGPUImageView.h"
-#import "LPRGPUCopyWriter.h"
+#import "LPRGPUImageMovieWriter.h"
 
 @interface ViewController ()
 @property (nonatomic, strong) LPRGPUImageView *lprGPUView;
-@property (nonatomic, strong) LPRGPUCopyWriter *cpWriter;
+@property (nonatomic, strong) LPRGPUImageMovieWriter *cpWriter;
 @property (nonatomic, strong) UISlider *progress_slider;
 @property (nonatomic, strong) UILabel *percent_label;
 
@@ -65,7 +65,7 @@
     NSString *pathToMovie = [NSHomeDirectory() stringByAppendingPathComponent:@"Documents/Movie10.mp4"];
     unlink(pathToMovie.UTF8String);
 
-    self.cpWriter = [[LPRGPUCopyWriter alloc]initWithMovieURL:[NSURL fileURLWithPath:pathToMovie] size:CGSizeMake(Draw_w, Draw_h)];
+    self.cpWriter = [[LPRGPUImageMovieWriter alloc]initWithMovieURL:[NSURL fileURLWithPath:pathToMovie] size:CGSizeMake(Draw_w, Draw_h)];
     __block ViewController *tmpWeakSelf = self;
     self.cpWriter.progressBlock = ^(CGFloat percent){
         dispatch_async(dispatch_get_main_queue(), ^{

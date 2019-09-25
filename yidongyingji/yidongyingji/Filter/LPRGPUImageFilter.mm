@@ -105,15 +105,15 @@ NSString *const kPicGPUImagePassthroughFragmentShaderString = SHADER_STRING
 @implementation LPRGPUImageFilter
 @synthesize texture_test = _texture_test;
 
-- (void)addImageAsset:(GPUImage&)image
+- (void)addImageAsset:(LPRGPUImage&)image
 {
-    GPUImage *tmpImage = &image;
+    LPRGPUImage *tmpImage = &image;
     tmpImage->index = _imageAsset_num;
     _imageAsset[_imageAsset_num] = tmpImage;
     _imageAsset_num++;
 }
 
-- (void)addImageTexture:(GPUImage &)image
+- (void)addImageTexture:(LPRGPUImage &)image
 {
     memcpy(image.vertexData_dst_lpr, vertexData_src_lpr, 30*sizeof(GLfloat));
     _texture[_texture_num] = cpp_createImageTexture(image.byte, image.w, image.h, self.texture_size.width, image.vertexData_dst_lpr);
@@ -142,7 +142,7 @@ NSString *const kPicGPUImagePassthroughFragmentShaderString = SHADER_STRING
     {
         AELayerEntity &layer = configEntity->layers[i];
         int asset_index = parseAE.asset_index_refId(layer.refId, *configEntity);
-        GPUImage *tmpImage = _imageAsset[asset_index];
+        LPRGPUImage *tmpImage = _imageAsset[asset_index];
         [self addImageTexture:*tmpImage];
     }
 }
@@ -252,7 +252,7 @@ NSString *const kPicGPUImagePassthroughFragmentShaderString = SHADER_STRING
             {
                 int w1,h1;
                 GLubyte *byte1 = [self getImageDataWithName:[NSString stringWithFormat:@"img_%d.png",i] width:&w1 height:&h1];
-                GPUImage *image1 = (GPUImage *)malloc(sizeof(*image1));
+                LPRGPUImage *image1 = (LPRGPUImage *)malloc(sizeof(*image1));
                 image1->byte = byte1;
                 image1->w = w1;
                 image1->h = h1;
@@ -324,7 +324,7 @@ NSString *const kPicGPUImagePassthroughFragmentShaderString = SHADER_STRING
                 float ae_a_x_result = (ae_a_x-ae_w/2.0)/self->_texture_size.width*2.0;
                 float ae_a_y_result = (ae_h/2.0-ae_a_y)/self->_texture_size.width*2.0;
                 
-                GPUAnimateAttr animateAttr;
+                LPRGPUAnimateAttr animateAttr;
                 animateAttr.anchorPX = ae_a_x_result;
                 animateAttr.anchorPY = ae_a_y_result;
                 animateAttr.rotateAngleX = ae_rx;

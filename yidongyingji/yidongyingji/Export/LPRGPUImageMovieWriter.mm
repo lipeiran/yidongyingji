@@ -6,13 +6,11 @@
 //  Copyright © 2019 李沛然. All rights reserved.
 //
 
-#import "LPRGPUCopyWriter.h"
+#import "LPRGPUImageMovieWriter.h"
 #import <AssetsLibrary/ALAssetsLibrary.h>
 #import "LPRGPUImageMovie.h"
 
-
-
-@interface LPRGPUCopyWriter ()
+@interface LPRGPUImageMovieWriter ()
 {
     GLuint movieRenderbuffer, movieFramebuffer;
     
@@ -44,7 +42,7 @@
 
 @end
 
-@implementation LPRGPUCopyWriter
+@implementation LPRGPUImageMovieWriter
 
 @synthesize movieWriterContext = _movieWriterContext;
 

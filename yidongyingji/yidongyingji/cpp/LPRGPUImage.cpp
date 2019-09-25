@@ -6,4 +6,4 @@
 //  Copyright © 2019 李沛然. All rights reserved.
 //
 
-#include "GPUImage.hpp"
+#include "LPRGPUImage.hpp"

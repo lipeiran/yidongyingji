@@ -18,7 +18,7 @@
 typedef void(^WriteBlock)(CGFloat percent);
 
 
-@interface LPRGPUCopyWriter : NSObject
+@interface LPRGPUImageMovieWriter : NSObject
 {
     NSURL *movieURL;
     NSString *fileType;

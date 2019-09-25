@@ -12,7 +12,7 @@
 #include <stdio.h>
 #import "Header.h"
 
-class GPUAnimateAttr {
+class LPRGPUAnimateAttr {
 public:
     float anchorPX = 0.5f;
     float anchorPY = 0.5f;

@@ -11,8 +11,8 @@
 #import "LPRGPUImageFrameBuffer.h"
 #include "LPRGPUImageContext.h"
 #include "GLProgram.hpp"
-#import "GPUImage.hpp"
-#import "GPUAnimateAttr.hpp"
+#import "LPRGPUImage.hpp"
+#import "LPRGPUAnimateAttr.hpp"
 #import "Parse_AE.h"
 #import "Header.h"
 
@@ -32,7 +32,7 @@ NS_ASSUME_NONNULL_BEGIN
     
     GLuint _texture[512];
     GLuint _texture_num;
-    GPUImage *_imageAsset[512];
+    LPRGPUImage *_imageAsset[512];
     GLuint _imageAsset_num;
     
     BOOL _ae_b;
