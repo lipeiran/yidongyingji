@@ -37,9 +37,10 @@ typedef void(^WriteBlock)(CGFloat percent);
 @property(readonly, nonatomic) CGSize sizeInPixels;
 @property(nonatomic, retain) LPRGPUImageContext * _Nullable movieWriterContext;
 @property (nonatomic, copy, nullable) WriteBlock progressBlock;
+@property (nonatomic, copy) NSString *resName;
 
 // Initialization and teardown
-- (id _Nullable )initWithMovieURL:(NSURL *_Nullable)newMovieURL size:(CGSize)newSize;
+- (id _Nullable )initWithMovieURL:(NSURL *_Nullable)newMovieURL withFileName:(NSString *)fileName size:(CGSize)newSize;
 
 // Managing the data FBO
 - (void)createDataFBO;

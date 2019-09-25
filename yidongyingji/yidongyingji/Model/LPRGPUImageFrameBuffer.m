@@ -12,7 +12,6 @@
 {
     GLuint framebuffer;
     
-    
     CVPixelBufferRef renderTarget;
     CVOpenGLESTextureRef renderTexture;
 }

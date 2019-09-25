@@ -150,7 +150,7 @@ NSString *const kPicGPUImagePassthroughFragmentShaderString = SHADER_STRING
 - (GLubyte *)getImageDataWithName:(NSString *)imageName width:(int*)width height:(int*)height
 {
     //获取纹理图片
-    CGImageRef cgImgRef = [UIImage imageNamed:imageName].CGImage;
+    CGImageRef cgImgRef = [UIImage imageWithContentsOfFile:imageName].CGImage;
     if (!cgImgRef)
     {
         NSLog(@"纹理获取失败");
@@ -172,12 +172,14 @@ NSString *const kPicGPUImagePassthroughFragmentShaderString = SHADER_STRING
     return byte;
 }
 
-- (id)initSize:(CGSize)size imageName:(nullable NSString *)imageName ae:(AEConfigEntity &)aeConfig camera:(AEConfigEntity &)cameraConfig
+- (id)initSize:(CGSize)size imageName:(nullable NSString *)imageName ae:(AEConfigEntity &)aeConfig camera:(AEConfigEntity &)cameraConfig withFileName:(NSString *)fileName
 {
     if (!(self = [super init]))
     {
         return nil;
     }
+    self.resName = fileName;
+
     if (imageName == NULL)
     {
         _ae_b = YES;
@@ -248,10 +250,13 @@ NSString *const kPicGPUImagePassthroughFragmentShaderString = SHADER_STRING
         
         if (self->_ae_b)
         {
+            NSString *resPath = [ResourceBasePath stringByAppendingPathComponent:[NSString stringWithFormat:@"%@/images",self.resName]];
+
             for (int i = 0; i < self->configEntity->assets_num; i++)
             {
+                NSString *imgPath = [resPath stringByAppendingPathComponent:[NSString stringWithFormat:@"img_%d.png",i]];
                 int w1,h1;
-                GLubyte *byte1 = [self getImageDataWithName:[NSString stringWithFormat:@"img_%d.png",i] width:&w1 height:&h1];
+                GLubyte *byte1 = [self getImageDataWithName:imgPath width:&w1 height:&h1];
                 LPRGPUImage *image1 = (LPRGPUImage *)malloc(sizeof(*image1));
                 image1->byte = byte1;
                 image1->w = w1;

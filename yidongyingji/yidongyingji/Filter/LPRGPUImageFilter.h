@@ -15,6 +15,7 @@
 #import "LPRGPUAnimateAttr.hpp"
 #import "Parse_AE.h"
 #import "Header.h"
+#import "LPR_config.h"
 
 #define STRINGIZE(x) #x
 #define STRINGIZE2(x) STRINGIZE(x)
@@ -41,8 +42,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (readonly) GLuint texture_test;
 @property (retain) LPRGPUImageFrameBuffer *outputFramebuffer;
 @property (nonatomic) CGSize texture_size;
+@property (nonatomic, copy) NSString *resName;
 
-- (id)initSize:(CGSize)size imageName:(nullable NSString *)imageName ae:(AEConfigEntity &)aeConfig camera:(AEConfigEntity &)cameraConfig;
+- (id)initSize:(CGSize)size imageName:(nullable NSString *)imageName ae:(AEConfigEntity &)aeConfig camera:(AEConfigEntity &)cameraConfig withFileName:(NSString *)fileName;
 
 - (void)renderToTexture:(int)fr;
 

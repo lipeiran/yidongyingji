@@ -358,34 +358,6 @@ NSString *const kGPUImageVertexShaderString_movie = SHADER_STRING
             CFRelease(pixelBuffer);
         });
     }
-    else
-    {
-        NSLog(@"没有数据啊没有数据啊没有数据啊没有数据啊没有数据啊没有数据啊没有数据啊\n");
-    }
-//    else
-//    {
-//        int fail_c = 0;
-//        CMTime delta_jump = CMTimeMake(1, 100);
-//        while (1)
-//        {
-//            fail_c++;
-//            time = CMTimeAdd(time, delta_jump);
-//            __unsafe_unretained GPUImageMovie *weakSelf = self;
-//            CVPixelBufferRef pixelBuffer = [playerItemOutput copyPixelBufferForItemTime:time itemTimeForDisplay:NULL];
-//            if(pixelBuffer)
-//            {
-//                runSynchronouslyOnVideoProcessingQueue(^{
-//                    [weakSelf processMovieFrame:pixelBuffer withSampleTime:time];
-//                    CFRelease(pixelBuffer);
-//                });
-//                break;
-//            }
-//            if (fail_c > 10)
-//            {
-//                break;
-//            }
-//        }
-//    }
 }
 
 #pragma mark -

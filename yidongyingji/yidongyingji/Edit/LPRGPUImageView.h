@@ -23,6 +23,9 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 @property(readonly, nonatomic) CGSize sizeInPixels;
+@property (nonatomic, copy) NSString *resName;
+
+- (id)initWithFrame:(CGRect)frame withName:(NSString *)fileName;
 
 // Initialization and teardown
 - (void)commonInit;
@@ -38,6 +41,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)resume;
 - (void)stop;
 - (void)seekToPercent:(CGFloat)percent;
+
+- (void)resetByResName:(NSString *)name;
 
 @end
 

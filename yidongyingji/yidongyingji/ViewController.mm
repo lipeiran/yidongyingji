@@ -38,7 +38,7 @@
     _percent_label.textAlignment = NSTextAlignmentCenter;
     [self.view addSubview:_percent_label];
     
-    _lprGPUView = [[LPRGPUImageView alloc]initWithFrame:CGRectMake(Draw_x/[UIScreen mainScreen].scale, Draw_y/[UIScreen mainScreen].scale, Draw_w/[UIScreen mainScreen].scale, Draw_h/[UIScreen mainScreen].scale)];
+    _lprGPUView = [[LPRGPUImageView alloc]initWithFrame:CGRectMake(Draw_x/[UIScreen mainScreen].scale, Draw_y/[UIScreen mainScreen].scale, Draw_w/[UIScreen mainScreen].scale, Draw_h/[UIScreen mainScreen].scale) withName:@"1"];
     [self.view addSubview:self.lprGPUView];
     
     _progress_slider = [[UISlider alloc]initWithFrame:CGRectMake(100, 400, 200, 30)];
@@ -65,7 +65,7 @@
     NSString *pathToMovie = [NSHomeDirectory() stringByAppendingPathComponent:@"Documents/Movie10.mp4"];
     unlink(pathToMovie.UTF8String);
 
-    self.cpWriter = [[LPRGPUImageMovieWriter alloc]initWithMovieURL:[NSURL fileURLWithPath:pathToMovie] size:CGSizeMake(Draw_w, Draw_h)];
+    self.cpWriter = [[LPRGPUImageMovieWriter alloc]initWithMovieURL:[NSURL fileURLWithPath:pathToMovie] withFileName:@"1" size:CGSizeMake(Draw_w, Draw_h)];
     __block ViewController *tmpWeakSelf = self;
     self.cpWriter.progressBlock = ^(CGFloat percent){
         dispatch_async(dispatch_get_main_queue(), ^{

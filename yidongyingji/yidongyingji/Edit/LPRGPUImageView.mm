@@ -25,11 +25,12 @@
     GLuint _position;
     GLuint _textCoordinate;
     
-    GLuint _texture_test;
-    GLuint _texture_test2;
+    GLuint _texture_ae;
+    GLuint _texture_movie;
     
     BOOL _layer_exist;
     int _fr;
+    int _total_fr;
     BOOL _slider_bool;
     CGFloat _duration;
     int32_t _timeScale;
@@ -37,7 +38,7 @@
     AEConfigEntity camera_configEntity;
 }
 
-@property(nonatomic, strong) NSTimer *renderTimer;
+@property (nonatomic, strong) NSTimer *renderTimer;
 @property (nonatomic, strong) AVPlayer *player;
 @property (nonatomic, strong) LPRGPUImageMovie *preMovie;
 
@@ -53,12 +54,13 @@
     return [CAEAGLLayer class];
 }
 
-- (id)initWithFrame:(CGRect)frame
+- (id)initWithFrame:(CGRect)frame withName:(NSString *)fileName
 {
     if (!(self = [super initWithFrame:frame]))
     {
         return nil;
     }
+    self.resName = fileName;
     [self commonInit];
     [self setTimer];
     return self;
@@ -81,24 +83,30 @@
 - (void)setMaskMovieTexture
 {
     NSError *error;
-    NSString *musicPath = [[NSBundle mainBundle]pathForResource:@"music" ofType:@"mp3"];
+
+    NSString *resPath = [ResourceBasePath stringByAppendingPathComponent:self.resName];
+    NSString *musicPath = [resPath stringByAppendingPathComponent:@"music.mp3"];
+    NSString *tp_fg_Path = [resPath stringByAppendingPathComponent:@"tp_fg.mp4"];
+    NSString *tp_json_Path = [resPath stringByAppendingPathComponent:@"tp.json"];
+    NSString *tp_camera_Path = [resPath stringByAppendingPathComponent:@"tp_camera.json"];
+    
     _audioPlayer = [[AVAudioPlayer alloc]initWithContentsOfURL:[NSURL URLWithString:musicPath] error:&error];
     _audioPlayer.numberOfLoops = 0;
     [_audioPlayer prepareToPlay];
     
-    char *configPath = (char *)[[[NSBundle mainBundle]pathForResource:@"tp" ofType:@"json"] UTF8String];
+    char *configPath = (char *)[tp_json_Path UTF8String];
     ParseAE parseAE;
     parseAE.dofile(configPath, configEntity);
     _fr = configEntity.fr;
-    
+    _total_fr = configEntity.op - configEntity.ip + 1;
     if (configEntity.ddd)
     {
-        char *configPath = (char *)[[[NSBundle mainBundle]pathForResource:@"tp_camera" ofType:@"json"] UTF8String];
+        char *configPath = (char *)[tp_camera_Path UTF8String];
         ParseAE parseAE;
         parseAE.dofile(configPath, camera_configEntity);
     }
     
-    NSURL *tmpUrl = [[NSBundle mainBundle]URLForResource:@"tp_fg" withExtension:@"mp4"];
+    NSURL *tmpUrl = [NSURL fileURLWithPath:tp_fg_Path];
     AVAsset *tmpAsset = [AVAsset assetWithURL:tmpUrl];
     AVPlayerItem *playerItem = [[AVPlayerItem alloc]initWithAsset:tmpAsset];
     _player = [AVPlayer playerWithPlayerItem:playerItem];
@@ -119,16 +127,23 @@
         {
             runAsynchronouslyOnVideoProcessingQueue(^{
                 runSynchronouslyOnVideoProcessingQueue(^{
-                    int fr_pts = (int)(self.player.currentTime.value*1.0/self.player.currentTime.timescale*self->_fr);
-                    [self->imageFilter renderToTexture:fr_pts];
-                    [self->_preMovie processPixelBufferAtTimeWithTime:self.player.currentTime];
-                    self->_texture_test = self->imageFilter.outputFramebuffer.texture;
-                    self->_texture_test2 = self->_preMovie.outputFramebuffer.texture;
-                    [self draw];
-                    if ( !self.audioPlaying )
+                    __block int fr_pts = (int)(self.player.currentTime.value*1.0/self.player.currentTime.timescale*self->_fr);
+                    if (fr_pts >= self->_total_fr)
                     {
-                        self.audioPlaying = YES;
-                        [self.audioPlayer play];
+                        [self.player seekToTime:kCMTimeZero toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero completionHandler:^(BOOL finished) {
+                            if (self.player.rate == 0)
+                            {
+                                [self.player play];
+                            }
+                            self.audioPlaying = false;
+                            self.audioPlayer.currentTime = 0;
+                            fr_pts = 0;
+                            [self drawAction:fr_pts];
+                        }];
+                    }
+                    else
+                    {
+                        [self drawAction:fr_pts];
                     }
                 });
             });
@@ -136,10 +151,23 @@
     }
 }
 
+- (void)drawAction:(int)fr_pts
+{
+    [self->imageFilter renderToTexture:fr_pts];
+    [self->_preMovie processPixelBufferAtTimeWithTime:self.player.currentTime];
+    self->_texture_ae = self->imageFilter.outputFramebuffer.texture;
+    self->_texture_movie = self->_preMovie.outputFramebuffer.texture;
+    [self draw];
+    if ( !self.audioPlaying )
+    {
+        self.audioPlaying = YES;
+        [self.audioPlayer play];
+    }
+}
+
 - (void)commonInit;
 {
     // Set scaling to account for Retina display
-    [self setMaskMovieTexture];
 
     if ([self respondsToSelector:@selector(setContentScaleFactor:)])
     {
@@ -150,12 +178,11 @@
     CAEAGLLayer *eaglLayer = (CAEAGLLayer *)self.layer;
     eaglLayer.opaque = YES;
     eaglLayer.drawableProperties = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:NO], kEAGLDrawablePropertyRetainedBacking, kEAGLColorFormatRGBA8, kEAGLDrawablePropertyColorFormat, nil];
-    float scale = [UIScreen mainScreen].scale;
-    CGSize screenSize = CGSizeMake(self.frame.size.width * scale, self.frame.size.height * scale);
+
+    [self setMaskMovieTexture];
 
     runAsynchronouslyOnVideoProcessingQueue(^{
         runSynchronouslyOnVideoProcessingQueue(^{
-
             [LPRGPUImageContext useImageProcessingContext];
             GLProgram glProgram1;
             //编译program
@@ -173,8 +200,20 @@
             glEnableVertexAttribArray(self->displayPositionAttribute);
             glEnableVertexAttribArray(self->displayTextureCoordinateAttribute);
             [self createDisplayFramebuffer];
-            
-            self->imageFilter = [[LPRGPUImageFilter alloc]initSize:screenSize imageName:nil ae:self->configEntity camera:self->camera_configEntity];
+        });
+    });
+    [self setDataAndRefresh];
+}
+
+- (void)setDataAndRefresh
+{
+    float scale = [UIScreen mainScreen].scale;
+    CGSize screenSize = CGSizeMake(self.frame.size.width * scale, self.frame.size.height * scale);
+
+    [self setMaskMovieTexture];
+    runAsynchronouslyOnVideoProcessingQueue(^{
+        runSynchronouslyOnVideoProcessingQueue(^{
+            self->imageFilter = [[LPRGPUImageFilter alloc]initSize:screenSize imageName:nil ae:self->configEntity camera:self->camera_configEntity withFileName:self.resName];
         });
     });
 }
@@ -332,11 +371,11 @@
             glEnable(GL_DEPTH_TEST);
 
             glActiveTexture(GL_TEXTURE4);
-            glBindTexture(GL_TEXTURE_2D,self->_texture_test);
+            glBindTexture(GL_TEXTURE_2D,self->_texture_ae);
             glUniform1i(self->displayInputTextureUniform, 4);
             
             glActiveTexture(GL_TEXTURE5);
-            glBindTexture(GL_TEXTURE_2D,self->_texture_test2);
+            glBindTexture(GL_TEXTURE_2D,self->_texture_movie);
             glUniform1i(self->displayInputTextureUniform2, 5);
             
             glVertexAttribPointer(self->displayPositionAttribute, 2, GL_FLOAT, 0, 0, imageVertices_lpr);
@@ -347,6 +386,12 @@
             [self presentFramebuffer];
         });
     });
+}
+
+- (void)resetByResName:(NSString *)name
+{
+    self.resName = name;
+    [self setDataAndRefresh];
 }
 
 @end

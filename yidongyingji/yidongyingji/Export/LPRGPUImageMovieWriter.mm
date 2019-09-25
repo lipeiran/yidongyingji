@@ -46,17 +46,19 @@
 
 @synthesize movieWriterContext = _movieWriterContext;
 
-- (id)initWithMovieURL:(NSURL *)newMovieURL size:(CGSize)newSize;
+- (id)initWithMovieURL:(NSURL *)newMovieURL withFileName:(NSString *)fileName size:(CGSize)newSize;
 {
-    return [self initWithMovieURL:newMovieURL size:newSize fileType:AVFileTypeQuickTimeMovie outputSettings:nil];
+    return [self initWithMovieURL:newMovieURL withFileName:fileName size:newSize fileType:AVFileTypeQuickTimeMovie outputSettings:nil];
 }
 
-- (id)initWithMovieURL:(NSURL *)newMovieURL size:(CGSize)newSize fileType:(NSString *)newFileType outputSettings:(NSMutableDictionary *)outputSettings;
+- (id)initWithMovieURL:(NSURL *)newMovieURL withFileName:(NSString *)fileName size:(CGSize)newSize fileType:(NSString *)newFileType outputSettings:(NSMutableDictionary *)outputSettings;
 {
     if (!(self = [super init]))
     {
         return nil;
     }
+    self.resName = fileName;
+
     videoSize = newSize;
     movieURL = newMovieURL;
     fileType = newFileType;
@@ -249,40 +251,17 @@
     glFinish();
 }
 
-- (GLubyte *)getImageDataWithName:(NSString *)imageName width:(int*)width height:(int*)height
-{
-    //获取纹理图片
-    CGImageRef cgImgRef = [UIImage imageNamed:imageName].CGImage;
-    if (!cgImgRef)
-    {
-        NSLog(@"纹理获取失败");
-    }
-    //获取图片长、宽
-    size_t wd = CGImageGetWidth(cgImgRef);
-    size_t ht = CGImageGetHeight(cgImgRef);
-    GLubyte *byte = (GLubyte *)calloc(wd * ht * 4, sizeof(GLubyte));
-    CGContextRef contextRef = CGBitmapContextCreate(byte, wd, ht, 8, wd * 4, CGImageGetColorSpace(cgImgRef), kCGImageAlphaPremultipliedLast);
-    //长宽转成float 方便下面方法使用
-    float w = wd;
-    float h = ht;
-    CGRect rect = CGRectMake(0, 0, w, h);
-    CGContextDrawImage(contextRef, rect, cgImgRef);
-    //图片绘制完成后，contextRef就没用了，释放
-    CGContextRelease(contextRef);
-    *width = w;
-    *height = h;
-    return byte;
-}
-
 - (void)startRecording
  {
      NSLog(@"%s",__func__);
+     NSString *resPath = [ResourceBasePath stringByAppendingPathComponent:self.resName];
+     NSString *tp_fg_Path = [resPath stringByAppendingPathComponent:@"tp_fg.mp4"];
      
      [self->assetWriter startWriting];
      [self->assetWriter startSessionAtSourceTime:CMTimeMake(0, _fr)];
      
-     self->imageFilter = [[LPRGPUImageFilter alloc]initSize:CGSizeMake(Draw_w, Draw_h) imageName:nil ae:self->configEntity camera:self->camera_configEntity];
-     NSURL *tmpUrl = [[NSBundle mainBundle]URLForResource:@"tp_fg" withExtension:@"mp4"];
+     self->imageFilter = [[LPRGPUImageFilter alloc]initSize:CGSizeMake(Draw_w, Draw_h) imageName:nil ae:self->configEntity camera:self->camera_configEntity withFileName:self.resName];
+     NSURL *tmpUrl = [NSURL fileURLWithPath:tp_fg_Path];
      AVAsset *tmpAsset = [AVAsset assetWithURL:tmpUrl];
      _preMovie = [[LPRGPUImageMovie alloc]initWithAsset:tmpAsset];
      [_preMovie startProcessing];
@@ -343,16 +322,15 @@
 {
     [self finishRecordingWithCompletionHandler:^{
         dispatch_async(dispatch_get_main_queue(), ^{
+            NSString *resPath = [ResourceBasePath stringByAppendingPathComponent:self.resName];
+            NSString *wayPath = [resPath stringByAppendingPathComponent:@"music.mp3"];
             NSString *easyPath = [NSHomeDirectory() stringByAppendingPathComponent:@"Documents/Movie10.mp4"];
-            NSString *wayPath = [[NSBundle mainBundle] pathForResource:@"music" ofType:@"mp3"];
             NSString *destPath = [NSHomeDirectory() stringByAppendingPathComponent:@"Documents/Movie_result.mp4"];
-            
             if ([[NSFileManager defaultManager] fileExistsAtPath:destPath])
             {
                 [[NSFileManager defaultManager] removeItemAtPath:destPath error:nil];
             }
             [self audioVedioMerge:[NSURL fileURLWithPath:wayPath] vedioUrl:[NSURL fileURLWithPath:easyPath] destUrl:[NSURL fileURLWithPath:destPath]];
-            
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"视频保存沙盒成功" message:nil delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
             [alert show];
         });
@@ -371,14 +349,18 @@
 
 - (void)setMaskMovieTexture
 {
-    char *configPath = (char *)[[[NSBundle mainBundle]pathForResource:@"tp" ofType:@"json"] UTF8String];
+    NSString *resPath = [ResourceBasePath stringByAppendingPathComponent:self.resName];
+    NSString *tp_json_Path = [resPath stringByAppendingPathComponent:@"tp.json"];
+    NSString *tp_camera_Path = [resPath stringByAppendingPathComponent:@"tp_camera.json"];
+    
+    char *configPath = (char *)[tp_json_Path UTF8String];
     ParseAE parseAE;
     parseAE.dofile(configPath, configEntity);
     _fr = configEntity.fr;
     _total_fr = configEntity.op+1;
     if (configEntity.ddd)
     {
-        char *configPath = (char *)[[[NSBundle mainBundle]pathForResource:@"tp_camera" ofType:@"json"] UTF8String];
+        char *configPath = (char *)[tp_camera_Path UTF8String];
         ParseAE parseAE;
         parseAE.dofile(configPath, camera_configEntity);
     }
