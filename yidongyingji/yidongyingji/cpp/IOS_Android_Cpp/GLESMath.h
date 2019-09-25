@@ -8,8 +8,8 @@
 #ifndef __GLESMATH_H__
 #define __GLESMATH_H__
 
-#import <OpenGLES/ES2/gl.h>
-#include <math.h>
+#include "AEConfig.h"
+
 
 #ifndef M_PI
 #define M_PI 3.1415926535897932384626433832795f

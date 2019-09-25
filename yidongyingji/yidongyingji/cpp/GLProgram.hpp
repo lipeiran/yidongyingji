@@ -12,7 +12,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string>
-#include "GL_Header.h"
+#include "AEConfig.h"
 #include "utils.hpp"
 
 class GLProgram {

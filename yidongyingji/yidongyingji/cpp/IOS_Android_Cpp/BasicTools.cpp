@@ -6,7 +6,7 @@
 //  Copyright © 2019 李沛然. All rights reserved.
 //
 
-#include "BasicTools.hpp"
+#include "BasicTools.h"
 
 // 某个字符串是否包含某个字符串
 int str_isIn_str(char *s,const char *c)
